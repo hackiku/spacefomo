@@ -31,6 +31,11 @@
   on:keydown={handleKeydown}>
 
   <div class="flex-1">
+    <div class="flex gap-x-2 align-left text-sm text-gray-400 mb-2">
+      <span>{source} •</span>
+      <span>{date}</span>
+      <!-- <span>FOMO: {fomoScore}</span>       -->
+    </div>
     <h2 class="text-xl text-white font-bold mb-2">{title}</h2>
     {#if !isOpen}
       <p class="text-gray-300">{shortDescription}</p>
@@ -38,20 +43,10 @@
       <p class="text-gray-300 mb-4">{longDescription}</p>
       <a href={link} class="text-blue-400 hover:text-blue-600 mb-4 inline-block">Read More</a>
       <!-- Image Column (only when open) -->
-      <div class="mt-4">
+      <div class="flex-none ml-4">
         <img src={image} alt={title} class="w-48 h-48 object-cover rounded"/>
-      </div>
-    {/if}
-    <div class="flex justify-between text-sm text-gray-400 mt-2">
-      <span>{date}</span>
-      <span>{time}</span>
-      <span>Source: {source}</span>
-      <span>FOMO Score: {fomoScore}</span>
-    </div>
+      </div>    
+      {/if}
   </div>
 
-  <!-- Image Column -->
-  <div class="flex-none ml-4">
-    <img src={image} alt={title} class="w-48 h-48 object-cover rounded"/>
-  </div>
 </div>
