@@ -7,7 +7,7 @@
       title: 'Virgin Galactic to launch 6th commercial spaceflight on Jan. 26',
       shortDescription: 'Featuring four private astronauts from diverse backgrounds.',
       longDescription: `Virgin Galactic, a key player in space tourism, announced their sixth commercial spaceflight, Galactic-06, scheduled for January 26. This mission will carry four private astronauts, hailing from Texas, California, Austria, and a dual national from Ukraine and California. The flight utilizes an air-launched system comprising the VMS Eve carrier aircraft and the VSS Unity space plane. Piloted by C.J. Sturckow and Nicola Pecile, the mission will ascend to about 50,000 feet before launch. After a successful streak of spaceflights in 2023, Virgin Galactic plans to focus on developing their next-generation 'Delta class' space plane, aiming for higher frequency missions starting in 2025.`,
-      link: 'https://www.space.com/virgin-galactic-6th-commercial-spaceflight-launch-january',
+      link: 'https://www.space.com/virgin-galactic-6th-commercial-spaceflight-january-2024',
       image: 'virgin-galactic-spacecraft.jpg',
       date: '12 Dec 2023',
       time: '14:00',
@@ -81,6 +81,9 @@ Why it matters: This mission represents a pivotal step in expanding human presen
     </div>
   </section>
   
+
+  <div class="container mx-auto px-40">
+
   <!-- categories -->
   <section class="categories mt-8 mb-8">
     <h3 class="text-xl text-white font-bold mb-4">Explore hot news</h3>
@@ -114,6 +117,7 @@ Why it matters: This mission represents a pivotal step in expanding human presen
     </button>
   </section>
   
+  </div>
 </div>
 
 <footer>hey</footer>

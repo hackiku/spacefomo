@@ -24,7 +24,7 @@
 </script>
 
 <div 
-  class="news-card bg-gray-800 p-6 mb-4 rounded-lg cursor-pointer flex" 
+  class="news-card bg-gray-800 p-6 mb-4 rounded-2xl cursor-pointer flex" 
   on:click={toggleOpen}
   role="button" 
   tabindex="0"
@@ -32,9 +32,10 @@
 
   <div class="flex-1">
     <div class="flex gap-x-2 align-left text-sm text-gray-400 mb-2">
-      <span>{source} •</span>
+      <span>{source}</span>
+      <span>•</span>
       <span>{date}</span>
-      <!-- <span>FOMO: {fomoScore}</span>       -->
+      <!-- <span>FOMO: {fomoScore}</span> -->
     </div>
     <h2 class="text-xl text-white font-bold mb-2">{title}</h2>
     {#if !isOpen}
