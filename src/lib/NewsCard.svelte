@@ -62,9 +62,6 @@
       <p class="text-gray-300 mb-4">{longDescription}</p>
       <a href={link} class="text-blue-400 hover:text-blue-600 mb-4 inline-block">Read More</a>
       <!-- Image Column (only when open) -->
-      <div class="flex-none ml-4">
-        <img src={image} alt={title} class="w-48 h-48 object-cover rounded"/>
-      </div>  
       <!-- Display bullet points -->
       {#if formattedNumbers.length}
         <ul class="list-inside list-disc">
@@ -78,15 +75,3 @@
 
 </div>
 
-<style>
-  .fomo-counter-container {
-    /* Styling for the FOMO counter container */
-    background-color: #333; /* Dark gray background */
-    border-radius: 9999px; /* Round shape */
-    padding: 0.5rem;
-    width: fit-content;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Optional: Adds a subtle shadow */
-    transform: translate(25%, -25%); /* Adjust as needed for alignment */
-  }
-  /* Additional styles if needed */
-</style>
