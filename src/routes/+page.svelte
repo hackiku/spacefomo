@@ -1,7 +1,9 @@
 <script>
   import { onMount } from 'svelte';
+  import { fetchNews } from '$lib/newsService.js';
   import NewsCard from '$lib/NewsCard.svelte';
-
+  import FomoCounter from '$lib/FomoCounter.svelte';
+  
   let newsItems = [
     {
       title: 'Virgin Galactic to launch 6th commercial spaceflight on Jan. 26',
@@ -55,73 +57,81 @@ Why it matters: This mission represents a pivotal step in expanding human presen
     }
   ];
 
+  onMount(() => {
+    fetchNews();
+  });
+
 </script>
 
 <div class="container mx-auto px-4">
-  <header class="flex justify-between items-center py-4">
-    <h1 class="text-md font-bold text-white">📡 spacefomo.com</h1>
-    <nav>
-      <ul class="flex space-x-4">
-    <li><a href="#" class="text-white hover:text-gray-300">Feed</a></li>
-        <li><a href="#" class="text-white hover:text-gray-300">About</a></li>
-        <li><a href="#" class="text-white hover:text-gray-300">Join</a></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <!-- hero -->
-  <section class="hero mt-8 py-8 flex justify-center items-center">
-    <div class="max-w-md text-center">
-      <h2 class="text-4xl font-bold text-white mb-4">Space Race FOMO relief in 100 words a pop</h2>
-      <p class="text-xl text-gray-500 mb-8">Space industry barometer. Never miss a beat with AI news summarized in 100 words.</p>
-      <form class="flex justify-center items-center">
-        <input type="email" placeholder="email away" class="border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300" />
-        <button class="bg-brandBlue rounded-r text-white px-4 py-2 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">Subscribe</button>
-      </form>
-    </div>
-  </section>
-  
+<header class="flex justify-between items-center py-4">
+  <h1 class="text-md font-bold text-white">📡 spacefomo.com</h1>
+  <nav>
+    <ul class="flex space-x-4">
+  <li><a href="#" class="text-white hover:text-gray-300">Feed</a></li>
+      <li><a href="#" class="text-white hover:text-gray-300">About</a></li>
+      <li><a href="#" class="text-white hover:text-gray-300">Join</a></li>
+    </ul>
+  </nav>
+</header>
 
-  <div class="container mx-auto px-40">
-
-  <!-- categories -->
-  <section class="categories mt-8 mb-8">
-    <h3 class="text-xl text-white font-bold mb-4">Explore hot news</h3>
-    <div class="flex space-x-4">
-      <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Spaceflight</a>
-      <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Startups</a>
-      <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Space Exploration</a>
-      <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Breakthroughs</a>    </div>
-  </section>
-
-  <section>
-    {#each newsItems as item}
-      <NewsCard
-        title={item.title}
-        shortDescription={item.shortDescription}
-        longDescription={item.longDescription}
-        link={item.link}
-        image={item.image}
-        date={item.date}
-        time={item.time}
-        source={item.source}
-        fomoScore={item.fomoScore} />
-    {/each}
-  </section>
-    
-  <section class="cta-section bg-gray-800 text-center p-6 rounded-lg mx-auto mt-8">
-    <h2 class="text-3xl text-white font-bold mb-4">Call to Arms</h2>
-    <p class="text-gray-300 mb-8">Placeholder subheading</p>
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-      Help Build Timeline
-    </button>
-  </section>
-  
+<!-- hero -->
+<section class="hero mt-8 py-8 flex justify-center items-center">
+  <div class="max-w-md text-center">
+    <h2 class="text-4xl font-bold text-white mb-4">Space Race FOMO relief in 100 words a pop</h2>
+    <p class="text-xl text-gray-500 mb-8">AI-digested space industry news you can't afford to miss.</p>
+    <form class="flex justify-center items-center">
+      <input type="email" placeholder="email away" class="border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300" />
+      <button class="bg-brandBlue rounded-r text-white px-4 py-2 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">Subscribe</button>
+    </form>
   </div>
+</section>
+
+
+<div class="container mx-auto px-40">
+
+<!-- fomo counter -->
+<FomoCounter />
+
+<!-- categories -->
+<section class="categories mt-8 mb-8">
+  <div class="flex space-x-4">
+    <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Spaceflight</a>
+    <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Startups</a>
+    <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Space Exploration</a>
+    <a href="#" class="text-gray-500 hover:bg-gray-300 px-4 py-2 rounded-full border border-gray-500">Breakthroughs</a>    
+  </div>
+</section>
+
+
+<section>
+  {#each newsItems as item}
+    <NewsCard
+      title={item.title}
+      shortDescription={item.shortDescription}
+      longDescription={item.longDescription}
+      link={item.link}
+      image={item.image}
+      date={item.date}
+      time={item.time}
+      source={item.source}
+      fomoScore={item.fomoScore} />
+  {/each}
+</section>
+  
+<section class="cta-section bg-gray-800 text-center p-6 rounded-lg mx-auto mt-8">
+  <h2 class="text-3xl text-white font-bold mb-4">Call to Arms</h2>
+  <p class="text-gray-300 mb-8">Placeholder subheading</p>
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    Help Build Timeline
+  </button>
+</section>
+
+</div>
 </div>
 
-<footer>hey</footer>
+<footer>footer</footer>
 
 <style>
-  /* Add additional styling as needed */
+/* Add additional styling as needed */
 </style>

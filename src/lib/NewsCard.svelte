@@ -1,3 +1,4 @@
+<!-- NewsCard.svelte -->
 <script>
   export let title;
   export let shortDescription;
@@ -8,6 +9,9 @@
   export let time; // new prop for time
   export let source; // new prop for source
   export let fomoScore; // new prop for FOMO score
+
+
+  $: formattedNumbers = longDescription.match(/\d+/g)?.map(num => `• ${num}`) || [];
 
   let isOpen = false;
 
@@ -20,8 +24,17 @@
       toggleOpen();
     }
   }
-
+  
 </script>
+
+<!-- Display bullet points -->
+{#if formattedNumbers.length}
+  <ul>
+    {#each formattedNumbers as number}
+      <li>{number}</li>
+    {/each}
+  </ul>
+{/if}
 
 <div 
   class="news-card bg-gray-800 p-6 mb-4 rounded-2xl cursor-pointer flex" 
