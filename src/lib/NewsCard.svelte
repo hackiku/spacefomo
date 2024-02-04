@@ -1,5 +1,7 @@
 <!-- NewsCard.svelte -->
 <script>
+
+  import FomoCounter from "./FomoCounter.svelte";
   export let title;
   export let shortDescription;
   export let longDescription;
@@ -9,7 +11,6 @@
   export let time; // new prop for time
   export let source; // new prop for source
   export let fomoScore; // new prop for FOMO score
-
 
   $: formattedNumbers = longDescription.match(/\d+/g)?.map(num => `• ${num}`) || [];
 
@@ -25,25 +26,28 @@
     }
   }
   
+  let fomoPercentage = parseFloat(fomoScore);
+  function updateFomoScore(newScore) {
+    fomoPercentage = newScore;
+    // Here you can also add logic to update the score in your database or global state
+  }
+
 </script>
 
-<!-- Display bullet points -->
-{#if formattedNumbers.length}
-  <ul>
-    {#each formattedNumbers as number}
-      <li>{number}</li>
-    {/each}
-  </ul>
-{/if}
 
 <div 
-  class="news-card bg-gray-800 p-6 mb-4 rounded-2xl cursor-pointer flex" 
+  class="news-card relative bg-gray-800 p-6 mb-4 rounded-2xl cursor-pointer flex" 
   on:click={toggleOpen}
   role="button" 
   tabindex="0"
   on:keydown={handleKeydown}>
 
   <div class="flex-1">
+    <!-- FomoCounter, positioned absolutely -->
+    <div class="fomo-counter-container absolute top-0 right-0 m-4">
+      <FomoCounter {fomoPercentage} on:update={updateFomoScore} />
+    </div>
+    
     <div class="flex gap-x-2 align-left text-sm text-gray-400 mb-2">
       <span>{source}</span>
       <span>•</span>
@@ -51,6 +55,7 @@
       <!-- <span>FOMO: {fomoScore}</span> -->
     </div>
     <h2 class="text-xl text-white font-bold mb-2">{title}</h2>
+        
     {#if !isOpen}
       <p class="text-gray-300">{shortDescription}</p>
     {:else}
@@ -59,8 +64,29 @@
       <!-- Image Column (only when open) -->
       <div class="flex-none ml-4">
         <img src={image} alt={title} class="w-48 h-48 object-cover rounded"/>
-      </div>    
+      </div>  
+      <!-- Display bullet points -->
+      {#if formattedNumbers.length}
+        <ul class="list-inside list-disc">
+          {#each formattedNumbers as number}
+            <li class="text-gray-300">{number}</li>
+          {/each}
+        </ul>
       {/if}
+    {/if}
   </div>
 
 </div>
+
+<style>
+  .fomo-counter-container {
+    /* Styling for the FOMO counter container */
+    background-color: #333; /* Dark gray background */
+    border-radius: 9999px; /* Round shape */
+    padding: 0.5rem;
+    width: fit-content;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Optional: Adds a subtle shadow */
+    transform: translate(25%, -25%); /* Adjust as needed for alignment */
+  }
+  /* Additional styles if needed */
+</style>
