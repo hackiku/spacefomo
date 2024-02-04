@@ -1,5 +1,6 @@
 <!-- NewsCard.svelte -->
 <script>
+  import { supabase } from '$lib/supabase'
 
   import FomoCounter from "./FomoCounter.svelte";
   export let title;
@@ -11,6 +12,15 @@
   export let time; // new prop for time
   export let source; // new prop for source
   export let fomoScore; // new prop for FOMO score
+
+  async function fetchNewsItems() {
+  const { data, error } = await supabase
+    .from('news_items')
+    .select('*')
+  if (error) console.log('Error fetching news:', error)
+  else return data
+}
+
 
   $: formattedNumbers = longDescription.match(/\d+/g)?.map(num => `• ${num}`) || [];
 
