@@ -1,9 +1,10 @@
 <script>
   import { onMount } from 'svelte';
   import { fetchNews } from '$lib/newsService.js';
-  import NewsCard from '$lib/NewsCard.svelte';
+  // import NewsCard from '$lib/NewsCard.svelte';
   import FomoCounter from '$lib/FomoCounter.svelte';
-  
+  // import NewsPocketbase from '$lib/NewsPocketbase.svelte';
+
   let newsItems = [
     {
       title: 'Virgin Galactic to launch 6th commercial spaceflight on Jan. 26',
@@ -63,6 +64,8 @@ Why it matters: This mission represents a pivotal step in expanding human presen
 
 </script>
 
+<!-- <NewsPocketbase /> -->
+
 <div class="container mx-auto px-4">
 <header class="flex justify-between items-center py-4">
   <h1 class="text-md font-bold text-white">📡 spacefomo.com</h1>
@@ -104,7 +107,7 @@ Why it matters: This mission represents a pivotal step in expanding human presen
 </section>
 
 
-<section>
+<!-- <section>
   {#each newsItems as item}
     <NewsCard
       title={item.title}
@@ -117,7 +120,7 @@ Why it matters: This mission represents a pivotal step in expanding human presen
       source={item.source}
       fomoScore={item.fomoScore} />
   {/each}
-</section>
+</section> -->
   
 <section class="cta-section bg-gray-800 text-center p-6 rounded-lg mx-auto mt-8">
   <h2 class="text-3xl text-white font-bold mb-4">Call to Arms</h2>

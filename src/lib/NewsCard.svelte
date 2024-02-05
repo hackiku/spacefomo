@@ -1,7 +1,7 @@
 <!-- NewsCard.svelte -->
 <script>
-  import { supabase } from '$lib/supabase'
-
+  import pb from 'pocketbase';
+  
   import FomoCounter from "./FomoCounter.svelte";
   export let title;
   export let shortDescription;
@@ -12,13 +12,15 @@
   export let time; // new prop for time
   export let source; // new prop for source
   export let fomoScore; // new prop for FOMO score
+  
+  // const pb = new PocketBase('http://127.0.0.1:8090');
 
   async function fetchNewsItems() {
-  const { data, error } = await supabase
+    const { data, error } = await supabase
     .from('news_items')
     .select('*')
-  if (error) console.log('Error fetching news:', error)
-  else return data
+    if (error) console.log('Error fetching news:', error)
+    else return data
 }
 
 
