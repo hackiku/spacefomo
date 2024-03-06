@@ -3,10 +3,16 @@
 <script>
   import { onMount } from 'svelte';
   import { fetchNews } from '$lib/newsService.js';
+  // ui
   import Nav from '$lib/ui/Nav.svelte';
-  import NewsCard from '$lib/NewsCard.svelte';
   import FomoCounter from '$lib/FomoCounter.svelte';
+  import ScreenSizeDebug from '$lib/ui/ScreenSizeDebug.svelte';
+  
+  // news
+  import NewsCard from '$lib/NewsCard.svelte';
   // import NewsPocketbase from '$lib/NewsPocketbase.svelte';
+
+
 
   let newsItems = [
     {
@@ -70,6 +76,9 @@ Why it matters: This mission represents a pivotal step in expanding human presen
 
 <!-- ------------------------------- HTML --------------------------------- -->
 <Nav />
+<ScreenSizeDebug />
+
+
 
 <!-- <NewsPocketbase /> -->
 
