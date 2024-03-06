@@ -3,6 +3,7 @@
 <script>
   import { onMount } from 'svelte';
   import { fetchNews } from '$lib/newsService.js';
+  import Nav from '$lib/ui/Nav.svelte';
   import NewsCard from '$lib/NewsCard.svelte';
   import FomoCounter from '$lib/FomoCounter.svelte';
   // import NewsPocketbase from '$lib/NewsPocketbase.svelte';
@@ -66,19 +67,13 @@ Why it matters: This mission represents a pivotal step in expanding human presen
 
 </script>
 
+
+<!-- ------------------------------- HTML --------------------------------- -->
+<Nav />
+
 <!-- <NewsPocketbase /> -->
 
-<div class="container mx-auto px-4">
-<header class="flex justify-between items-center py-4">
-  <h1 class="text-md font-bold text-white">📡 spacefomo.com</h1>
-  <nav>
-    <ul class="flex space-x-4">
-  <li><a href="#" class="text-white hover:text-gray-300">Feed</a></li>
-      <li><a href="#" class="text-white hover:text-gray-300">About</a></li>
-      <li><a href="#" class="text-white hover:text-gray-300">Join</a></li>
-    </ul>
-  </nav>
-</header>
+<main class="container mx-auto px-4">
 
 <!-- hero -->
 <section class="hero mt-8 py-8 flex justify-center items-center">
@@ -133,7 +128,7 @@ Why it matters: This mission represents a pivotal step in expanding human presen
 </section>
 
 </div>
-</div>
+</main>
 
 <footer>footer</footer>
 

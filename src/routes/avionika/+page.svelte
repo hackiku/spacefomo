@@ -1,4 +1,4 @@
-<!-- /news/+page.svelte -->
+<!-- /avionika/+page.svelte -->
 <script>
 	import NewsPocketbase from '$lib/NewsPocketbase.svelte';
 	import FomoCounter from '$lib/FomoCounter.svelte';
@@ -6,4 +6,4 @@
 
 <!-- <NewsPocketbase /> -->
 
-<h1>ass</h1>
+<h1>Drop gdocs</h1>
