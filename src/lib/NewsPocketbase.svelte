@@ -1,3 +1,5 @@
+<!-- $lib/NewsPocketbase.svelte -->
+
 <script>
   import { onMount } from 'svelte';
   import { pb } from '$lib/pocketbase.js'; // Import the PocketBase client instance

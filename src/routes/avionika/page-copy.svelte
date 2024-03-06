@@ -2,13 +2,13 @@
 <script>
 	// import { pb , fetchAvionics } from '$lib/pocketbase.js';
   import { onMount } from 'svelte';
-	// import { fetchSingleAvionicsRecord } from '$lib/pocketbase.js';
+	import { fetchSingleAvionicsRecord } from '$lib/pocketbase.js';
   import Nav from '$lib/ui/Nav.svelte';
 
   let url = '';
   // let avionicsUrls = [];
 
-  // let avionicsRecord = null;
+	let avionicsRecord = null;
 
 
   // Function to handle form submission
@@ -73,8 +73,16 @@
 <section class="w-full flex flex-col items-center space-y-8">
 	<h3 class="text-2xl font-bold text-white">Drop all of the intel 👇</h3>
 
+	{#if avionicsRecord}
+  <div>
+    <p>Intel URL: <a href="{avionicsRecord.intel_url}" target="_blank">{avionicsRecord.intel_url}</a></p>
+  </div>
+{:else}
+  <p>No avionics record found or loading...</p>
+{/if}
 
-	<form on:submit={handleSubmit} class="flex flex-col space-y-4">
+
+	<!-- <form on:submit={handleSubmit} class="flex flex-col space-y-4">
 		<label for="upload-url" class="text-white">Upload URL</label>
 		<input type="text" id="upload-url" bind:value={url} class="px-4 py-2 border-2 border-gray-200 text-gray-900" placeholder="Enter URL" required>
 		<button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Submit URL</button>
@@ -82,7 +90,7 @@
 
 </section>
 
-	<!-- <section class="w-full flex flex-col items-center space-y-8">
+	<section class="w-full flex flex-col items-center space-y-8">
     <h3 class="text-2xl font-bold text-white">Avionics Intel URLs</h3>
     {#each avionicsUrls as { intel_url }}
       <a href="{intel_url}" target="_blank" class="text-blue-500 hover:text-blue-700">{intel_url}</a>
