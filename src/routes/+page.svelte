@@ -1,7 +1,9 @@
+<!-- homepage spacefomo -->
+
 <script>
   import { onMount } from 'svelte';
   import { fetchNews } from '$lib/newsService.js';
-  // import NewsCard from '$lib/NewsCard.svelte';
+  import NewsCard from '$lib/NewsCard.svelte';
   import FomoCounter from '$lib/FomoCounter.svelte';
   // import NewsPocketbase from '$lib/NewsPocketbase.svelte';
 
@@ -83,10 +85,10 @@ Why it matters: This mission represents a pivotal step in expanding human presen
   <div class="max-w-md text-center">
     <h2 class="text-4xl font-bold text-white mb-4">Space Race FOMO relief in 100 words a pop</h2>
     <p class="text-xl text-gray-500 mb-8">AI-digested space industry news you can't afford to miss.</p>
-    <form class="flex justify-center items-center">
+    <!-- <form class="flex justify-center items-center">
       <input type="email" placeholder="email away" class="border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300" />
       <button class="bg-brandBlue rounded-r text-white px-4 py-2 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">Subscribe</button>
-    </form>
+    </form> -->
   </div>
 </section>
 

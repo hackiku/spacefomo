@@ -1,6 +1,7 @@
 // src/hooks.server.js
 import PocketBase from 'pocketbase';
 
+const pb = new PocketBase
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
@@ -24,3 +25,5 @@ export async function handle({ event, resolve }) {
 
     return response;
 }
+
+
