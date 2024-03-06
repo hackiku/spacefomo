@@ -4,11 +4,11 @@
 
 <Nav />
 
-<main class="container mx-auto px-6 md:px-16 lg:px-26 xl:px-44 py-16 space-y-24">
+<main class="container mx-auto overflow-x-hidden px-6 md:px-16 lg:px-26 xl:px-44 py-16 space-y-24">
 	<!-- --------------------- HERO ------------------------------- -->
 	<section class="flex flex-col items-center space-y-6">
-		<h1 class="text-4xl font-bold text-white font-mono mb-4">avionika prodz</h1>
-		<h4 class="text-xl font-bold text-white mb-4">General Dynamics F-16 Fighting Falcon</h4>
+		<p class="text-xl font-mono">avionika prodzekt</p>
+		<h1 class="text-4xl font-bold text-white mb-4">F-16 Fighting Falcon</h1>
 	</section>
 	
 	<!-- --------------------- docs & drive btns ------------------------------- -->
@@ -27,22 +27,19 @@
 		</a>
 	</section>
 	
-	<!-- --------------------- UPLOAD ------------------------------- -->
-	<section class="flex flex-col items-center space-y-4">
-		<h3 class="text-xl font-bold text-white">Info itd.</h3>
-		
-		<!-- Upload URL Form -->
-		<form class="flex flex-col items-center space-y-2">
-			<label for="upload-url" class="text-white">Upload URL</label>
-			<input type="text" id="upload-url" class="px-4 py-2 border-2 border-gray-200 text-gray-900" placeholder="Enter URL">
-			<button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Upload URL</button>
-		</form>
-		
-		<!-- Upload File Form -->
-		<form class="flex flex-col items-center space-y-2">
-			<label for="upload-file" class="text-white">Upload File</label>
-			<input type="file" id="upload-file" class="px-4 py-2 border-2 border-gray-200 text-gray-900">
-			<button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Upload File</button>
-		</form>
-	</section>
+<!-- --------------------- UPLOAD ------------------------------- -->
+<section class="w-full flex flex-col items-center space-y-8">
+	<h3 class="text-2xl font-bold text-white">Drop all of the intel 👇</h3>
+
+	<div class="w-full max-w-md">
+			<div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0 md:space-x-4">
+					<div class="flex-1">
+							<input type="text" id="upload-url" class="w-full px-4 py-2 border-2 border-gray-200 text-gray-900" placeholder="Enter URL">
+					</div>
+					<button type="submit" class="mt-2 md:mt-0 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition-colors">Upload URL</button>
+			</div>
+	</div>
+
+</section>
+
 </main>
