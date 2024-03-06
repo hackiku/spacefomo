@@ -78,7 +78,7 @@ Why it matters: This mission represents a pivotal step in expanding human presen
 <!-- hero -->
 <section class="hero mt-8 py-8 flex justify-center items-center">
   <div class="max-w-md text-center">
-    <h2 class="text-4xl font-bold text-white mb-4">Space Race FOMO relief in 100 words a pop</h2>
+    <h1 class="text-4xl font-bold text-white mb-4">Space Race FOMO relief in 100 words a pop</h1>
     <p class="text-xl text-gray-500 mb-8">AI-digested space industry news you can't afford to miss.</p>
     <!-- <form class="flex justify-center items-center">
       <input type="email" placeholder="email away" class="border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300" />

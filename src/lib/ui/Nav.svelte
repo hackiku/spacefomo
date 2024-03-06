@@ -29,7 +29,7 @@ lg:mx-20 md:mx-20 mx-4 flex flex-col md:flex-row justify-between items-center p-
       </li>
       <li class="relative group">
         <a class="flex h-6 w-6 justify-center items-center relative" href="https://workspace.google.com/u/0/marketplace/app/autolatex_equations/850293439076" target="_blank" rel="noopener noreferrer">
-          <img src="ui/docs-logo.svg" alt="Docs" class="">
+          <img src="icons/docs-logo.svg" alt="Docs" class="">
           <div class="absolute hidden group-hover:flex justify-center items-center
             bg-brandBlue p-1 whitespace-nowrap"
             style="transform: rotate(-20deg);" >
