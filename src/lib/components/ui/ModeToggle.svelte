@@ -1,3 +1,5 @@
+<!-- $lib/components/ui/ModeToggle.svelte -->
+ 
 <script lang="ts">
   import Sun from "lucide-svelte/icons/sun";
   import Moon from "lucide-svelte/icons/moon";
