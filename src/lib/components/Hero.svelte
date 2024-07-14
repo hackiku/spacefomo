@@ -17,6 +17,6 @@
       placeholder="Your email" 
       class="w-full md:w-auto p-2 rounded-lg border"
     />
-    <Button class="text-lg w-full md:w-auto">Stay Tuned</Button>
+    <Button class="text-lg w-full md:w-auto">Don't Miss Out</Button>
   </form>
 </section>
