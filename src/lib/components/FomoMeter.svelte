@@ -56,6 +56,12 @@
   });
 </script>
 
+<div class="absolute bottom-10 left-10 flex gap-6">
+	<img class="w-36 h-36" src="assets/Altimeter_marekcel.svg" alt="">
+	<img class="w-36 h-36 filter invert" src="assets/Altimeter.svg" alt="">
+	<img class="w-36 h-36" src="assets/3-Pointer_Altimeter.svg" alt="">
+</div>
+
 <div class="absolute top-0 right-0 m-4 p-4 border border-gray-500 rounded-lg">
   <section class="text-center mt-8">
     <h1 class="text-2xl font-bold mb-4">Today's FOMO Score</h1>
