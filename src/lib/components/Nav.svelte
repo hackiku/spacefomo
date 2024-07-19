@@ -13,6 +13,6 @@
 		Spacefomo
 		</div></a>
   <a href="/feed" class="text-gray-400 hover:text-white text-lg">Feed</a>
-  <Button variant="outline" class="text-lg">Start</Button>
+  <Button class="text-lg">Start</Button>
   <ModeToggle />
 </nav>
