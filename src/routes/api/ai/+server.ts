@@ -16,8 +16,8 @@ export const GET = async () => {
 			model: "gpt-4o-mini",
 		});
 
-		console.log(completion.choices[0]);
-		return json({ success: true, message: 'Check the server console for the OpenAI response.' });
+		// Return the actual OpenAI response to the client
+		return json(completion);
 	} catch (error) {
 		console.error('Error fetching OpenAI response:', error);
 		return json({ success: false, error: error.message });

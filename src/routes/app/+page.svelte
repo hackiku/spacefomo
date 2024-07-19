@@ -5,9 +5,9 @@
 
     async function testOpenAI() {
         try {
-            const res = await fetch('/app/api/openai-test');
+            const res = await fetch('/api/ai');
             const data = await res.json();
-            responseMessage = data.message;
+            responseMessage = JSON.stringify(data, null, 2); // Format JSON with indentation
         } catch (error) {
             console.error('Error calling OpenAI test endpoint:', error);
             responseMessage = 'Error occurred while calling the OpenAI test endpoint.';
@@ -22,6 +22,6 @@
 
     <div>
         <h2 class="text-xl">Response:</h2>
-        <pre class="bg-gray-800 p-4">{responseMessage}</pre>
+        <pre class="bg-gray-800 text-white p-4">{responseMessage}</pre>
     </div>
 </main>
