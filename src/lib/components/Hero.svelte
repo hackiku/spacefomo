@@ -9,12 +9,12 @@
     Space craze FOMO relief
     <span class="font-mono block mt-2 text-2xl sm:text-3xl">in ~100 words a pop</span>
   </h1>
-  <form class="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-4 sm:space-y-0 w-full max-w-md">
+  <!-- <form class="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-4 sm:space-y-0 w-full max-w-md">
     <input 
       type="email" 
       placeholder="Email" 
       class="w-full sm:w-2/3 py-3 px-6 rounded-full border text-lg"
     />
     <Button class="text-xl h-12 py-3 px-6 rounded-full w-full sm:w-1/3">Stay Spacey</Button>
-  </form>
+  </form> -->
 </section>
