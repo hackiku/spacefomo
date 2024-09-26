@@ -1,18 +1,13 @@
 <!-- $lib/components/Nav.svelte -->
- 
+
 <script lang="ts">
   import ModeToggle from "$lib/components/ui/ModeToggle.svelte";
-  import { Button } from "$lib/components/ui/button/index.ts";
 </script>
 
-<nav class="mt-4 mx-auto rounded-full px-12 py-2 border border-gray-500 flex justify-center items-center space-x-4 w-max">
-  <!-- <a href="/" class="text-lg font-bold">📡 SpaceFOMO</a> -->
-  <a href="/" class="text-lg font-bold flex mr-10">
-		<img src="logo.png" class="w-8 mr-2">
-		<div>
-		Spacefomo
-		</div></a>
-  <a href="/feed" class="text-gray-400 hover:text-white text-lg">Feed</a>
-  <Button class="text-lg">Start</Button>
+<nav class="mt-8 mx-auto flex justify-between items-center max-w-7xl px-4 sm:px-6 lg:px-8">
+  <a href="/" class="text-lg text-gray-500 font-thin flex items-center">
+    <span class="mr-2" aria-hidden="true">🛰️</span>
+    <span>Spacefomo</span>
+  </a>
   <ModeToggle />
 </nav>

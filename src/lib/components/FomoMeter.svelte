@@ -1,109 +1,64 @@
 <!-- $lib/components/FomoMeter.svelte -->
-
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
-  import { writable, derived } from 'svelte/store';
-  import Chart from 'chart.js/auto';
+  import { onMount, onDestroy } from 'svelte';
 
-  export let remainingTime: number;
-  export let currentScore: number;
+  export let initialScore = 86;
+  export let initialTime = 15950;
 
-  const endTime = writable(Date.now() + remainingTime);
+  let score = initialScore;
+  let timeRemaining = initialTime;
 
-  // Derived store for countdown timer
-  const timeRemaining = derived(
-    endTime,
-    $endTime => $endTime - Date.now()
-  );
+  let radius = 120;
+  let circumference = radius * Math.PI;
+  $: dashOffset = circumference - (score / 100) * circumference;
 
-  let chart;
-
-  // Function to initialize the gauge chart
-  function initChart() {
-    const ctx = document.getElementById('fomoMeter').getContext('2d');
-    chart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [currentScore, 100 - currentScore],
-          backgroundColor: ['#ff0000', '#e0e0e0']
-        }]
-      },
-      options: {
-        circumference: Math.PI,
-        rotation: Math.PI,
-        cutout: '70%',
-        plugins: {
-          tooltip: { enabled: false }
-        }
-      }
-    });
+  function formatTime(time: number): string {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+    return `${hours}h ${minutes}m ${seconds}s`;
   }
 
-  // Function to update the gauge chart
-  function updateChart() {
-    chart.data.datasets[0].data = [currentScore, 100 - currentScore];
-    chart.update();
-  }
+  let interval: number;
 
   onMount(() => {
-    initChart();
-    const interval = setInterval(() => {
-      updateChart();
+    interval = setInterval(() => {
+      timeRemaining = Math.max(0, timeRemaining - 1);
     }, 1000);
+  });
 
-    return () => clearInterval(interval);
+  onDestroy(() => {
+    clearInterval(interval);
   });
 </script>
 
-<div class="absolute bottom-10 left-10 flex gap-6">
-	<img class="w-36 h-36" src="assets/Altimeter_marekcel.svg" alt="">
-	<img class="w-36 h-36 filter invert" src="assets/Altimeter.svg" alt="">
-	<img class="w-36 h-36" src="assets/3-Pointer_Altimeter.svg" alt="">
-</div>
-
-<div class="absolute top-0 right-0 m-4 p-4 border border-gray-500 rounded-lg">
-  <section class="text-center mt-8">
-    <h1 class="text-2xl font-bold mb-4">Today's FOMO Score</h1>
-    <div class="relative gauge-wrapper border border-gray-500 rounded-full">
-      <canvas id="fomoMeter" width="200" height="100"></canvas>
-      <div class="gauge-content">
-        <span class="text-4xl font-bold">{currentScore}</span>
-        <span class="text-lg">FOMO Score</span>
-      </div>
+<div class="flex flex-col items-center justify-center">
+  <div class="relative w-64 h-32 mb-8">
+    <svg class="w-full h-full" viewBox="0 0 256 128">
+      <path
+        d="M8 128 A 120 120 0 0 1 248 128"
+        fill="none"
+        stroke="#1f2937"
+        stroke-width="16"
+        stroke-opacity="0.3"
+      />
+      <path
+        d="M8 128 A 120 120 0 0 1 248 128"
+        fill="none"
+        stroke="#ef4444"
+        stroke-width="16"
+        stroke-dasharray={circumference}
+        stroke-dashoffset={dashOffset}
+        stroke-linecap="round"
+      />
+    </svg>
+    <div class="absolute inset-0 flex flex-col items-center justify-center">
+      <span class="text-5xl font-bold text-gray-800">{score}</span>
+      <span class="text-md text-gray-600">FOMO Score Today</span>
     </div>
-    <div class="mt-4">
-      <h2 class="text-lg font-bold">Next update in:</h2>
-      <div>
-        {#if $timeRemaining > 0}
-          <p class="text-2xl font-bold">
-            {Math.floor($timeRemaining / (1000 * 60 * 60)) % 24}h 
-            {Math.floor($timeRemaining / (1000 * 60)) % 60}m 
-            {Math.floor($timeRemaining / 1000) % 60}s
-          </p>
-        {:else}
-          <p class="text-2xl font-bold">Updating now...</p>
-        {/if}
-      </div>
-    </div>
-  </section>
+  </div>
+  <div class="text-center">
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">Next update in:</h2>
+    <p class="text-2xl font-bold text-gray-800">{formatTime(timeRemaining)}</p>
+  </div>
 </div>
-
-<style>
-  .gauge-wrapper {
-    position: relative;
-    width: 200px;
-    height: 100px;
-  }
-  .gauge-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
