@@ -7,18 +7,23 @@
   import { spring } from 'svelte/motion';
   import { fade, fly } from 'svelte/transition';
   
-  export interface NewsItem {
-    id: string;
-    title: string;
-    summary: string;
-    tldr: string;
-    score: number;
-    url: string;
-    tags: string[];
-    source: string;
-    readTime: string;
-    dataPoints: { label: string; value: string }[];
-  }
+	export interface NewsItem {
+		id: string;
+		url: string;
+		title: string;
+		source: string;
+		date: string;
+		
+		// Optional properties
+		summary?: string;
+		tldr?: string;
+		score?: number;
+		tags?: string[];
+		readTime?: string;
+		dataPoints?: { label: string; value: string }[];
+		author?: string;
+		publication?: string;
+	}
 
   export let item: NewsItem;
   
