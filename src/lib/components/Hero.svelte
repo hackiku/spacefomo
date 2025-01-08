@@ -4,7 +4,7 @@
   import WeeklyFomo from '../features/fomo/WeeklyFomo.svelte';
 </script>
 
-<div class="relative py-10">
+<div class="relative py-10 md:py-16">
   <!-- Background accent lines -->
   <div class="absolute inset-0 overflow-hidden">
     <div class="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-500/20 to-transparent" />
@@ -21,23 +21,22 @@
         
         <!-- Title with glowing effect -->
         <h1 class="relative mb-8">
-          <span class="absolute inset-0 text-6xl font-bold text-blue-500/20 blur-sm">
+          <!-- <span class="absolute inset-0 text-6xl font-bold text-blue-500/20 blur-sm">
             Space race weekly missing out relief
-          </span>
-          <span class="relative text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-100 via-blue-300 to-blue-100 leading-tight tracking-tight">
+          </span> -->
+          <span class="relative text-6xl font-regular bg-clip-text text-transparent bg-gradient-to-r from-blue-100 via-blue-300 to-blue-100 leading-tight tracking-tight">
             Space race weekly missing out relief
           </span>
         </h1>
 
-        <!-- Subtitle with terminal style -->
-        <p class="relative text-2xl text-blue-500/70 leading-relaxed mb-12 font-mono">
-          <span class="text-blue-400">>></span> Hottest news <span class="text-blue-300">1 minute</span> a pop.
-        </p>
 
         <!-- Email form container with extra styling -->
         <div class="relative max-w-md">
           <div class="absolute -inset-4 bg-blue-500/5" />
           <EmailForm />
+					<p class="relative text-center text-2xl text-blue-500/70 leading-relaxed mb-6 font-mono">
+						<span class="text-blue-400">&gt;&gt;</span> news <span class="text-blue-300">100 words</span> a pop.
+					</p>
         </div>
       </div>
 

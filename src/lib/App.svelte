@@ -46,7 +46,12 @@
     <WeekSelector />
     
     <!-- Featured Card -->
-    <section class="container py-12">
+    <section class="container py-4">
+			        <!-- Subtitle with terminal style -->
+        <!-- <p class="relative text-center text-2xl text-blue-500/70 leading-relaxed mb-6 font-mono">
+          <span class="text-blue-400">&gt;&gt;</span> news <span class="text-blue-300">1 minute</span> a pop.
+        </p> -->
+
       <Card 
         item={featuredNews} 
         onClick={handleCardClick}
