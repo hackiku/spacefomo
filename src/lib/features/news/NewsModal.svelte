@@ -1,40 +1,15 @@
-<!-- $lib/components/NewsModal.svelte -->
-
+<!-- src/lib/features/news/NewsModal.svelte -->
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
   import { ExternalLink, X } from 'lucide-svelte';
   import { Button } from "$lib/components/ui/button";
-  import { spring } from 'svelte/motion';
   import { fade, fly } from 'svelte/transition';
-  
-	export interface NewsItem {
-		id: string;
-		url: string;
-		title: string;
-		source: string;
-		date: string;
-		
-		// Optional properties
-		summary?: string;
-		tldr?: string;
-		score?: number;
-		tags?: string[];
-		readTime?: string;
-		dataPoints?: { label: string; value: string }[];
-		author?: string;
-		publication?: string;
-	}
+  import FomoScore from '$lib/features/fomo/FomoScore.svelte';
+  import type { NewsItem } from '$lib/types';
 
   export let item: NewsItem;
   
   const dispatch = createEventDispatcher();
-  
-  let sliderValue = spring(item.score, {
-    stiffness: 0.1,
-    damping: 0.6
-  });
-  let isDragging = false;
-  let originalScore = item.score;
 
   function close() {
     dispatch('close');
@@ -52,22 +27,6 @@
     }
   }
 
-  function updateScore(event: MouseEvent) {
-    const rect = (event.currentTarget as HTMLDivElement).getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const newValue = Math.round((x / rect.width) * 100);
-    sliderValue.set(Math.max(0, Math.min(100, newValue)));
-  }
-
-  function startDragging() {
-    isDragging = true;
-  }
-
-  function stopDragging() {
-    isDragging = false;
-    dispatch('scoreUpdate', { newScore: $sliderValue });
-  }
-
   onMount(() => {
     document.addEventListener('keydown', handleKeydown);
     return () => {
@@ -76,71 +35,82 @@
   });
 </script>
 
-<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" on:click={handleOutsideClick}>
-  <div class="bg-gray-800 w-full max-w-3xl rounded-lg shadow-xl overflow-hidden" in:fly="{{ y: 50, duration: 500 }}" out:fade>
-    <div class="p-6">
-      <div class="flex justify-between items-start mb-4">
-        <h2 class="text-2xl font-bold">{item.title}</h2>
-        <button on:click={close} class="text-gray-400 hover:text-white">
-          <X size={24} />
+<div 
+  class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" 
+  on:click={handleOutsideClick}
+>
+  <div 
+    class="bg-zinc-900 w-full max-w-2xl rounded-2xl border-2 border-zinc-800/50 overflow-hidden" 
+    in:fly="{{ y: 20, duration: 300 }}" 
+    out:fade
+  >
+    <div class="p-8">
+      <!-- Header -->
+      <div class="flex justify-between items-start gap-8 mb-8">
+        <h2 class="text-3xl font-medium text-zinc-100 tracking-tight leading-tight">
+          {item.title}
+        </h2>
+        <button 
+          on:click={close}
+          class="p-2 text-zinc-400 hover:text-zinc-200 rounded-lg hover:bg-zinc-800/50 transition-colors"
+        >
+          <X class="w-5 h-5" />
         </button>
       </div>
       
-      <div class="mb-4">
-        <p class="text-purple-400 font-semibold mb-2">TLDR</p>
-        <p>{item.tldr}</p>
-      </div>
+      <!-- Summary -->
+      {#if item.summary}
+        <p class="text-xl text-zinc-300 leading-relaxed mb-8">
+          {item.summary}
+        </p>
+      {/if}
       
-      <div class="mb-4">
-        <p>{item.summary}</p>
-      </div>
-      
-      <div class="flex flex-wrap gap-2 mb-4">
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 mb-8">
         {#each item.tags as tag}
-          <span class="bg-gray-700 bg-opacity-40 text-sm px-2 py-1 rounded">{tag}</span>
+          <span class="px-3 py-1.5 text-sm bg-zinc-800/50 text-zinc-400 
+                     rounded-full border border-zinc-700/50">
+            {tag}
+          </span>
         {/each}
       </div>
       
-      <div class="text-sm text-gray-400 mb-4">
-        {item.readTime} read time • From {item.source}
-      </div>
-      
-      <div class="flex items-center space-x-4">
-        <Button on:click={() => window.open(item.url, '_blank')}>
-          <ExternalLink size={16} class="mr-2" />
-          Read post
-        </Button>
-        
-        <div class="flex-1 relative h-12 bg-gray-700 rounded-full overflow-hidden cursor-pointer"
-             on:mousedown={startDragging}
-             on:mouseup={stopDragging}
-             on:mouseleave={stopDragging}
-             on:mousemove={isDragging ? updateScore : null}>
-          <div class="absolute inset-0 bg-white opacity-20" style="width: {originalScore}%"></div>
-          <div class="absolute inset-0 bg-red-500" style="width: {$sliderValue}%"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-2xl font-bold">{Math.round($sliderValue)}</span>
+      <!-- Metadata & Actions -->
+      <div class="flex items-center justify-between gap-6 pt-6 border-t border-zinc-800/50">
+        <div class="flex items-center gap-6">
+          <div class="text-sm">
+            <div class="text-zinc-400 mb-1">{item.source}</div>
+            <div class="text-zinc-500">{item.readTime}</div>
+          </div>
+          <div class="border-l border-zinc-800/50 pl-6">
+            <FomoScore score={item.score} />
           </div>
         </div>
+        
+        <Button 
+          variant="outline"
+          class="gap-2 text-base bg-zinc-800/50 border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600/50"
+          on:click={() => window.open(item.url, '_blank')}
+        >
+          <ExternalLink class="w-4 h-4" />
+          Read More
+        </Button>
       </div>
     </div>
     
-    <div class="bg-gray-700 bg-opacity-20 p-6">
-      <h3 class="text-lg font-semibold mb-4">Key Data Points</h3>
-      <div class="grid grid-cols-2 gap-4">
-        {#each item.dataPoints as point}
-          <div>
-            <p class="text-sm text-gray-400">{point.label}</p>
-            <p class="text-lg font-semibold text-blue-400">{point.value}</p>
-          </div>
-        {/each}
+    <!-- Key Points -->
+    {#if item.dataPoints}
+      <div class="bg-zinc-800/30 p-8 border-t border-zinc-800/50">
+        <h3 class="text-lg font-medium text-zinc-300 mb-6">Key Points</h3>
+        <div class="grid grid-cols-2 gap-6">
+          {#each item.dataPoints as point}
+            <div>
+              <p class="text-sm text-zinc-400 mb-1">{point.label}</p>
+              <p class="text-lg font-medium text-zinc-200">{point.value}</p>
+            </div>
+          {/each}
+        </div>
       </div>
-    </div>
+    {/if}
   </div>
 </div>
-
-<style>
-  .bg-red-500 {
-    background-color: #ff4500;
-  }
-</style>

@@ -30,10 +30,8 @@
   }
 </script>
 
-<div class="w-full py-16 text-center">
-  <div class="max-w-4xl mx-auto px-4">
-    <h2 class="text-xl text-zinc-400 mb-8">This Week in Space</h2>
-    
+<div class="w-full text-center">
+  <div class="max-w-4xl mx-auto px-4">    
     <div class="flex justify-between items-center gap-4 overflow-x-auto pb-4">
       {#each weekDates as date, i}
         <button

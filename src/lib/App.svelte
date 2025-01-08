@@ -3,9 +3,8 @@
   import Hero from './components/Hero.svelte';
   import WeekSelector from './components/WeekSelector.svelte';
   import Card from './features/news/Card.svelte';
-  // import NewsFeed from './features/news/NewsFeed.svelte';
-  import StyleSwitcher from './components/StyleSwitcher.svelte';
-  import { mockNewsItems } from './data/newsData';
+  import NewsModal from './features/news/NewsModal.svelte';
+  import type { NewsItem } from './types';
   
   // Example news item for the manual card
   const featuredNews = {
@@ -17,24 +16,44 @@
     url: '#',
     score: 95,
     date: '2024-01-08',
-    tags: ['SpaceX', 'Starship', 'Launch']
+    tags: ['SpaceX', 'Starship', 'Launch'],
+    dataPoints: [
+      { label: 'Flight Duration', value: '1h 30m' },
+      { label: 'Max Altitude', value: '250 km' },
+      { label: 'Landing Accuracy', value: '< 100m' },
+      { label: 'Reuse Timeline', value: '2 weeks' }
+    ]
   };
+
+  let selectedItem: NewsItem | null = null;
+
+  function handleCardClick(item: NewsItem) {
+    selectedItem = item;
+  }
+
+  function handleModalClose() {
+    selectedItem = null;
+  }
 </script>
 
 <main class="min-h-screen bg-zinc-900 text-zinc-100">
   <!-- Main content -->
   <Hero />
-  <WeekSelector /> 
+  <WeekSelector />
+  
   <!-- Featured Card -->
   <section class="max-w-3xl mx-auto px-4 py-12">
-    <Card item={featuredNews} />
+    <Card 
+      item={featuredNews} 
+      onClick={handleCardClick}
+    />
   </section>
   
-  <!-- Original News Feed with style switching -->
-  <section class="max-w-3xl mx-auto px-4 pb-24">
-    <div class="border-t border-zinc-800 pt-12">
-      <!-- <NewsFeed newsItems={mockNewsItems} /> -->
-      <!-- <StyleSwitcher /> -->
-    </div>
-  </section>
+  <!-- Modal -->
+  {#if selectedItem}
+    <NewsModal 
+      item={selectedItem}
+      on:close={handleModalClose}
+    />
+  {/if}
 </main>
