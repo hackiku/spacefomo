@@ -1,50 +1,104 @@
-<!-- $lib/features/fomo/WeeklyFomo.svelte -->
+<!-- src/lib/features/fomo/WeeklyFomo.svelte -->
 <script lang="ts">
-  import FomoBar from './FomoBar.svelte';
-  // import type { FomoScore } from '$lib/types';
+  import { fomoStore, wellSteepness } from '$lib/stores/fomoStore';
+  import { onMount } from 'svelte';
   
-  // Weekly data structure
-  // export let weeklyScores: FomoScore[] = [];
-  export let weeklyScores = [];
-  export let currentWeekScore = 86;
-  export let nextUpdateTime = 604800; // 1 week in seconds
-
-  // Generate week dates (Sunday to Saturday)
-  let weekDates = Array.from({length: 7}, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - date.getDay() + i);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric'
-    });
-  });
-
-  function handleDateSelected(event: CustomEvent<string>) {
-    console.log('Selected date:', event.detail);
-    // TODO: Update visualization based on selected date
+  export let width = 400;
+  export let height = 300;
+  
+  let container: HTMLDivElement;
+  let points: Array<{x: number, y: number}> = [];
+  
+  // Calculate grid points based on FOMO score
+  $: {
+    const steepness = $wellSteepness;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const gridSize = 20;
+    
+    points = [];
+    for (let x = 0; x <= width; x += gridSize) {
+      for (let y = 0; y <= height; y += gridSize) {
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const distortion = Math.min(30, (distance * steepness) / 5);
+        const angle = Math.atan2(dy, dx);
+        
+        points.push({
+          x: x + Math.cos(angle) * distortion,
+          y: y + Math.sin(angle) * distortion
+        });
+      }
+    }
   }
 </script>
 
-<div class="relative">
-  <!-- Vaporwave-inspired background elements -->
-  <div class="absolute inset-0 bg-gradient-to-r from-[#756BFF]/5 to-[#FF6AD5]/5">
-    <div class="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-    <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-[#756BFF]/50 via-[#FF6AD5]/50 to-[#26C6DA]/50"></div>
-  </div>
-
-  <!-- Content -->
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="text-center mb-8">
-      <h2 class="text-2xl font-bold text-white mb-2">Weekly Space FOMO Index</h2>
-      <p class="text-[#FF6AD5] font-mono">Tracking collective space anxiety since 2024</p>
-    </div>
-
-    <FomoBar 
-      currentScore={currentWeekScore}
-      remainingTime={nextUpdateTime}
-      dates={weekDates}
-      on:dateSelected={handleDateSelected}
+<div class="relative" bind:this={container}>
+  <svg
+    {width}
+    {height}
+    class="w-full h-full"
+  >
+    <!-- Grid Lines -->
+    {#each points as point, i}
+      <g>
+        {#if i % (width/20 + 1) !== 0 && i > 0}
+          <line
+            x1={points[i-1].x}
+            y1={points[i-1].y}
+            x2={point.x}
+            y2={point.y}
+            stroke="#80808015"
+            stroke-width="1"
+          />
+        {/if}
+        {#if i >= width/20 + 1}
+          <line
+            x1={points[i-(width/20 + 1)].x}
+            y1={points[i-(width/20 + 1)].y}
+            x2={point.x}
+            y2={point.y}
+            stroke="#80808015"
+            stroke-width="1"
+          />
+        {/if}
+      </g>
+    {/each}
+    
+    <!-- Well Center -->
+    <circle
+      cx={width/2}
+      cy={height/2}
+      r={40 * $wellSteepness}
+      class="fill-blue-500/50"
     />
+  </svg>
+  
+  <!-- FOMO Score Display -->
+  <div 
+    class="absolute inset-0 flex items-center justify-center text-center"
+    style="pointer-events: none;"
+  >
+    <div>
+      <div class="text-5xl font-bold text-zinc-100">
+        {$fomoStore.currentScore}
+      </div>
+      <div class="text-sm text-zinc-400 mt-2">
+        FOMO Level
+      </div>
+    </div>
   </div>
 </div>
+
+<style>
+  svg {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease-out;
+  }
+  
+  svg:hover {
+    transform: rotate(180deg);
+  }
+</style>

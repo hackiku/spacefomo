@@ -1,7 +1,7 @@
 <!-- src/lib/components/Hero.svelte -->
 <script lang="ts">
   import EmailForm from './cta/EmailForm.svelte';
-  import GravityWell from './GravityWell.svelte';
+  import WeeklyFomo from '../features/fomo/WeeklyFomo.svelte';
 </script>
 
 <div class="relative flex items-start py-12 overflow-hidden">
@@ -38,7 +38,7 @@
       <!-- Right Animation -->
       <div class="relative col-span-12 lg:col-span-3 lg:col-start-9 lg:mt-auto">
         <div class="w-full max-w-sm mx-auto">
-          <GravityWell />
+          <WeeklyFomo />
         </div>
       </div>
     </div>
