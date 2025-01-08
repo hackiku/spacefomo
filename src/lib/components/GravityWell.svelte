@@ -1,37 +1,21 @@
 <!-- src/lib/components/GravityWell.svelte -->
 <script lang="ts">
-  import { fomoStore, wellSteepness } from '$lib/stores/fomoStore';
   import { onMount } from 'svelte';
+  import { fomoStore, wellSteepness, wellDepth, wellSize } from '$lib/stores/fomoStore';
   
   let container: HTMLDivElement;
-  let width: number;
-  let height: number;
-  let points: Array<{x: number, y: number}> = [];
+  let width = 0;
+  let height = 0;
   
-  $: {
-    const steepness = $wellSteepness;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const gridSize = Math.max(20, Math.min(width, height) / 20);
-    
-    points = [];
-    for (let x = -gridSize; x <= width + gridSize; x += gridSize) {
-      for (let y = -gridSize; y <= height + gridSize; y += gridSize) {
-        const dx = x - centerX;
-        const dy = y - centerY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        const distortion = Math.min(30, (distance * steepness) / 5);
-        const angle = Math.atan2(dy, dx);
-        
-        points.push({
-          x: x + Math.cos(angle) * distortion,
-          y: y + Math.sin(angle) * distortion
-        });
-      }
-    }
-  }
-
+  type GridCell = {
+    x: number;
+    y: number;
+    z: number;
+    opacity: number;
+  };
+  
+  let cells: GridCell[][] = [];
+  
   onMount(() => {
     const observer = new ResizeObserver(entries => {
       const entry = entries[0];
@@ -42,58 +26,70 @@
     observer.observe(container);
     return () => observer.disconnect();
   });
+  
+  $: {
+    if (width && height) {
+      const gridSize = 20;
+      const rows = Math.ceil(height / gridSize) + 4;
+      const cols = Math.ceil(width / gridSize) + 4;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      
+      cells = Array(rows).fill(0).map((_, rowIndex) => 
+        Array(cols).fill(0).map((_, colIndex) => {
+          const x = colIndex * gridSize - gridSize * 2;
+          const y = rowIndex * gridSize - gridSize * 2;
+          const dx = x - centerX;
+          const dy = y - centerY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const maxRadius = Math.min(width, height) * $wellSize;
+          const falloff = Math.max(0, 1 - distance / maxRadius);
+          const distortion = falloff * $wellDepth;
+          
+          return {
+            x: x + (dx / distance) * distortion * $wellSteepness || 0,
+            y: y + (dy / distance) * distortion * $wellSteepness || 0,
+            z: distortion,
+            opacity: Math.min(0.15, distortion / 200)
+          };
+        })
+      );
+    }
+  }
 </script>
 
-<div 
-  class="fixed inset-0 -z-10 px-8 overflow-hidden"
-  style="transform: rotate(-12deg) scale(1.2);"
->
-  <div class="w-full h-full" bind:this={container}>
-    <svg
-      viewBox="0 0 {width} {height}"
-      class="w-full h-full"
-      preserveAspectRatio="xMidYMid slice"
+<div class="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-b from-black to-blue-950">
+  <div 
+    class="relative w-full h-full"
+    style="perspective: 1000px; transform-style: preserve-3d;"
+    bind:this={container}
+  >
+    <div 
+      class="absolute inset-0"
+      style="transform: rotateX(60deg) translateZ(-100px); transform-style: preserve-3d;"
     >
-      <defs>
-        <radialGradient id="wellGradient" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" style="stop-color: var(--well-color-center, hsl(var(--primary))); stop-opacity: 0.15" />
-          <stop offset="100%" style="stop-color: var(--well-color-edge, hsl(var(--primary))); stop-opacity: 0.05" />
-        </radialGradient>
-      </defs>
-
-      <!-- Grid Lines -->
-      {#each points as point, i}
-        <g>
-          {#if i % (Math.ceil(width/20) + 1) !== 0 && i > 0}
-            <line
-              x1={points[i-1].x}
-              y1={points[i-1].y}
-              x2={point.x}
-              y2={point.y}
-              stroke="var(--grid-color, hsl(var(--muted-foreground) / 0.1))"
-              stroke-width="1"
+      {#each cells as row, rowIndex}
+        <div class="flex" style="transform-style: preserve-3d;">
+          {#each row as cell, colIndex}
+            <div
+              class="border border-blue-500/20"
+              style="
+                width: 20px;
+                height: 20px;
+                transform: translate3d({cell.x}px, {cell.y}px, {cell.z}px);
+                transition: transform 0.3s ease-out;
+                background-color: rgba(59, 130, 246, {cell.opacity});
+              "
             />
-          {/if}
-          {#if i >= Math.ceil(width/20) + 1}
-            <line
-              x1={points[i-(Math.ceil(width/20) + 1)].x}
-              y1={points[i-(Math.ceil(width/20) + 1)].y}
-              x2={point.x}
-              y2={point.y}
-              stroke="var(--grid-color, hsl(var(--muted-foreground) / 0.1))"
-              stroke-width="1"
-            />
-          {/if}
-        </g>
+          {/each}
+        </div>
       {/each}
-      
-      <!-- Well Center -->
-      <circle
-        cx={width/2}
-        cy={height/2}
-        r={80 * $wellSteepness}
-        fill="url(#wellGradient)"
-      />
-    </svg>
+    </div>
   </div>
 </div>
+
+<style>
+  div {
+    transform-style: preserve-3d;
+  }
+</style>

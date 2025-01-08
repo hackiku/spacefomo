@@ -7,7 +7,6 @@
   import GravityWell from './components/GravityWell.svelte';
   import type { NewsItem } from './types';
   
-  // Example news item for the manual card
   const featuredNews = {
     id: 'featured-1',
     title: 'SpaceX successfully lands Starship after orbital test flight',
@@ -38,26 +37,34 @@
 </script>
 
 <!-- Background Effect -->
-<GravityWell />
+<div class="relative overflow-hidden min-h-screen">
+  <GravityWell />
 
-<main>
-  <!-- Main content -->
-  <Hero />
-  <WeekSelector />
-  
-  <!-- Featured Card -->
-  <section class="container py-12">
-    <Card 
-      item={featuredNews} 
-      onClick={handleCardClick}
-    />
-  </section>
-  
-  <!-- Modal -->
-  {#if selectedItem}
-    <NewsModal 
-      item={selectedItem}
-      on:close={handleModalClose}
-    />
-  {/if}
-</main>
+  <main class="relative z-10">
+    <!-- Main content -->
+    <Hero />
+    <WeekSelector />
+    
+    <!-- Featured Card -->
+    <section class="container py-12">
+      <Card 
+        item={featuredNews} 
+        onClick={handleCardClick}
+      />
+    </section>
+    
+    <!-- Modal -->
+    {#if selectedItem}
+      <NewsModal 
+        item={selectedItem}
+        on:close={handleModalClose}
+      />
+    {/if}
+  </main>
+</div>
+
+<style>
+  :global(html) {
+    overflow-x: hidden;
+  }
+</style>

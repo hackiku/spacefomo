@@ -1,7 +1,7 @@
 <!-- src/lib/components/Nav.svelte -->
 <script lang="ts">
   import ModeToggle from "$lib/components/ui/ModeToggle.svelte";
-  import { Rocket } from 'lucide-svelte';
+  import { Satellite } from 'lucide-svelte';
   let isMenuOpen = false;
 </script>
 
@@ -11,7 +11,8 @@
       <!-- Logo -->
       <a href="/" class="flex items-center space-x-3">
         <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-          <Rocket class="w-6 h-6 text-primary transform -rotate-45" />
+          <Satellite class="w-6 h-6 text-primary transform -rotate-45" />
+					<!-- 🛰️ -->
         </div>
         <span class="text-lg font-medium">Space FOMO</span>
       </a>

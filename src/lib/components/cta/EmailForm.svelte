@@ -36,67 +36,86 @@
     }
   }
 
-  // Reset error on email change
   $: if (email) error = '';
 </script>
 
 {#if !success}
   <form 
     on:submit|preventDefault={handleSubmit}
-    class="relative"
+    class="relative group"
   >
-    <!-- Input group with gradient border -->
-    <div class="group relative">
-      <div 
-        class="absolute -inset-0.5 bg-gradient-to-r from-blue-500/50 to-purple-500/50 rounded-lg blur opacity-30 
-               group-hover:opacity-50 transition duration-500"
-      />
-      <div class="relative flex items-center gap-2 bg-zinc-900 rounded-lg p-1">
+    <!-- Ambient glow -->
+    <div class="absolute -inset-1 bg-blue-500/20 blur-xl group-hover:bg-blue-500/30 
+                transition-all duration-500 opacity-0 group-hover:opacity-100" />
+    
+    <!-- Main container -->
+    <div class="relative bg-black border border-blue-500/30">
+      <!-- Corner accents -->
+      <div class="absolute top-0 left-0 w-4 h-4 border-l border-t border-blue-500" />
+      <div class="absolute top-0 right-0 w-4 h-4 border-r border-t border-blue-500" />
+      <div class="absolute bottom-0 left-0 w-4 h-4 border-l border-b border-blue-500" />
+      <div class="absolute bottom-0 right-0 w-4 h-4 border-r border-b border-blue-500" />
+      
+      <div class="flex items-center p-1">
         <input
           type="email"
           bind:value={email}
           placeholder="your@email.com"
-          class="flex-1 bg-transparent px-4 py-2 text-zinc-100 placeholder-zinc-500 
-                 focus:outline-none"
+          class="flex-1 bg-transparent px-4 py-3 text-blue-100 placeholder-blue-900
+                 focus:outline-none font-mono"
           disabled={loading}
         />
+        
         <Button
           type="submit"
           variant="default"
-          class="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 
-                 text-zinc-100 shadow-lg flex items-center gap-2"
+          class="relative group/btn bg-blue-950 hover:bg-blue-900 border border-blue-500/50
+                 text-blue-400 hover:text-blue-300 shadow-lg flex items-center gap-2 px-6"
           disabled={loading}
         >
-          {#if loading}
-            <Loader2 class="w-4 h-4 animate-spin" />
-            <span>Launching...</span>
-          {:else}
-            <Rocket class="w-4 h-4" />
-            <span>Subscribe</span>
-          {/if}
+          <div class="absolute inset-0 bg-blue-500/20 blur-sm opacity-0 
+                      group-hover/btn:opacity-100 transition-opacity" />
+          <div class="relative">
+            {#if loading}
+              <Loader2 class="w-4 h-4 animate-spin" />
+              <span>CONNECTING...</span>
+            {:else}
+              <Rocket class="w-4 h-4" />
+              <span>SUBSCRIBE</span>
+            {/if}
+          </div>
         </Button>
       </div>
     </div>
 
     {#if error}
       <div 
-        class="absolute -bottom-6 left-0 text-sm text-red-400"
+        class="absolute -bottom-6 left-0 text-sm text-red-400 font-mono"
         transition:fly={{ y: -10, duration: 200 }}
       >
-        {error}
+        >> ERROR: {error}
       </div>
     {/if}
   </form>
 {:else}
   <div 
-    class="bg-zinc-800/50 rounded-lg p-6 text-center border border-zinc-700/50"
+    class="relative"
     in:fly={{ y: 20, duration: 300 }}
   >
-    <div class="text-xl font-medium text-zinc-100 mb-2">
-      You're on the launch pad! 🚀
+    <div class="absolute -inset-1 bg-green-500/20 blur-xl" />
+    <div class="relative bg-black border border-green-500/30 p-6 text-center">
+      <div class="text-xl font-medium text-green-400 mb-2 font-mono">
+        >> CONNECTION ESTABLISHED
+      </div>
+      <p class="text-green-600 font-mono">
+        Check your terminal for confirmation.
+      </p>
     </div>
-    <p class="text-zinc-400">
-      Check your inbox for confirmation.
-    </p>
   </div>
 {/if}
+
+<style>
+  input::placeholder {
+    color: rgba(59, 130, 240, 0.3);
+  }
+</style>

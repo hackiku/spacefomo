@@ -36,8 +36,18 @@ function createFomoStore() {
 
 export const fomoStore = createFomoStore();
 
-// Derived store for gravity well steepness
+// Derived stores for gravity well effects
 export const wellSteepness = derived(
 	fomoStore,
 	$fomo => Math.max(0.2, $fomo.currentScore / 100) // Min steepness of 0.2
+);
+
+export const wellDepth = derived(
+	fomoStore,
+	$fomo => Math.max(20, ($fomo.currentScore / 100) * 50) // Max depth in pixels
+);
+
+export const wellSize = derived(
+	fomoStore,
+	$fomo => Math.max(0.4, $fomo.currentScore / 100) // Well size factor
 );
