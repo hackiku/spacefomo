@@ -2,49 +2,79 @@
 <script lang="ts">
   import { ArrowUp, ArrowDown } from 'lucide-svelte';
   import NewsModal from './NewsModal.svelte';
-
-  export interface NewsItem {
-    id: string;
-    title: string;
-    summary: string;
-    tldr: string;
-    score: number;
-    url: string;
-    tags: string[];
-    source: string;
-    readTime: string;
-    dataPoints: { label: string; value: string }[];
-  }
-
+  import type { NewsItem } from '$lib/types';
+  import { cardStyles, type CardStyle } from './styles';
+  
   export let item: NewsItem;
+  export let style: CardStyle = 'terminal';
+
   let showModal = false;
+  $: styles = cardStyles[style];
 
   function toggleModal() {
     showModal = !showModal;
   }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      toggleModal();
+    }
+  }
 </script>
 
-<div class="bg-gray-700 bg-opacity-20 rounded-lg border border-gray-600 p-4 mb-4 cursor-pointer" on:click={toggleModal}>
-  <div class="flex items-center mb-2">
-    <button class="text-gray-400 hover:text-white mr-2" on:click|stopPropagation>
-      <ArrowUp size={20} />
-    </button>
-    <span class="text-lg font-semibold {item.score > 0 ? 'text-red-500' : 'text-gray-400'}">
-      {item.score}
-    </span>
-    <button class="text-gray-400 hover:text-white ml-2" on:click|stopPropagation>
-      <ArrowDown size={20} />
-    </button>
-  </div>
-  <h2 class="text-xl font-bold mb-2">{item.title}</h2>
-  <p class="text-gray-300 mb-4">{item.summary}</p>
-  <div class="flex flex-wrap gap-2">
-    {#each item.tags as tag}
-      <span class="bg-gray-700 bg-opacity-40 text-sm px-2 py-1 rounded">{tag}</span>
-    {/each}
+<div 
+  class={styles.container}
+  on:click={toggleModal}
+  on:keydown={handleKeyDown}
+  role="button"
+  tabindex="0"
+>
+  <div class={styles.card}>
+    <!-- Vote Controls -->
+    <div class="absolute top-4 right-4 flex items-center gap-2">
+      <button 
+        class={styles.score}
+        on:click|stopPropagation
+        aria-label="Upvote"
+      >
+        <ArrowUp size={20} />
+      </button>
+      <span class={styles.score}>{item.score}</span>
+      <button 
+        class={styles.score}
+        on:click|stopPropagation
+        aria-label="Downvote"
+      >
+        <ArrowDown size={20} />
+      </button>
+    </div>
+
+    <!-- Content -->
+    <h2 class={styles.title}>{item.title}</h2>
+    <p class={styles.summary}>{item.summary}</p>
+
+    <!-- Metadata -->
+    <div class="flex items-center gap-4 mb-4">
+      <span class={styles.meta}>{item.source}</span>
+      <span class={styles.meta}>•</span>
+      <span class={styles.meta}>{item.readTime} read</span>
+    </div>
+
+    <!-- Tags -->
+    <div class="flex flex-wrap gap-2">
+      {#each item.tags as tag}
+        <span class={styles.tag}>
+          {tag}
+        </span>
+      {/each}
+    </div>
   </div>
 </div>
 
 {#if showModal}
   <NewsModal {item} on:close={toggleModal} />
 {/if}
+
+<style>
+  /* Any style-specific animations can go here */
+</style>
