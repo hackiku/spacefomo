@@ -5,7 +5,7 @@
 </script>
 
 <footer class="border-t border-border">
-  <div class="container py-16">
+  <div class="container py-8">
     <!-- Email Form Section -->
     <div class="max-w-md mx-auto mb-16">
       <h3 class="text-2xl font-medium text-foreground mb-4 text-center">

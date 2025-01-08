@@ -6,7 +6,7 @@
   import SendNews from '$lib/components/cta/SendNews.svelte';
 </script>
 
-<div class="min-h-screen bg-background text-foreground">
+<div class="min-h-screen text-foreground">
   <Nav />
   
   <main>

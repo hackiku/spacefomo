@@ -1,83 +1,99 @@
 <!-- src/lib/components/GravityWell.svelte -->
 <script lang="ts">
   import { fomoStore, wellSteepness } from '$lib/stores/fomoStore';
-
-  // Path generation helpers
-  function generateWellPath(steepness: number) {
-    const width = 200;
-    const height = 200;
+  import { onMount } from 'svelte';
+  
+  let container: HTMLDivElement;
+  let width: number;
+  let height: number;
+  let points: Array<{x: number, y: number}> = [];
+  
+  $: {
+    const steepness = $wellSteepness;
     const centerX = width / 2;
     const centerY = height / 2;
-    const depth = steepness * 150; // Max depth of 150px
+    const gridSize = Math.max(20, Math.min(width, height) / 20);
     
-    // Create a spiral-like curve that gets tighter based on steepness
-    const spiral = Array.from({ length: 8 }, (_, i) => {
-      const angle = (i / 8) * Math.PI * 2;
-      const radius = (1 - i / 8) * width / 2;
-      const x = centerX + Math.cos(angle) * radius;
-      const y = centerY + Math.sin(angle) * radius;
-      const z = (i / 8) * depth;
-      return `${x},${y},${z}`;
-    });
-
-    return spiral.join(' L ');
+    points = [];
+    for (let x = -gridSize; x <= width + gridSize; x += gridSize) {
+      for (let y = -gridSize; y <= height + gridSize; y += gridSize) {
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const distortion = Math.min(30, (distance * steepness) / 5);
+        const angle = Math.atan2(dy, dx);
+        
+        points.push({
+          x: x + Math.cos(angle) * distortion,
+          y: y + Math.sin(angle) * distortion
+        });
+      }
+    }
   }
+
+  onMount(() => {
+    const observer = new ResizeObserver(entries => {
+      const entry = entries[0];
+      width = entry.contentRect.width;
+      height = entry.contentRect.height;
+    });
+    
+    observer.observe(container);
+    return () => observer.disconnect();
+  });
 </script>
 
-<div class="relative w-full h-full">
-  <svg 
-    viewBox="0 0 200 200" 
-    class="w-full h-full"
-  >
-    <!-- Gradient definitions -->
-    <defs>
-      <radialGradient id="wellGradient" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" style="stop-color: rgb(0,0,0); stop-opacity: 0.8" />
-        <stop offset="100%" style="stop-color: rgb(30,30,30); stop-opacity: 0.2" />
-      </radialGradient>
+<div 
+  class="fixed inset-0 -z-10 px-8 overflow-hidden"
+  style="transform: rotate(-12deg) scale(1.2);"
+>
+  <div class="w-full h-full" bind:this={container}>
+    <svg
+      viewBox="0 0 {width} {height}"
+      class="w-full h-full"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <defs>
+        <radialGradient id="wellGradient" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" style="stop-color: var(--well-color-center, hsl(var(--primary))); stop-opacity: 0.15" />
+          <stop offset="100%" style="stop-color: var(--well-color-edge, hsl(var(--primary))); stop-opacity: 0.05" />
+        </radialGradient>
+      </defs>
+
+      <!-- Grid Lines -->
+      {#each points as point, i}
+        <g>
+          {#if i % (Math.ceil(width/20) + 1) !== 0 && i > 0}
+            <line
+              x1={points[i-1].x}
+              y1={points[i-1].y}
+              x2={point.x}
+              y2={point.y}
+              stroke="var(--grid-color, hsl(var(--muted-foreground) / 0.1))"
+              stroke-width="1"
+            />
+          {/if}
+          {#if i >= Math.ceil(width/20) + 1}
+            <line
+              x1={points[i-(Math.ceil(width/20) + 1)].x}
+              y1={points[i-(Math.ceil(width/20) + 1)].y}
+              x2={point.x}
+              y2={point.y}
+              stroke="var(--grid-color, hsl(var(--muted-foreground) / 0.1))"
+              stroke-width="1"
+            />
+          {/if}
+        </g>
+      {/each}
       
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-        <feMerge>
-          <feMergeNode in="coloredBlur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
-
-    <!-- Base well shape -->
-    <path 
-      d={`M ${generateWellPath($wellSteepness)}`}
-      fill="url(#wellGradient)"
-      stroke="rgba(255,255,255,0.1)"
-      stroke-width="0.5"
-      filter="url(#glow)"
-    />
-
-    <!-- Particles floating around the well -->
-    {#each Array(20) as _, i}
-      <circle 
-        cx={100 + Math.cos(i/5 * Math.PI * 2) * (30 + i*2)} 
-        cy={100 + Math.sin(i/5 * Math.PI * 2) * (30 + i*2)}
-        r="0.5"
-        fill="white"
-        opacity={0.5 - i/40}
-      >
-        <animate 
-          attributeName="opacity"
-          values="0.5;0.2;0.5"
-          dur={`${2 + i/2}s`}
-          repeatCount="indefinite"
-        />
-      </circle>
-    {/each}
-  </svg>
-
-  <!-- Score display -->
-  <div class="absolute inset-0 flex items-center justify-center">
-    <div class="text-center">
-      <span class="block text-5xl font-bold">{$fomoStore.currentScore}</span>
-      <span class="text-sm opacity-60">FOMO LEVEL</span>
-    </div>
+      <!-- Well Center -->
+      <circle
+        cx={width/2}
+        cy={height/2}
+        r={80 * $wellSteepness}
+        fill="url(#wellGradient)"
+      />
+    </svg>
   </div>
 </div>

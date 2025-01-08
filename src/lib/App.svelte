@@ -4,6 +4,7 @@
   import WeekSelector from './components/WeekSelector.svelte';
   import Card from './features/news/Card.svelte';
   import NewsModal from './features/news/NewsModal.svelte';
+  import GravityWell from './components/GravityWell.svelte';
   import type { NewsItem } from './types';
   
   // Example news item for the manual card
@@ -36,13 +37,16 @@
   }
 </script>
 
-<main class="min-h-screen bg-zincs-900 text-zinc-100">
+<!-- Background Effect -->
+<GravityWell />
+
+<main>
   <!-- Main content -->
   <Hero />
   <WeekSelector />
   
   <!-- Featured Card -->
-  <section class="max-w-3xl mx-auto px-4 py-12">
+  <section class="container py-12">
     <Card 
       item={featuredNews} 
       onClick={handleCardClick}

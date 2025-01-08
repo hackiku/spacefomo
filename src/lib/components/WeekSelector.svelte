@@ -3,63 +3,70 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
-  // Generate dates for this week
-  const weekDates = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - date.getDay() + i);
+  // Generate weeks
+  const weeks = Array.from({ length: 4 }, (_, i) => {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - startDate.getDay() - (i * 7));
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 6);
+    
     return {
-      full: date.toLocaleDateString('en-US', { 
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric'
-      }),
-      short: date.toLocaleDateString('en-US', {
-        weekday: 'short',
+      id: i,
+      startDate,
+      endDate,
+      label: `Week ${4-i}`,
+      dateRange: `${startDate.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric'
-      }),
-      isToday: date.toDateString() === new Date().toDateString()
+      })} - ${endDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      })}`,
+      isCurrent: i === 0
     };
-  });
+  }).reverse();
 
-  let selectedIndex = weekDates.findIndex(d => d.isToday);
+  let selectedIndex = weeks.findIndex(w => w.isCurrent);
 
-  function selectDate(index: number) {
+  function selectWeek(index: number) {
     selectedIndex = index;
-    dispatch('select', weekDates[index].full);
+    dispatch('select', weeks[index]);
   }
 </script>
 
-<div class="w-full text-center">
-  <div class="max-w-4xl mx-auto px-4">    
-    <div class="flex justify-between items-center gap-4 overflow-x-auto pb-4">
-      {#each weekDates as date, i}
-        <button
-          class="flex-shrink-0 px-4 py-2 rounded-lg transition-all duration-200
-                 {i === selectedIndex ? 
-                   'text-zinc-100' : 
-                   'text-zinc-500 hover:text-zinc-300'}"
-          on:click={() => selectDate(i)}
-        >
-          <div class="text-2xl font-medium sm:text-3xl whitespace-nowrap">
-            {date.short}
-          </div>
-          {#if date.isToday}
-            <div class="mt-2 text-sm text-zinc-400">Today</div>
-          {/if}
-        </button>
-      {/each}
-    </div>
+<div class="relative container">
+  <!-- Progress Line -->
+  <div class="absolute top-0 left-0 right-0 h-px bg-border overflow-hidden">
+    <div 
+      class="absolute h-full w-1/4 bg-primary transition-all duration-300"
+      style="left: {selectedIndex * 25}%"
+    />
+  </div>
+
+  <div class="grid grid-cols-4 gap-4">
+    {#each weeks as week, i}
+      <button
+        class="group py-6 text-center"
+        class:text-primary={i === selectedIndex}
+        class:text-muted-foreground={i !== selectedIndex}
+        on:click={() => selectWeek(i)}
+      >
+        <!-- Week Label -->
+        <div class="text-2xl font-medium mb-2 transition-colors">
+          {week.label}
+        </div>
+        
+        <!-- Date Range -->
+        <div class="text-sm opacity-75 transition-colors">
+          {week.dateRange}
+        </div>
+      </button>
+    {/each}
   </div>
 </div>
 
 <style>
-  /* For webkit browsers */
-  .overflow-x-auto {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .overflow-x-auto::-webkit-scrollbar {
-    display: none;
+  button {
+    transition: color 0.2s;
   }
 </style>

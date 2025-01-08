@@ -5,7 +5,7 @@
   let isMenuOpen = false;
 </script>
 
-<nav class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md md:px-20">
+<nav class="sticky top-0 z-50 border-b border-border bg-background/50 backdrop-blur-xs md:px-20">
   <div class="container h-16">
     <div class="flex justify-between items-center h-full">
       <!-- Logo -->
@@ -19,10 +19,10 @@
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center gap-8">
         <a href="/about" class="text-muted-foreground hover:text-foreground text-lg transition-colors">
-          About
+          News
         </a>
         <a href="/news" class="text-muted-foreground hover:text-foreground text-lg transition-colors">
-          News
+          About
         </a>
         <ModeToggle />
       </div>
