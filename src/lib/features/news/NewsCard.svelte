@@ -1,4 +1,4 @@
-<!-- $lib/components/NewsCard.svelte -->
+<!-- $lib/features/news/NewsCard.svelte -->
 <script lang="ts">
   import { ArrowUp, ArrowDown } from 'lucide-svelte';
   import NewsModal from './NewsModal.svelte';

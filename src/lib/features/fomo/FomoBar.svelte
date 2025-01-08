@@ -1,4 +1,4 @@
-<!-- $lib/fomo/FomoBar.svelte -->
+<!-- $lib/features/fomo/FomoBar.svelte -->
 
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';

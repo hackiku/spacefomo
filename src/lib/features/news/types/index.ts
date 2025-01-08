@@ -24,12 +24,6 @@ export interface FomoScore {
 	timeRemaining: number;
 }
 
-export interface WeeklyFomoData {
-	currentWeekScore: number;
-	nextUpdateTime: number;
-	weeklyScores: FomoScore[];
-	weekDates: string[];
-}
 export interface SubmitNewsResponse {
 	success: boolean;
 	message: string;
