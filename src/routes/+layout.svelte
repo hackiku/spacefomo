@@ -1,26 +1,20 @@
-<!-- routes/+layout.svelte -->
+<!-- src/routes/+layout.svelte -->
 <script lang="ts">
-  import "../app.css";
-  import { ModeWatcher } from "mode-watcher";
+  import '../app.css';
   import Nav from '$lib/components/Nav.svelte';
   import Footer from '$lib/components/Footer.svelte';
-	import SendNews from '$lib/components/cta/SendNews.svelte'
+  import SendNews from '$lib/components/cta/SendNews.svelte';
 </script>
 
-<div class="min-h-screen flex flex-col bg-background font-sans">
-  <ModeWatcher />
+<div class="min-h-screen bg-background text-foreground">
   <Nav />
-  <main class="flex-1">
+  
+  <main>
     <slot />
   </main>
+  
   <Footer />
+  
+  <!-- Send Link Button -->
+  <SendNews />
 </div>
-
-<SendNews />
-
-<style>
-  /* Optional: If you want a more refined system font stack */
-  :global(body) {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
-  }
-</style>

@@ -36,7 +36,7 @@
   }
 </script>
 
-<main class="min-h-screen bg-zinc-900 text-zinc-100">
+<main class="min-h-screen bg-zincs-900 text-zinc-100">
   <!-- Main content -->
   <Hero />
   <WeekSelector />
