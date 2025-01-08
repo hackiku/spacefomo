@@ -1,4 +1,4 @@
-// $lib/stores/styleStore.ts
+// $lib/stores/newsStore.ts
 import { writable } from 'svelte/store';
 import type { NewsItem } from '../types';
 

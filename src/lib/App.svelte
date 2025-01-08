@@ -1,8 +1,9 @@
 <!-- src/lib/App.svelte -->
 <script lang="ts">
   import Hero from './components/Hero.svelte';
+  import WeekSelector from './components/WeekSelector.svelte';
   import Card from './features/news/Card.svelte';
-  import NewsFeed from './features/news/NewsFeed.svelte';
+  // import NewsFeed from './features/news/NewsFeed.svelte';
   import StyleSwitcher from './components/StyleSwitcher.svelte';
   import { mockNewsItems } from './data/newsData';
   
@@ -23,7 +24,7 @@
 <main class="min-h-screen bg-zinc-900 text-zinc-100">
   <!-- Main content -->
   <Hero />
-  
+  <WeekSelector /> 
   <!-- Featured Card -->
   <section class="max-w-3xl mx-auto px-4 py-12">
     <Card item={featuredNews} />
@@ -32,9 +33,8 @@
   <!-- Original News Feed with style switching -->
   <section class="max-w-3xl mx-auto px-4 pb-24">
     <div class="border-t border-zinc-800 pt-12">
-      <h2 class="text-2xl font-medium mb-8">More Updates</h2>
-      <NewsFeed newsItems={mockNewsItems} />
-      <StyleSwitcher />
+      <!-- <NewsFeed newsItems={mockNewsItems} /> -->
+      <!-- <StyleSwitcher /> -->
     </div>
   </section>
 </main>
