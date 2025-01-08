@@ -6,7 +6,7 @@
   import Footer from '$lib/components/Footer.svelte';
 </script>
 
-<div class="min-h-screen flex flex-col bg-black font-['Space_Grotesk']">
+<div class="min-h-screen flex flex-col bg-black font-sans">
   <ModeWatcher />
   <Nav />
   <main class="flex-1">
@@ -14,3 +14,10 @@
   </main>
   <Footer />
 </div>
+
+<style>
+  /* Optional: If you want a more refined system font stack */
+  :global(body) {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+  }
+</style>
