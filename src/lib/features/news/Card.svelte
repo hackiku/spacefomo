@@ -9,19 +9,17 @@
 </script>
 
 <article 
-  class="group relative max-w-2xl mx-auto cursor-pointer overflow-hidden"
+  class="group relative max-w-2xl mx-auto cursor-pointer"
 >
-  <!-- Ambient glow effect -->
-  <div class="absolute -inset-1 bg-blue-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+  <!-- Hover glow effect -->
+  <div class="absolute -inset-1 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500
+              dark:bg-gradient-to-r dark:from-violet-600/20 dark:to-fuchsia-600/20
+              light:bg-gradient-to-r light:from-violet-500/10 light:to-fuchsia-500/10" />
   
   <!-- Main container -->
-  <div class="relative bg-black border border-blue-500/20 group-hover:border-blue-500/30 transition-colors duration-300">
-    <!-- Corner accents -->
-    <div class="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-blue-500/40 group-hover:border-blue-500/60 transition-colors duration-300" />
-    <div class="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-blue-500/40 group-hover:border-blue-500/60 transition-colors duration-300" />
-    <div class="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-blue-500/40 group-hover:border-blue-500/60 transition-colors duration-300" />
-    <div class="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-blue-500/40 group-hover:border-blue-500/60 transition-colors duration-300" />
-
+  <div class="relative rounded-2xl overflow-hidden border
+              dark:bg-black/30 dark:backdrop-blur-sm dark:border-white/10
+              light:bg-white/30 light:backdrop-blur-sm light:border-black/10">
     <div class="flex gap-6 p-6">
       <!-- Content -->
       <div class="flex-1" 
@@ -29,75 +27,40 @@
            on:keydown={(e) => e.key === 'Enter' && onClick(item)}
            tabindex="0"
       >
-        <!-- Title with hover glow -->
-        <h2 class="relative text-2xl font-medium tracking-tight mb-3 group-hover:text-blue-100 transition-colors">
-          <span class="absolute inset-0 text-blue-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
-            {item.title}
-          </span>
-          <span class="relative">
-            {item.title}
-          </span>
+        <!-- Title -->
+        <h2 class="text-2xl font-medium tracking-tight mb-3 transition-colors
+                   dark:text-white dark:group-hover:text-transparent dark:group-hover:bg-clip-text
+                   dark:group-hover:bg-gradient-to-r dark:group-hover:from-violet-400 dark:group-hover:to-fuchsia-400
+                   light:text-black light:group-hover:text-transparent light:group-hover:bg-clip-text
+                   light:group-hover:bg-gradient-to-r light:group-hover:from-violet-600 light:group-hover:to-fuchsia-600">
+          {item.title}
         </h2>
 
-        <!-- Metadata with terminal style -->
-        <div class="flex items-center gap-4 font-mono text-sm text-blue-500/60 mb-4">
-          <span class="text-blue-400">>></span>
+        <!-- Metadata -->
+        <div class="flex items-center gap-4 text-sm mb-4
+                    dark:text-zinc-500 light:text-zinc-600">
           <span>{item.source}</span>
-          <span class="text-blue-400/50">|</span>
+          <span class="dark:text-zinc-700 light:text-zinc-400">•</span>
           <span>{item.readTime}</span>
         </div>
 
-        <!-- Tags with neon effect -->
+        <!-- Tags -->
         <div class="flex flex-wrap gap-2">
           {#each item.tags as tag}
-            <span class="relative px-3 py-1 text-sm">
-              <!-- Tag glow -->
-              <span class="absolute inset-0 bg-blue-500/10 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
-              <!-- Tag border with gradient -->
-              <span class="absolute inset-0 border border-blue-500/30 bg-blue-950/30" />
-              <!-- Tag text -->
-              <span class="relative text-blue-400 font-mono">
-                {tag}
-              </span>
+            <span class="px-3 py-1 text-xs font-medium rounded-full border transition-colors duration-300
+                        dark:bg-zinc-900/50 dark:text-zinc-400 dark:border-white/5 dark:group-hover:border-violet-500/20
+                        light:bg-zinc-100/50 light:text-zinc-600 light:border-black/5 light:group-hover:border-violet-500/20">
+              {tag}
             </span>
           {/each}
         </div>
       </div>
 
-      <!-- FOMO Score with glowing separator -->
-      <div class="relative flex items-center pl-6">
-        <!-- Vertical line with glow -->
-        <div class="absolute -top-6 -bottom-6 left-0 w-px">
-          <div class="absolute inset-0 bg-blue-500/20" />
-          <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/20 to-transparent" />
-        </div>
-        
+      <!-- FOMO Score -->
+      <div class="flex items-center pl-6 border-l
+                  dark:border-white/5 light:border-black/5">
         <FomoScore score={item.score} />
       </div>
     </div>
   </div>
 </article>
-
-<style>
-  /* Optional: Add subtle scanner effect on hover */
-  article::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(59, 130, 246, 0.1),
-      transparent
-    );
-    transition: 0.5s;
-    pointer-events: none;
-  }
-
-  article:hover::after {
-    left: 100%;
-  }
-</style>

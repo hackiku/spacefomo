@@ -4,31 +4,44 @@
 </script>
 
 <div class="relative group">
-  <!-- Hexagon container with glow -->
-  <div class="absolute inset-0 bg-blue-500/20 blur-xl group-hover:bg-blue-500/30 transition-colors duration-500" />
+  <!-- Glow effect - different opacity for dark/light -->
+  <div class="absolute -inset-4 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500
+              dark:bg-violet-500/20 dark:group-hover:opacity-75
+              light:bg-violet-500/10 light:group-hover:opacity-50" />
   
-  <div class="relative bg-black border border-blue-500/30 p-8">
-    <!-- Diagonal corner accents -->
-    <div class="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-blue-500" />
-    <div class="absolute top-0 right-0 w-8 h-8 border-r-2 border-t-2 border-blue-500" />
-    <div class="absolute bottom-0 left-0 w-8 h-8 border-l-2 border-b-2 border-blue-500" />
-    <div class="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-blue-500" />
-    
+  <div class="relative overflow-hidden rounded-2xl border
+              dark:bg-black/30 dark:backdrop-blur-sm dark:border-white/10
+              light:bg-white/30 light:backdrop-blur-sm light:border-black/10
+              p-8">
     <div class="text-center">
-      <!-- Score with glow effect -->
-      <div class="relative">
-        <div class="absolute inset-0 text-blue-500 blur-sm">{$fomoStore.currentScore}</div>
-        <div class="text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-blue-300 to-blue-600">
-          {$fomoStore.currentScore}
-        </div>
+      <!-- Score with gradient -->
+      <div class="text-8xl font-bold bg-clip-text text-transparent
+                  dark:bg-gradient-to-br dark:from-violet-400 dark:to-fuchsia-500
+                  light:bg-gradient-to-br light:from-violet-600 light:to-fuchsia-600
+                  mb-2">
+        {$fomoStore.currentScore}
       </div>
       
-      <!-- Label with horizontal lines -->
-      <div class="mt-4 flex items-center gap-4">
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
-        <div class="text-blue-400 font-medium tracking-widest text-sm">FOMO LEVEL</div>
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+      <!-- Label -->
+      <div class="text-sm font-medium uppercase tracking-wider
+                  dark:text-zinc-400 light:text-zinc-600">
+        FOMO Level
       </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="mt-6 space-y-4">
+      {#each ['Launch Activity', 'Industry Buzz', 'Tech Impact'] as stat}
+        <div class="flex items-center gap-2">
+          <div class="h-1 flex-1 rounded-full overflow-hidden
+                      dark:bg-zinc-800 light:bg-zinc-200">
+            <div class="h-full w-[85%] rounded-full
+                        dark:bg-gradient-to-r dark:from-violet-500 dark:to-fuchsia-500
+                        light:bg-gradient-to-r light:from-violet-600 light:to-fuchsia-600" />
+          </div>
+          <span class="text-xs dark:text-zinc-500 light:text-zinc-600">{stat}</span>
+        </div>
+      {/each}
     </div>
   </div>
 </div>

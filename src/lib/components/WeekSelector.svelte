@@ -3,7 +3,6 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
-  // Generate weeks with single date format
   const weeks = Array.from({ length: 4 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - (i * 7));
@@ -11,11 +10,9 @@
     return {
       id: i,
       date,
-      label: `W${4-i}`,
       dateText: date.toLocaleDateString('en-US', {
         month: 'short',
-        day: 'numeric',
-        year: '2-digit'
+        day: 'numeric'
       }),
       isCurrent: i === 0
     };
@@ -30,55 +27,41 @@
 </script>
 
 <div class="relative container">
-  <!-- Timeline bar with glowing active section -->
-  <div class="absolute top-1/2 left-0 right-0 h-px -translate-y-1/2">
-    <!-- Background line -->
-    <div class="absolute h-4 inset-0 bg-blue-900/50" />
-    
-    <!-- Glowing active section -->
+  <!-- Progress bar -->
+  <div class="absolute top-0 left-0 right-0 h-px overflow-hidden
+              dark:bg-zinc-800 light:bg-zinc-200">
     <div 
-      class="absolute h-4 w-1/4 transition-all duration-300 backdrop-blur-sm"
+      class="absolute h-full w-1/4 transition-all duration-300
+             dark:bg-gradient-to-r dark:from-violet-500 dark:to-fuchsia-500
+             light:bg-gradient-to-r light:from-violet-600 light:to-fuchsia-600"
       style="left: {selectedIndex * 25}%"
-    >
-      <div class="absolute inset-0 bg-blue-500/50 blur-sm" />
-      <div class="absolute inset-0 bg-blue-400" />
-    </div>
+    />
   </div>
 
-  <!-- Week markers -->
-  <div class="relative grid grid-cols-4">
+  <div class="grid grid-cols-4 gap-4">
     {#each weeks as week, i}
       <button
-        class="group flex flex-col items-center"
-        class:text-blue-400={i === selectedIndex}
-        class:text-blue-900={i !== selectedIndex}
+        class="group py-6 text-center"
+        class:dark:text-white={i === selectedIndex}
+        class:dark:text-zinc-600={i !== selectedIndex}
+        class:light:text-black={i === selectedIndex}
+        class:light:text-zinc-500={i !== selectedIndex}
         on:click={() => selectWeek(i)}
       >
-        <!-- Marker dot -->
-        <!-- <div 
-          class="w-4 h-4 border-2 rounded-full mb-4 transition-colors duration-300
-                 group-hover:border-blue-400 group-hover:bg-blue-950
-                 {i === selectedIndex ? 'border-blue-400 bg-blue-950' : 'border-blue-900 bg-black'}"
-        /> -->
-        
-        <!-- Week label -->
-        <div class="text-xs font-medium tracking-wider mb-12 transition-colors duration-300
-                    group-hover:text-blue-400">
-          <!-- {week.label} -->
-        </div>
-        
-        <!-- Date -->
-        <div class="text-sm opacity-75 transition-colors duration-300
-                    group-hover:text-blue-400 font-mono">
-          {week.dateText}
+        <div class="relative">
+          <!-- Glow effect for selected -->
+          {#if i === selectedIndex}
+            <div class="absolute -inset-2 rounded-lg blur-sm
+                        dark:bg-violet-500/20 light:bg-violet-500/10" />
+          {/if}
+          
+          <!-- Date -->
+          <div class="relative text-sm font-medium transition-colors duration-300
+                      dark:group-hover:text-white light:group-hover:text-black">
+            {week.dateText}
+          </div>
         </div>
       </button>
     {/each}
   </div>
 </div>
-
-<style>
-  button {
-    transition: color 0.2s;
-  }
-</style>
