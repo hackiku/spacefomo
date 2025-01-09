@@ -16,16 +16,18 @@ export interface NewsItem {
 	}>
 }
 
+export interface WeekStats {
+	launchActivity: number
+	industryBuzz: number
+	techImpact: number
+}
+
 export interface WeekData {
 	id: number
 	startDate: Date
 	endDate: Date
 	score: number
-	stats: {
-		launchActivity: number
-		industryBuzz: number
-		techImpact: number
-	}
+	stats: WeekStats
 }
 
 export interface FomoState {
@@ -34,5 +36,3 @@ export interface FomoState {
 	weeks: WeekData[]
 	nextUpdate: number
 }
-
-export type CardStyle = 'minimal' | 'terminal'

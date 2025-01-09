@@ -4,7 +4,6 @@
   import Fomo from './features/fomo/Fomo.svelte';
   import Card from './features/news/Card.svelte';
   import NewsModal from './features/news/NewsModal.svelte';
-  import GravityWell from './components/GravityWell.svelte';
   import type { NewsItem } from './types';
   
   const featuredNews = {
@@ -38,26 +37,22 @@
 
 <!-- Background Effect -->
 <div class="relative overflow-hidden min-h-screen">
-  <!-- <GravityWell /> -->
-
   <main class="relative z-10">
     <!-- Main content -->
     <Hero />
     
     <!-- FOMO Score & Timeline -->
-    <div class="relative -mt-32 pb-12 px-6">
-      <div class="container">
-        <Fomo />
-      </div>
-    </div>
+    <Fomo />
     
-    <!-- Featured Card -->
-    <section class="container py-4">
-      <Card 
-        item={featuredNews} 
-        onClick={handleCardClick}
-      />
-    </section>
+    <!-- News Content -->
+    <div class="bg-zinc-900/80 min-h-screen">
+      <section class="container py-12">
+        <Card 
+          item={featuredNews} 
+          onClick={handleCardClick}
+        />
+      </section>
+    </div>
     
     <!-- Modal -->
     {#if selectedItem}

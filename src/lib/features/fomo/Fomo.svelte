@@ -1,26 +1,20 @@
 <!-- src/lib/features/fomo/Fomo.svelte -->
 <script lang="ts">
+  import FomoCard from './FomoCard.svelte';
   import FomoScore from './FomoScore.svelte';
   import WeekTimeline from './WeekTimeline.svelte';
   import { fomoStore } from '$lib/stores/fomoStore';
+
+  $: currentWeek = $fomoStore.weeks[$fomoStore.currentWeekIndex];
 </script>
 
-<div class="relative container max-w-6xl mx-auto">
-  <!-- Combined container -->
-  <div class="relative">
-    <!-- Score section -->
-    <div class="relative rounded-t-2xl border border-b-0
-                bg-white/30 dark:bg-black/30 backdrop-blur-sm 
-                border-black/10 dark:border-white/10">
-      <FomoScore />
-    </div>
+<section class="relative w-full bg-zinc-900/80 backdrop-blur-sm border-t border-white/10">
+  <FomoCard position="right">
+    <FomoScore score={currentWeek.score} stats={currentWeek.stats} />
+  </FomoCard>
 
-    <!-- Timeline section that merges with score -->
-    <div class="relative -mt-px rounded-b-2xl border
-                bg-white/30 dark:bg-black/30 backdrop-blur-sm
-                border-black/10 dark:border-white/10
-                opacity-80 hover:opacity-100 transition-opacity duration-300">
-      <WeekTimeline />
-    </div>
+  <!-- Timeline section that fills width -->
+  <div class="container mx-auto pt-16 lg:pt-8">
+    <WeekTimeline />
   </div>
-</div>
+</section>

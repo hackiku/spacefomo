@@ -21,3 +21,9 @@
   <!-- Send Link Button -->
   <SendNews />
 <!-- </div> -->
+
+<style>
+  :global(html) {
+    overflow-x: hidden;
+  }
+</style>

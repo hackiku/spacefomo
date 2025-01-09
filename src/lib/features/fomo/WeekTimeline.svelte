@@ -1,34 +1,67 @@
 <!-- src/lib/features/fomo/WeekTimeline.svelte -->
 <script lang="ts">
-  import { ArrowUp, ArrowDown } from 'lucide-svelte';
-  
-  export let score: number;
-  export let userVote: 'up' | 'down' | null = null;
+  import { onMount } from 'svelte';
+  import { fomoStore } from '$lib/stores/fomoStore';
 
-  function handleVote(vote: 'up' | 'down') {
-    userVote = userVote === vote ? null : vote;
-    // TODO: Integrate with store/API
-  }
+  let scrollContainer: HTMLDivElement;
+  
+  onMount(() => {
+    // Scroll to current week on mobile
+    if (window.innerWidth < 768) {
+      const weekWidth = scrollContainer.scrollWidth / $fomoStore.weeks.length;
+      scrollContainer.scrollLeft = weekWidth * $fomoStore.currentWeekIndex;
+    }
+  });
 </script>
 
-<div class="flex flex-col items-center gap-2">
-  <button
-    class="p-2 rounded-full transition-colors duration-200 hover:bg-zinc-800
-           {userVote === 'up' ? 'text-blue-400' : 'text-zinc-500'}"
-    on:click={() => handleVote('up')}
+<div class="relative pb-4">
+  <!-- Fade effect on the left -->
+  <div class="absolute left-0 top-0 bottom-0 w-32 pointer-events-none
+              bg-gradient-to-r from-zinc-900 to-transparent
+              z-10" />
+
+  <!-- Scrollable container -->
+  <div 
+    bind:this={scrollContainer}
+    class="overflow-x-auto md:overflow-x-visible -mx-4 px-4 md:mx-0 md:px-0
+           scrollbar-none" 
   >
-    <ArrowUp class="w-5 h-5" />
-  </button>
-  
-  <span class="text-2xl font-medium text-zinc-100">
-    {score}
-  </span>
-  
-  <button
-    class="p-2 rounded-full transition-colors duration-200 hover:bg-zinc-800
-           {userVote === 'down' ? 'text-red-400' : 'text-zinc-500'}"
-    on:click={() => handleVote('down')}
-  >
-    <ArrowDown class="w-5 h-5" />
-  </button>
+    <!-- Week bars -->
+    <div class="grid grid-cols-4 gap-4 min-w-[600px] md:min-w-0">
+      {#each $fomoStore.weeks as week, i}
+        <button
+          class="group flex flex-col items-center"
+          on:click={() => fomoStore.setCurrentWeek(i)}
+        >
+          <!-- Progress bar/week selector -->
+          <div class="w-full h-3 rounded-full transition-colors duration-300
+                      {i === $fomoStore.currentWeekIndex ? 
+                        'bg-gradient-to-r from-violet-500 to-fuchsia-500' : 
+                        'bg-zinc-800 group-hover:bg-zinc-700'}"
+          />
+          
+          <!-- Date label -->
+          <div class="mt-2 text-xs font-medium
+                      {i === $fomoStore.currentWeekIndex ?
+                        'text-white' :
+                        'text-zinc-600'}">
+            {week.startDate.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric'
+            })}
+          </div>
+        </button>
+      {/each}
+    </div>
+  </div>
 </div>
+
+<style>
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+</style>
