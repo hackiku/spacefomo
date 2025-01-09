@@ -2,7 +2,8 @@
 <script lang="ts">
   import Hero from './components/Hero.svelte';
   import Fomo from './features/fomo/Fomo.svelte';
-  import Card from './features/news/Card.svelte';
+  // import Card from './features/news/Card.svelte';
+  import News from './features/news/News.svelte';
   // import Analytics from './features/analytics/Analytics.svelte';
 
 	import NewsModal from './features/news/NewsModal.svelte';
@@ -49,10 +50,7 @@
     <!-- News Content -->
     <div class="bg-zinc-900/80">
       <section class="container py-12">
-        <Card 
-          item={featuredNews} 
-          onClick={handleCardClick}
-        />
+        <News />
       </section>
     </div>
     
@@ -70,8 +68,3 @@
   </main>
 </div>
 
-<style>
-  :global(html) {
-    overflow-x: hidden;
-  }
-</style>

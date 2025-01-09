@@ -14,7 +14,7 @@
   });
 </script>
 
-<div class="relative pb-4 pt-2">
+<div class="relative py-4">
   <!-- Fade effect on the left -->
   <div class="absolute left-0 top-0 bottom-0 w-32 pointer-events-none
               bg-gradient-to-r from-zinc-900/80 to-transparent
@@ -35,7 +35,7 @@
           on:click={() => fomoStore.setCurrentWeek(i)}
         >
           <!-- Progress bar/week selector -->
-          <div class="w-full h-3 rounded-full transition-colors duration-300
+          <div class="w-full h-4 rounded-full transition-colors duration-300
                       {i === $fomoStore.currentWeekIndex ? 
                         'bg-gradient-to-r from-violet-500 to-fuchsia-500' : 
                         'bg-zinc-800 group-hover:bg-zinc-700'}"

@@ -44,7 +44,69 @@ export const NEWS_ITEMS: NewsItem[] = [
 			{ label: 'Deposit Size', value: '~ 10,000 m²' },
 			{ label: 'Water Content', value: '> 90% pure' }
 		]
+	},
+	{
+		id: '3',
+		title: 'ESA Updates Mars Sample Return Timeline',
+		summary: 'European Space Agency revises Mars Sample Return mission schedule, citing technical challenges with the Earth Return Orbiter.',
+		source: 'ESA',
+		readTime: '2 min read',
+		url: 'https://www.esa.int/mars-sample',
+		score: 78,
+		date: '2024-01-06',
+		tags: ['Mars', 'ESA', 'Sample Return'],
+		type: ARTICLE_TYPES.INDUSTRY,
+		dataPoints: [
+			{ label: 'New Launch Date', value: '2028' },
+			{ label: 'Sample Return', value: '2033' },
+			{ label: 'Budget Change', value: '+€350M' }
+		]
+	},
+	{
+		id: '4',
+		title: 'Amateur Astronomer Spots New Jupiter Impact Event',
+		summary: 'Brazilian amateur astronomer documents potential impact flash in Jupiter\'s southern hemisphere, awaiting confirmation from professional observatories.',
+    source: 'Sky & Telescope',
+		readTime: '3 min read',
+		url: 'https://skyandtelescope.org/jupiter-impact',
+		score: 72,
+		date: '2024-01-05',
+		tags: ['Jupiter', 'Amateur Astronomy', 'Impact'],
+		type: ARTICLE_TYPES.DISCOVERY,
+		dataPoints: [
+			{ label: 'Event Duration', value: '2.1 seconds' },
+			{ label: 'Location', value: '47°S' },
+			{ label: 'Equipment Used', value: '11" Dobsonian' }
+		]
+	},
+	{
+		id: '5',
+		title: 'China Delays Lunar South Pole Mining Plans',
+		summary: 'CNSA releases preliminary roadmap for lunar resource extraction, focusing on water ice and rare earth elements in permanently shadowed craters.',
+		source: 'Space Policy Online',
+		readTime: '4 min read',
+		url: 'https://spacepolicy.com/china-lunar-mining',
+		score: 65,
+		date: '2024-01-04',
+		tags: ['China', 'Moon', 'Mining'],
+		type: ARTICLE_TYPES.POLICY,
+		dataPoints: [
+			{ label: 'Initial Investment', value: '¥12.5B' },
+			{ label: 'Target Date', value: '2029' },
+			{ label: 'Resource Focus', value: 'He-3, Water Ice' }
+		]
 	}
+
+	
+
+	
+
+
+
+
+
+
+
 ];
 
 // You can also have featured/pinned items
