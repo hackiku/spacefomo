@@ -2,7 +2,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
   import { ExternalLink, X } from 'lucide-svelte';
-  import { Button } from "$lib/components/ui/button";
   import { fade, fly } from 'svelte/transition';
   import NewsScore from './NewsScore.svelte';
   import type { NewsItem } from '$lib/types';
@@ -20,12 +19,6 @@
     }
   }
 
-  function handleOutsideClick(event: MouseEvent) {
-    if (event.target === event.currentTarget) {
-      close();
-    }
-  }
-
   onMount(() => {
     document.addEventListener('keydown', handleKeydown);
     return () => {
@@ -34,22 +27,31 @@
   });
 </script>
 
+<!-- Trap focus within modal when open -->
 <div 
-  class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4 md:p-8" 
-  on:click={handleOutsideClick}
   role="dialog"
   aria-labelledby="modal-title"
   aria-modal="true"
+  class="fixed inset-0 z-[100]"
 >
+  <!-- Backdrop -->
+  <button
+    class="absolute inset-0 w-full h-full bg-black/90 backdrop-blur-sm"
+    on:click={close}
+    aria-label="Close modal"
+  />
+
   <!-- ESC key hint -->
-  <div class="absolute top-6 right-6 flex items-center gap-2 text-zinc-600">
-    <span class="border border-zinc-700/50 rounded px-2 py-0.5 text-xs font-medium">ESC</span>
+  <div class="absolute top-20 right-6 flex items-center gap-2 text-zinc-600 z-10">
+    <kbd class="border border-zinc-700/50 rounded px-2 py-0.5 text-xs font-medium">ESC</kbd>
     <span class="text-sm">to close</span>
   </div>
 
+  <!-- Modal Content -->
   <div 
-    class="bg-zinc-900/95 w-full max-w-5xl rounded-2xl border border-white/10 overflow-hidden backdrop-blur-sm" 
-    in:fly="{{ y: 20, duration: 300 }}" 
+    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl
+           bg-zinc-900/95 rounded-2xl border border-white/10 overflow-hidden backdrop-blur-sm" 
+    in:fly={{ y: 20, duration: 300 }} 
     out:fade
   >
     <div class="md:grid md:grid-cols-5 divide-x divide-zinc-800/50">
@@ -78,12 +80,15 @@
         {/if}
         
         <!-- Tags -->
-        <div class="flex flex-wrap gap-2 mb-6" role="list" aria-label="Article tags">
+        <div class="flex flex-wrap gap-2 mb-6">
           {#each item.tags as tag}
-            <span role="listitem" class="px-3 py-1.5 text-sm bg-zinc-800/50 text-zinc-400 
-                       rounded-full border border-zinc-700/50">
+            <button 
+              class="px-3 py-1.5 text-sm bg-zinc-800/50 text-zinc-400 
+                     rounded-full border border-zinc-700/50 hover:bg-zinc-800"
+              on:click={() => {/* TODO: Filter by tag */}}
+            >
               {tag}
-            </span>
+            </button>
           {/each}
         </div>
 
@@ -91,15 +96,16 @@
         <div class="flex items-center justify-between border-t border-zinc-800/50 pt-6">
           <div class="flex items-center gap-6">
             <div class="text-sm">
-              <div class="text-zinc-400 mb-1">{item.source}</div>
+              <button 
+                class="text-zinc-400 hover:text-zinc-200 mb-1"
+                on:click={() => {/* TODO: Filter by source */}}
+              >
+                {item.source}
+              </button>
               <div class="text-zinc-500">{item.readTime}</div>
             </div>
             <div class="border-l border-zinc-800/50 pl-6">
-              <NewsScore 
-                score={item.score}
-                onUpvote={handleUpvote}
-                onDownvote={handleDownvote}
-              />
+              <NewsScore {item} />
             </div>
           </div>
 
@@ -112,7 +118,7 @@
                    hover:bg-zinc-800/50 border border-zinc-700/50"
           >
             <ExternalLink class="w-4 h-4" />
-            View Source
+            Read Source
           </a>
         </div>
       </div>

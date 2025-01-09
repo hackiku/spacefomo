@@ -38,11 +38,11 @@
     : NEWS_ITEMS;
 </script>
 
-<div class="bg-zinc-900/80">
+<div class="bg-gray-200/60 dark:bg-zinc-900/80 md:px-20">
   <div class="container">
     <!-- Controls Bar -->
     <div class="flex justify-between items-center mb-8 sticky top-0 z-10 
-                bg-zinc-900/95 backdrop-blur-sm py-4 border-b border-white/5">
+                bg-zinc-900/95 backdrop-blur-sm">
       <!-- Left: Type Filters -->
       <div class="flex gap-2">
         <Button 
