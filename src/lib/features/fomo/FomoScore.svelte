@@ -1,34 +1,37 @@
 <!-- src/lib/features/fomo/FomoScore.svelte -->
 <script lang="ts">
-  import { ArrowUp, ArrowDown } from 'lucide-svelte';
-  
-  export let score: number;
-  export let userVote: 'up' | 'down' | null = null;
-
-  function handleVote(vote: 'up' | 'down') {
-    userVote = userVote === vote ? null : vote;
-    // TODO: Integrate with store/API
-  }
+  import { fomoStore } from '$lib/stores/fomoStore';
 </script>
 
-<div class="flex flex-col items-center gap-2">
-  <button
-    class="p-2 rounded-full transition-colors duration-200 hover:bg-zinc-800
-           {userVote === 'up' ? 'text-blue-400' : 'text-zinc-500'}"
-    on:click={() => handleVote('up')}
-  >
-    <ArrowUp class="w-5 h-5" />
-  </button>
-  
-  <span class="text-2xl font-medium text-zinc-100">
-    {score}
-  </span>
-  
-  <button
-    class="p-2 rounded-full transition-colors duration-200 hover:bg-zinc-800
-           {userVote === 'down' ? 'text-red-400' : 'text-zinc-500'}"
-    on:click={() => handleVote('down')}
-  >
-    <ArrowDown class="w-5 h-5" />
-  </button>
-</div>
+<div class="flex flex-row md:flex-col gap-8 p-8">
+  <!-- Score section -->
+  <div class="flex-shrink-0">
+    <!-- Score with gradient -->
+    <div class="text-7xl md:text-8xl font-bold bg-clip-text text-transparent
+                bg-gradient-to-br from-violet-600 to-fuchsia-600
+                dark:from-violet-400 dark:to-fuchsia-500">
+      {$fomoStore.currentScore}
+    </div>
+    
+    <!-- Label -->
+    <div class="text-sm font-medium uppercase tracking-wider
+                text-zinc-600 dark:text-zinc-400">
+      FOMO Level
+    </div>
+  </div>
+
+  <!-- Stats section -->
+  <div class="flex-grow min-w-[200px] space-y-4">
+    {#each ['Launch Activity', 'Industry Buzz', 'Tech Impact'] as stat}
+      <div class="flex items-center gap-2">
+        <div class="h-1 w-full min-w-[100px] rounded-full overflow-hidden
+                    bg-zinc-200 dark:bg-zinc-800">
+          <div class="h-full w-[85%] rounded-full
+                      bg-gradient-to-r from-violet-600 to-fuchsia-600
+                      dark:from-violet-500 dark:to-fuchsia-500" />
+        </div>
+        <span class="text-xs flex-shrink-0 text-zinc-600 dark:text-zinc-500">{stat}</span>
+      </div>
+    {/each}
+  </div>
+</div>``

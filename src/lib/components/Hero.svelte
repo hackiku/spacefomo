@@ -1,7 +1,8 @@
 <!-- src/lib/components/Hero.svelte -->
 <script lang="ts">
   import EmailForm from './cta/EmailForm.svelte';
-  import WeeklyFomo from '../features/fomo/WeeklyFomo.svelte';
+  // import WeeklyFomo from '../features/fomo/WeeklyFomo.svelte';
+  import Fomo from '../features/fomo/Fomo.svelte';
   import SocialProof from './proof/SocialProof.svelte';
 </script>
 
@@ -51,7 +52,8 @@
         <div class="absolute -inset-4 
                     dark:bg-violet-500/20 light:bg-violet-500/10 
                     rounded-full blur-3xl dark:opacity-50 light:opacity-30" />
-        <WeeklyFomo />
+        <!-- <WeeklyFomo /> -->
+        <Fomo />
       </div>
     </div>
   </div>
