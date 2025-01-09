@@ -47,38 +47,41 @@
     <!-- Gradient background with theme support -->
     <div class="absolute -inset-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-200" />
     
-    <!-- Main container -->
-    <div class="relative flex items-center rounded-full overflow-hidden
+    <!-- Main container with fixed height -->
+    <div class="relative flex items-stretch rounded-full overflow-hidden h-14
                 bg-white/50 dark:bg-black/50 backdrop-blur-sm">
-      <div class="pl-5">
+      <!-- Mail icon - now fixed width -->
+      <div class="flex items-center pl-4 w-10">
         <Mail class="w-5 h-5 text-zinc-400/50 dark:text-zinc-600/50" />
       </div>
       
+      <!-- Input with min-width and flex grow -->
       <input
         type="email"
         bind:value={email}
         placeholder="you@email.com"
-        class="flex-1 px-4 py-4 bg-transparent text-lg
+        class="min-w-[120px] flex-1 px-2 bg-transparent text-base
                text-zinc-900 dark:text-white 
                placeholder:text-zinc-400/50 dark:placeholder:text-zinc-600/50
                border-0 focus:outline-none"
         disabled={loading}
       />
       
-      <div class="p-1.5 pr-2">
+      <!-- Button container with fixed padding -->
+      <div class="p-1.5 pr-2 flex-shrink-0">
         <Button
           type="submit"
           variant="default"
-          class="rounded-full px-6 py-3 flex items-center gap-2 transition-colors
+          class="h-11 rounded-full px-6 flex items-center gap-2 transition-colors whitespace-nowrap
                  bg-violet-500 hover:bg-violet-600 text-white"
           disabled={loading}
         >
           {#if loading}
             <Loader2 class="w-4 h-4 animate-spin" />
-            <span>Joining...</span>
+            <span class="hidden sm:inline">Joining...</span>
           {:else}
             <Rocket class="w-4 h-4" />
-            <span>Join</span>
+            <span class="hidden sm:inline">Join</span>
           {/if}
         </Button>
       </div>

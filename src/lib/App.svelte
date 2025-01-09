@@ -3,7 +3,9 @@
   import Hero from './components/Hero.svelte';
   import Fomo from './features/fomo/Fomo.svelte';
   import Card from './features/news/Card.svelte';
-  import NewsModal from './features/news/NewsModal.svelte';
+  // import Analytics from './features/analytics/Analytics.svelte';
+
+	import NewsModal from './features/news/NewsModal.svelte';
   import type { NewsItem } from './types';
   
   const featuredNews = {
@@ -45,7 +47,7 @@
     <Fomo />
     
     <!-- News Content -->
-    <div class="bg-zinc-900/80 min-h-screen">
+    <div class="bg-zinc-900/80">
       <section class="container py-12">
         <Card 
           item={featuredNews} 
@@ -54,7 +56,11 @@
       </section>
     </div>
     
-    <!-- Modal -->
+		<!-- <section class="container py-12">
+			<Analytics />
+		</section> -->
+
+		<!-- Modal -->
     {#if selectedItem}
       <NewsModal 
         item={selectedItem}

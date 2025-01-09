@@ -30,13 +30,13 @@
               Busy Humans
             </span>
           </h1>
-          <p class="text-lg text-zinc-600 dark:text-zinc-400">
-            Weekly space intel in 100 words a pop. 
+          <p class="text-xl text-zinc-600 dark:text-zinc-400">
+            Intel you can't miss in 100 words a pop. 
           </p>
         </div>
 
         <!-- Email signup with social proof -->
-        <div class="space-y-6 max-w-md">
+        <div class="space-y-6 max-w-sm">
           <EmailForm />
           <SocialProof showReaderCount={false} showSubscribers={true} />
         </div>
