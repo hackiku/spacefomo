@@ -1,7 +1,7 @@
 <!-- src/lib/App.svelte -->
 <script lang="ts">
   import Hero from './components/Hero.svelte';
-  import WeekSelector from './components/WeekSelector.svelte';
+  import Fomo from './features/fomo/Fomo.svelte';
   import Card from './features/news/Card.svelte';
   import NewsModal from './features/news/NewsModal.svelte';
   import GravityWell from './components/GravityWell.svelte';
@@ -43,11 +43,16 @@
   <main class="relative z-10">
     <!-- Main content -->
     <Hero />
-    <WeekSelector />
+    
+    <!-- FOMO Score & Timeline -->
+    <div class="relative -mt-32 pb-12 px-6">
+      <div class="container">
+        <Fomo />
+      </div>
+    </div>
     
     <!-- Featured Card -->
     <section class="container py-4">
-
       <Card 
         item={featuredNews} 
         onClick={handleCardClick}

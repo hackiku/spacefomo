@@ -16,9 +16,23 @@ export interface NewsItem {
 	}>
 }
 
-export type FomoScore = {
-	value: number
-	date: string
+export interface WeekData {
+	id: number
+	startDate: Date
+	endDate: Date
+	score: number
+	stats: {
+		launchActivity: number
+		industryBuzz: number
+		techImpact: number
+	}
+}
+
+export interface FomoState {
+	currentScore: number
+	currentWeekIndex: number
+	weeks: WeekData[]
+	nextUpdate: number
 }
 
 export type CardStyle = 'minimal' | 'terminal'
