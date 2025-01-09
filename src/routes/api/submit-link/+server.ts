@@ -1,12 +1,14 @@
 // src/routes/api/submit-link/+server.ts
 
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import { addNewsItem } from '$lib/server/db/mockDb';
-import type { NewsItem } from '$lib/types';
+import { mockDb } from '$lib/server/db/mockDb';
 
-export const POST: RequestHandler = async ({ request }) => {
-	const item: NewsItem = await request.json();
-	addNewsItem(item);
-	return json({ success: true, message: 'Link submitted successfully' });
-};
+export async function POST({ request }) {
+	try {
+		const { url } = await request.json();
+		await mockDb.submitLink(url);
+		return json({ success: true });
+	} catch (error) {
+		return json({ success: false, error: 'Failed to submit link' }, { status: 400 });
+	}
+}
