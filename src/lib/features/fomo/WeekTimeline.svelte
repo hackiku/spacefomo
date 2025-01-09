@@ -14,19 +14,20 @@
   });
 </script>
 
-<div class="relative pb-4">
-  <!-- Fade effect on the left -->
+<div class="relative pb-4 pt-2">
+  <!-- Fade effect on the left - matched to parent background -->
   <div class="absolute left-0 top-0 bottom-0 w-32 pointer-events-none
-              bg-gradient-to-r from-zinc-900 to-transparent
+              bg-gradient-to-r from-zinc-900/80 to-transparent
               z-10" />
 
-  <!-- Scrollable container -->
+  <!-- Scrollable container with adjusted spacing -->
   <div 
     bind:this={scrollContainer}
-    class="overflow-x-auto md:overflow-x-visible -mx-4 px-4 md:mx-0 md:px-0
+    class="overflow-x-auto md:overflow-x-visible 
+           -mx-4 px-4 md:mx-0 md:px-0
            scrollbar-none" 
   >
-    <!-- Week bars -->
+    <!-- Week bars with consistent width -->
     <div class="grid grid-cols-4 gap-4 min-w-[600px] md:min-w-0">
       {#each $fomoStore.weeks as week, i}
         <button
@@ -40,7 +41,7 @@
                         'bg-zinc-800 group-hover:bg-zinc-700'}"
           />
           
-          <!-- Date label -->
+          <!-- Date label with consistent spacing -->
           <div class="mt-2 text-xs font-medium
                       {i === $fomoStore.currentWeekIndex ?
                         'text-white' :
@@ -54,6 +55,11 @@
       {/each}
     </div>
   </div>
+
+  <!-- Optional: Right fade effect for visual balance -->
+  <div class="absolute right-0 top-0 bottom-0 w-32 pointer-events-none
+              bg-gradient-to-l from-zinc-900/80 to-transparent
+              z-10 md:hidden" />
 </div>
 
 <style>

@@ -13,8 +13,7 @@
     <FomoScore score={currentWeek.score} stats={currentWeek.stats} />
   </FomoCard>
 
-  <!-- Timeline section that fills width -->
-  <div class="container mx-auto pt-16 lg:pt-8">
+  <div class="container max-w-6xl mx-auto pt-16 lg:pt-8">
     <WeekTimeline />
   </div>
 </section>
