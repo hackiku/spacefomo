@@ -9,9 +9,9 @@
               dark:bg-violet-500/20 dark:group-hover:opacity-75
               light:bg-violet-500/10 light:group-hover:opacity-50" />
   
-  <div class="relative overflow-hidden rounded-2xl border
+  <div class="flex md:flex-col relative overflow-hidden rounded-2xl border
               dark:bg-black/30 dark:backdrop-blur-sm dark:border-white/10
-              light:bg-white/30 light:backdrop-blur-sm light:border-black/10
+              bg-gray-200/30 backdrop-blur-sm border-black/10
               p-8">
     <div class="text-center">
       <!-- Score with gradient -->

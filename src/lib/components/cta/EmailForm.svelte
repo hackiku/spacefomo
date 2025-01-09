@@ -1,6 +1,6 @@
 <!-- src/lib/components/cta/EmailForm.svelte -->
 <script lang="ts">
-  import { Rocket, Loader2 } from 'lucide-svelte';
+  import { Rocket, Loader2, Mail } from 'lucide-svelte';
   import { Button } from '$lib/components/ui/button';
   import { fly } from 'svelte/transition';
 
@@ -45,46 +45,48 @@
     class="relative group"
   >
     <!-- Gradient background with theme support -->
-    <div class="absolute -inset-1 bg-gradient-to-r rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-200
-                dark:from-violet-600 dark:to-fuchsia-600
-                light:from-violet-500 light:to-fuchsia-500" />
+    <div class="absolute -inset-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-200" />
     
     <!-- Main container -->
-    <div class="relative flex rounded-lg overflow-hidden
-                dark:bg-black/50 dark:backdrop-blur-sm
-                light:bg-white/50 light:backdrop-blur-sm">
+    <div class="relative flex items-center rounded-full overflow-hidden
+                bg-white/50 dark:bg-black/50 backdrop-blur-sm">
+      <div class="pl-5">
+        <Mail class="w-5 h-5 text-zinc-400/50 dark:text-zinc-600/50" />
+      </div>
+      
       <input
         type="email"
         bind:value={email}
         placeholder="you@email.com"
-        class="flex-1 px-4 py-3 bg-transparent border border-white/10
-               dark:text-white dark:placeholder-zinc-500
-               light:text-black light:placeholder-zinc-400
-               focus:outline-none focus:border-violet-500/50"
+        class="flex-1 px-4 py-4 bg-transparent text-lg
+               text-zinc-900 dark:text-white 
+               placeholder:text-zinc-400/50 dark:placeholder:text-zinc-600/50
+               border-0 focus:outline-none"
         disabled={loading}
       />
       
-      <Button
-        type="submit"
-        variant="default"
-        class="px-6 py-3 flex items-center gap-2 transition-colors border-0
-               dark:bg-violet-600 dark:hover:bg-violet-500 dark:text-white
-               light:bg-violet-500 light:hover:bg-violet-600 light:text-white"
-        disabled={loading}
-      >
-        {#if loading}
-          <Loader2 class="w-4 h-4 animate-spin" />
-          <span>Joining...</span>
-        {:else}
-          <Rocket class="w-4 h-4" />
-          <span>Join</span>
-        {/if}
-      </Button>
+      <div class="p-1.5 pr-2">
+        <Button
+          type="submit"
+          variant="default"
+          class="rounded-full px-6 py-3 flex items-center gap-2 transition-colors
+                 bg-violet-500 hover:bg-violet-600 text-white"
+          disabled={loading}
+        >
+          {#if loading}
+            <Loader2 class="w-4 h-4 animate-spin" />
+            <span>Joining...</span>
+          {:else}
+            <Rocket class="w-4 h-4" />
+            <span>Join</span>
+          {/if}
+        </Button>
+      </div>
     </div>
 
     {#if error}
       <div 
-        class="absolute -bottom-6 left-0 text-sm dark:text-red-400 light:text-red-500"
+        class="absolute -bottom-6 left-0 text-sm text-red-500 dark:text-red-400"
         transition:fly={{ y: -10, duration: 200 }}
       >
         {error}
@@ -96,14 +98,13 @@
     class="relative"
     in:fly={{ y: 20, duration: 300 }}
   >
-    <div class="relative rounded-lg overflow-hidden p-6 text-center
-                dark:bg-emerald-500/10 dark:border dark:border-emerald-500/20
-                light:bg-emerald-50 light:border light:border-emerald-200">
-      <div class="text-xl font-medium mb-2 
-                  dark:text-emerald-400 light:text-emerald-700">
+    <div class="relative rounded-full overflow-hidden p-6 text-center
+                bg-emerald-50 dark:bg-emerald-500/10 
+                border border-emerald-200 dark:border-emerald-500/20">
+      <div class="text-xl font-medium mb-2 text-emerald-700 dark:text-emerald-400">
         You're on the launch pad! 🚀
       </div>
-      <p class="dark:text-emerald-500 light:text-emerald-600">
+      <p class="text-emerald-600 dark:text-emerald-500">
         Check your inbox for confirmation.
       </p>
     </div>
