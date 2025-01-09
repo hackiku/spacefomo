@@ -7,7 +7,7 @@
   
   onMount(() => {
     // Scroll to current week on mobile
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 1024) {  // Changed from 768 to 1024
       const weekWidth = scrollContainer.scrollWidth / $fomoStore.weeks.length;
       scrollContainer.scrollLeft = weekWidth * $fomoStore.currentWeekIndex;
     }
@@ -15,20 +15,20 @@
 </script>
 
 <div class="relative pb-4 pt-2">
-  <!-- Fade effect on the left - matched to parent background -->
+  <!-- Fade effect on the left -->
   <div class="absolute left-0 top-0 bottom-0 w-32 pointer-events-none
               bg-gradient-to-r from-zinc-900/80 to-transparent
               z-10" />
 
-  <!-- Scrollable container with adjusted spacing -->
+  <!-- Scrollable container -->
   <div 
     bind:this={scrollContainer}
-    class="overflow-x-auto md:overflow-x-visible 
-           -mx-4 px-4 md:mx-0 md:px-0
+    class="overflow-x-auto xl:overflow-x-visible 
+           -mx-4 px-4 xl:mx-0 xl:px-0
            scrollbar-none" 
   >
-    <!-- Week bars with consistent width -->
-    <div class="grid grid-cols-4 gap-4 min-w-[600px] md:min-w-0">
+    <!-- Week bars -->
+    <div class="grid grid-cols-4 gap-4 min-w-[600px] xl:min-w-0">
       {#each $fomoStore.weeks as week, i}
         <button
           class="group flex flex-col items-center"
@@ -41,7 +41,7 @@
                         'bg-zinc-800 group-hover:bg-zinc-700'}"
           />
           
-          <!-- Date label with consistent spacing -->
+          <!-- Date label -->
           <div class="mt-2 text-xs font-medium
                       {i === $fomoStore.currentWeekIndex ?
                         'text-white' :
@@ -56,10 +56,10 @@
     </div>
   </div>
 
-  <!-- Optional: Right fade effect for visual balance -->
+  <!-- Right fade effect -->
   <div class="absolute right-0 top-0 bottom-0 w-32 pointer-events-none
               bg-gradient-to-l from-zinc-900/80 to-transparent
-              z-10 md:hidden" />
+              z-10 xl:hidden" />
 </div>
 
 <style>

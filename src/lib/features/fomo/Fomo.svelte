@@ -8,12 +8,20 @@
   $: currentWeek = $fomoStore.weeks[$fomoStore.currentWeekIndex];
 </script>
 
-<section class="relative w-full bg-zinc-900/80 backdrop-blur-sm border-t border-white/10">
-  <FomoCard position="right">
-    <FomoScore score={currentWeek.score} stats={currentWeek.stats} />
-  </FomoCard>
-
-  <div class="container max-w-6xl mx-auto pt-16 lg:pt-8">
-    <WeekTimeline />
+<div class="relative -mt-32">
+  <!-- Card positioned above timeline -->
+  <div class="container max-w-6xl mx-auto">
+    <div class="xl:w-96 w-full ml-auto">
+      <FomoCard>
+        <FomoScore score={currentWeek.score} stats={currentWeek.stats} />
+      </FomoCard>
+    </div>
   </div>
-</section>
+  
+  <!-- Timeline section - overlap the card's bottom -->
+  <div class="bg-zinc-900/80 backdrop-blur-sm border-t border-white/10">
+    <div class="container max-w-6xl mx-auto">
+      <WeekTimeline />
+    </div>
+  </div>
+</div>

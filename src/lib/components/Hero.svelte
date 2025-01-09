@@ -4,7 +4,7 @@
   import SocialProof from './proof/SocialProof.svelte';
 </script>
 
-<div class="relative py-12 flex items-center px-6">
+<div class="relative pt-12 flex items-center px-6">
   <!-- Animated background grid - theme aware -->
   <div class="absolute inset-0 
               dark:bg-[linear-gradient(transparent_0%,_rgba(0,0,0,0.8)_50%),_linear-gradient(to_right,rgba(100,100,100,0.1)_1px,transparent_1px),_linear-gradient(rgba(100,100,100,0.1)_1px,transparent_1px)]
