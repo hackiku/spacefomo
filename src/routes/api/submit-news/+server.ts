@@ -3,13 +3,23 @@ import { json } from '@sveltejs/kit';
 import { PUBLIC_MAKE_SUBMIT_WEBHOOK_URL } from '$env/static/public';
 import type { RequestHandler } from './$types';
 
+interface SubmitPayload {
+	url: string;
+	comment?: string;
+	fomoScore?: number;
+}
+
 export const POST: RequestHandler = async ({ request, fetch }) => {
 	try {
-		const { url } = await request.json();
+		const { url, comment, fomoScore } = await request.json() as SubmitPayload;
 
 		// Basic validation
 		if (!url || !url.startsWith('http')) {
 			return json({ error: 'Invalid URL' }, { status: 400 });
+		}
+
+		if (fomoScore !== undefined && (fomoScore < 0 || fomoScore > 100)) {
+			return json({ error: 'FOMO score must be between 0 and 100' }, { status: 400 });
 		}
 
 		// Verify webhook URL is configured
@@ -21,6 +31,8 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 		// Prepare webhook payload
 		const payload = {
 			url,
+			comment: comment || null,  // Ensure consistent null instead of undefined
+			fomoScore: fomoScore || null,
 			timestamp: new Date().toISOString(),
 			userAgent: request.headers.get('user-agent'),
 			source: 'spacefomo_web'

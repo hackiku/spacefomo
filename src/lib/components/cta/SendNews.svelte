@@ -7,6 +7,8 @@
   
   let isOpen = false;
   let url = '';
+  let comment = '';
+  let fomoScore: number | null = null;
   let loading = false;
   let status: 'idle' | 'success' | 'error' = 'idle';
   
@@ -16,7 +18,6 @@
   
   function handleButtonClick(event: MouseEvent) {
     if (!isOpen) {
-      // Store click position for animation
       const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
       clickX = event.clientX - rect.left;
       clickY = event.clientY - rect.top;
@@ -31,16 +32,22 @@
     status = 'idle';
     
     try {
-      const response = await fetch('/api/submit-link', {
+      const response = await fetch('/api/submit-news', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
+        body: JSON.stringify({
+          url,
+          comment: comment || undefined,  // Only include if not empty
+          fomoScore: fomoScore || undefined  // Only include if not null
+        })
       });
       
       if (!response.ok) throw new Error();
       
       status = 'success';
       url = '';
+      comment = '';
+      fomoScore = null;
       setTimeout(() => isOpen = false, 1500);
     } catch (err) {
       status = 'error';
@@ -53,6 +60,12 @@
     if (event.target === event.currentTarget) {
       isOpen = false;
     }
+  }
+
+  function handleFomoScoreInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = parseInt(input.value);
+    fomoScore = isNaN(value) ? null : Math.min(100, Math.max(0, value));
   }
 </script>
 
@@ -81,7 +94,9 @@
         </h2>
         
         <div class="space-y-6">
+          <!-- URL Input -->
           <div>
+            <label class="block text-sm font-medium text-zinc-400 mb-2">URL</label>
             <input
               type="url"
               bind:value={url}
@@ -90,6 +105,48 @@
                      text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-600
                      transition-colors"
             />
+          </div>
+
+          <!-- Comment Input -->
+          <div>
+            <label class="block text-sm font-medium text-zinc-400 mb-2">
+              Comment (optional)
+            </label>
+            <textarea
+              bind:value={comment}
+              placeholder="Why is this interesting?"
+              rows="3"
+              class="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-lg px-4 py-3
+                     text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-600
+                     transition-colors resize-none"
+            />
+          </div>
+
+          <!-- FOMO Score Input -->
+          <div>
+            <label class="block text-sm font-medium text-zinc-400 mb-2">
+              FOMO Score (optional)
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                min="0"
+                max="100"
+                on:input={handleFomoScoreInput}
+                value={fomoScore || ''}
+                placeholder="0-100"
+                class="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-lg px-4 py-3
+                       text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-600
+                       transition-colors"
+              />
+              {#if fomoScore !== null}
+                <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div class="text-sm px-2 py-1 rounded bg-zinc-700/50">
+                    {fomoScore}
+                  </div>
+                </div>
+              {/if}
+            </div>
           </div>
           
           <div class="flex justify-end">
