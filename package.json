@@ -24,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@vercel/analytics": "^1.4.1",
 		"bits-ui": "^0.21.12",
 		"chart.js": "^4.4.3",
 		"clsx": "^2.1.1",
