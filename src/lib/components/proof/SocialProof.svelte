@@ -46,6 +46,6 @@
                     light:border-white light:bg-zinc-200" />
       {/each}
     </div>
-    <p>Join {totalSubscribers.toLocaleString()} space enthusiasts</p>
+    <p>Join {totalSubscribers.toLocaleString()} spacers</p>
   </div>
 {/if}
