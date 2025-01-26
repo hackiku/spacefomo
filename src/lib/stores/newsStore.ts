@@ -10,32 +10,17 @@ const initialState = {
 };
 
 function createNewsStore() {
-	const { subscribe, set, update } = writable(initialState);
+	const { subscribe, set } = writable<NewsItem[]>([]);
 
 	return {
 		subscribe,
-		loadNews: async () => {
-			update(state => ({ ...state, loading: true }));
-			try {
-				// In the future, this will fetch from an API
-				const mockNews = [ /* your mock news items */];
-				update(state => ({ ...state, items: mockNews, loading: false }));
-			} catch (error) {
-				update(state => ({ ...state, error, loading: false }));
-			}
-		},
-		submitNewsLink: async (url: string) => {
-			try {
-				const response = await fetch('/api/submit-link', {
-					method: 'POST',
-					body: JSON.stringify({ url }),
-					headers: { 'Content-Type': 'application/json' }
-				});
-				return await response.json();
-			} catch (error) {
-				console.error('Error submitting news link:', error);
-				throw error;
-			}
+		set,
+		refresh: async () => {
+			const response = await fetch('/api/refresh-news', {
+				method: 'POST'
+			});
+			const news = await response.json();
+			set(news);
 		}
 	};
 }

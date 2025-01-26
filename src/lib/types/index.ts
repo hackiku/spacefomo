@@ -8,7 +8,7 @@ export interface NewsItem {
 	source: string
 	score: number
 	date: string
-	readTime: string
+	readTime: number
 	tags: string[]
 	dataPoints?: Array<{
 		label: string
