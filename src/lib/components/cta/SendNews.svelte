@@ -7,7 +7,7 @@
   import EmailField from './send/EmailField.svelte';
   import LinkField from './send/LinkField.svelte';
   
-  let isOpen = true;
+  let isOpen = false;
   let url = '';
   let email = '';
   let comment = '';
