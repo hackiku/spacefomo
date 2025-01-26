@@ -70,12 +70,12 @@
 </script>
 
 {#if isOpen}
-  <div
+  <button
     class="fixed inset-0 w-full h-full bg-black/50 backdrop-blur-sm z-40"
     on:click={handleOutsideClick}
     transition:fade={{ duration: 200 }}
   >
-    <div
+    <button
       class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl
              bg-zinc-900/95 rounded-3xl border border-white/10 overflow-hidden backdrop-blur-sm
              shadow-xl px-6 py-8"
@@ -136,8 +136,8 @@
           <p class="text-red-400 text-sm" transition:fade>Failed to submit link. Please try again.</p>
         {/if}
       </div>
-    </div>
-  </div>
+    </button>
+  </button>
 {/if}
 
 <!-- Floating Action Button -->

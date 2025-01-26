@@ -21,68 +21,67 @@ function mapNotionToNews(page: any): NewsItem {
 		// Required fields
 		const newsItem: NewsItem = {
 			id: page.id,
-			title: props.Headline?.rich_text[0]?.plain_text || 'Untitled',
-			url: props.URL?.url || '#',
+			title: props.title?.rich_text[0]?.plain_text || 'Untitled',
+			url: props.url?.url || '#',
 		};
 
 		// Optional fields - only add if they exist
-		if (props.AISummary?.rich_text?.[0]?.plain_text) {
-			newsItem.summary = props.AISummary.rich_text[0].plain_text;
+		if (props.summary?.rich_text?.[0]?.plain_text) {
+			newsItem.summary = props.summary.rich_text[0].plain_text;
 		}
 
-		if (props.Type?.select?.name) {
-			newsItem.type = props.Type.select.name as ArticleType;
+		if (props.type?.select?.name) {
+			newsItem.type = props.type.select.name as ArticleType;
 		}
 
-		if (props.Status?.select?.name) {
-			newsItem.status = props.Status.select.name as ArticleStatus;
+		if (props.status?.select?.name) {
+			newsItem.status = props.status.select.name as ArticleStatus;
 		}
 
 		if (page.created_time) {
 			newsItem.createdTime = page.created_time;
 		}
 
-		if (props.Week?.formula?.number !== undefined) {
-			newsItem.week = props.Week.formula.number;
+		if (props.week?.formula?.number !== undefined) {
+			newsItem.week = props.week.formula.number;
 		}
 
-		if (props.ReadTime?.number !== undefined) {
-			newsItem.readTime = props.ReadTime.number;
+		if (props.readTime?.number !== undefined) {
+			newsItem.readTime = props.readTime.number;
 		}
 
-		if (props.FOMOScore?.number !== undefined) {
-			newsItem.score = props.FOMOScore.number;
+		if (props.score?.number !== undefined) {
+			newsItem.score = props.score.number;
 		}
 
-		if (props.PublishDate?.rich_text?.[0]?.plain_text) {
-			newsItem.date = props.PublishDate.rich_text[0].plain_text;
+		if (props.date?.date?.start) {  // Notice this is different - Notion date fields use this structure
+			newsItem.date = props.date.date.start;
 		}
 
-		if (props.Source?.select?.name) {
-			newsItem.source = props.Source.select.name;
+		if (props.source?.select?.name) {
+			newsItem.source = props.source.select.name;
 		}
 
-		if (props.Tags?.multi_select?.length > 0) {
-			newsItem.tags = props.Tags.multi_select.map((tag: any) => tag.name);
+		if (props.tags?.multi_select?.length > 0) {
+			newsItem.tags = props.tags.multi_select.map((tag: any) => tag.name);
 		}
 
-		if (props.WeeklyRank?.formula?.number !== undefined) {
-			newsItem.weeklyRank = props.WeeklyRank.formula.number;
+		if (props.weeklyRank?.formula?.number !== undefined) {
+			newsItem.weeklyRank = props.weeklyRank.formula.number;
 		}
 
 		// Handle DataPoints JSON
-		if (props.DataPoints?.rich_text?.[0]?.plain_text) {
+		if (props.dataPoints?.rich_text?.[0]?.plain_text) {
 			try {
-				newsItem.dataPoints = JSON.parse(props.DataPoints.rich_text[0].plain_text);
+				newsItem.dataPoints = JSON.parse(props.dataPoints.rich_text[0].plain_text);
 			} catch (e) {
-				console.warn('Failed to parse DataPoints JSON:', e);
+				console.warn('Failed to parse dataPoints JSON:', e);
 			}
 		}
 
 		return newsItem;
 	} catch (error) {
 		console.error('Error mapping Notion page:', error);
-		// Return minimal valid item
 		return {
 			id: page.id || `error-${Date.now()}`,
 			title: 'Error Loading Article',
@@ -99,15 +98,15 @@ export async function getNewsItems(forceRefresh = false) {
 	try {
 		const response = await notion.databases.query({
 			database_id: NOTION_DATABASE_ID,
-			filter: {
-				property: 'Status',
-				select: {
-					equals: 'Published'
-				}
-			},
+			// filter: {
+			// 	property: 'status',
+			// 	select: {
+			// 		equals: 'Published'
+			// 	}
+			// },
 			sorts: [
 				{
-					property: 'PublishDate',
+					property: 'createdTime',
 					direction: 'descending'
 				}
 			],
@@ -130,29 +129,29 @@ export async function createNewsItem(data: any) {
 	return await notion.pages.create({
 		parent: { database_id: NOTION_DATABASE_ID },
 		properties: {
-			Headline: {
+			title: {
 				rich_text: [{ text: { content: data.title?.slice(0, 2000) || '' } }]
 			},
-			URL: {
+			url: {
 				url: data.url || ''
 			},
-			Status: {
+			status: {
 				select: {
 					name: 'Pending'
 				}
 			},
-			PublishDate: {
+			date: {
 				date: {
 					start: new Date().toISOString()
 				}
 			},
-			Source: {
+			source: {
 				select: {
 					name: data.source || 'Submitted'
 				}
 			},
-			FOMOScore: {
-				number: data.fomoScore || 0
+			score: {
+				number: data.score || 0
 			}
 		}
 	});

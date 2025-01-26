@@ -4,7 +4,7 @@
   
   // Props for customization
   export let activeReaders = 142;
-  export let totalSubscribers = 1248;
+  // export let totalSubscribers = 1248;
   export let avatarCount = 4;
   export let showReaderCount = true;
   export let showSubscribers = true;
@@ -39,7 +39,7 @@
 <!-- Subscriber social proof -->
 {#if showSubscribers}
   <div class="flex items-center gap-4 text-sm dark:text-zinc-500 light:text-zinc-600">
-    <div class="flex -space-x-2">
+    <div class="flex -space-x-25">
       {#each Array(avatarCount) as _}
         <div class="w-6 h-6 rounded-full border-2 
                     dark:border-black dark:bg-zinc-800

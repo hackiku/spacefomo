@@ -1,5 +1,5 @@
 // src/routes/api/webhook/+server.ts
-
+import { BUILDSHIP_WEBHOOK_URL } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import type { RequestHandler } from './$types';
@@ -53,10 +53,13 @@ export const POST: RequestHandler = async ({ request }) => {
 
 				logPayload('Email Subscription', subscribePayload);
 
-				if (!dev) {
-					// TODO: Add Make.com webhook call here
-					// await fetch(MAKE_SUBSCRIBE_WEBHOOK_URL, {...})
-				}
+				// if (!dev) {
+					await fetch(BUILDSHIP_WEBHOOK_URL, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(subscribePayload)
+					});
+				// }
 
 				return json({ success: true, dev });
 			}
@@ -83,10 +86,13 @@ export const POST: RequestHandler = async ({ request }) => {
 
 				logPayload('News Submission', newsPayload);
 
-				if (!dev) {
-					// TODO: Add Make.com webhook call here
-					// await fetch(MAKE_SUBMIT_WEBHOOK_URL, {...})
-				}
+				// if (!dev) {
+					await fetch(BUILDSHIP_WEBHOOK_URL, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(newsPayload)
+					});
+				// }
 
 				return json({ success: true, dev });
 			}
