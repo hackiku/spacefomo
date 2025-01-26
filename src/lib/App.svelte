@@ -26,7 +26,7 @@
 				<Fomo />
 			</section>
 			<section>
-				<News />
+				<News items={news || []} />
 			</section>
 			<section>
 				<div class="opacity-20 text-center py-12 font-mono">// analytics</div>
