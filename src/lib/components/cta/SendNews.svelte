@@ -32,13 +32,14 @@
     status = 'idle';
     
     try {
-      const response = await fetch('/api/submit-news', {
+      const response = await fetch('/api/webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          url,
-          comment: comment || undefined,  // Only include if not empty
-          fomoScore: fomoScore || undefined  // Only include if not null
+          type: 'send-news',
+					url,
+          comment: comment || undefined,
+          fomoScore: fomoScore || undefined
         })
       });
       

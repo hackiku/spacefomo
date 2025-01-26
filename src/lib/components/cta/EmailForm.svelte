@@ -19,10 +19,13 @@
     error = '';
 
     try {
-      const response = await fetch('/api/subscribe', {
+      const response = await fetch('/api/webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({
+					type: 'subscribe',
+					email 
+				})
       });
 
       if (!response.ok) throw new Error('Subscription failed');
