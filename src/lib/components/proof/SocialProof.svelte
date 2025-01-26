@@ -46,6 +46,7 @@
                     light:border-white light:bg-zinc-200" />
       {/each}
     </div>
-    <p>Join {totalSubscribers.toLocaleString()} spacers</p>
+    <!-- <p>Join {totalSubscribers.toLocaleString()} spacers</p> -->
+    <p>dozens of us</p>
   </div>
 {/if}

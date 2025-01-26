@@ -6,7 +6,7 @@
 
 <div class="relative py-16 md:-mb-56 flex items-center md:px-20 z-20">
   <!-- Animated background grid - theme aware -->
-  <!-- <div class="absolute inset-0 
+  <!-- <div class="absolute inset-0
               dark:bg-[linear-gradient(transparent_0%,_rgba(0,0,0,0.8)_50%),_linear-gradient(to_right,rgba(100,100,100,0.1)_1px,transparent_1px),_linear-gradient(rgba(100,100,100,0.1)_1px,transparent_1px)]
               bg-[linear-gradient(transparent_0%,_rgba(255,255,255,0.8)_50%),_linear-gradient(to_right,rgba(100,100,100,0.1)_1px,transparent_1px),_linear-gradient(rgba(100,100,100,0.1)_1px,transparent_1px)]
               bg-[size:100%_100%,24px_24px,24px_24px] 

@@ -9,14 +9,14 @@ interface SubscribePayload {
 	type: 'subscribe';
 }
 
-interface SubmitNewsPayload {
+interface SendNewsPayload {
 	url: string;
 	comment?: string;
 	fomoScore?: number;
-	type: 'submit-news';
+	type: 'send-news';
 }
 
-type WebhookPayload = SubscribePayload | SubmitNewsPayload;
+type WebhookPayload = SubscribePayload | SendNewsPayload;
 
 // Dev logging helper
 function logPayload(action: string, payload: any) {
@@ -61,7 +61,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				return json({ success: true, dev });
 			}
 
-			case 'submit-news': {
+			case 'send-news': {
 				// Validate URL
 				if (!payload.url?.startsWith('http')) {
 					return json({ error: 'Invalid URL' }, { status: 400 });
