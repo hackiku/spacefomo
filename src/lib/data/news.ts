@@ -1,4 +1,3 @@
-// lib/data/news.ts
 import type { NewsItem } from '$lib/types';
 
 export const ARTICLE_TYPES = {
@@ -10,6 +9,26 @@ export const ARTICLE_TYPES = {
 } as const;
 
 export const NEWS_ITEMS: NewsItem[] = [
+	{
+		id: 'blushift-2025',
+		title: 'BluShift Aerospace hopes to launch 1st suborbital rocket from Maine in 2025',
+		summary: 'BluShift Aerospace is making significant strides in sustainable spaceflight, preparing for their first suborbital launch using proprietary bio-derived fuel technology. Following successful MAREVL engine tests, the company has secured new funding and aims to demonstrate their innovative approach to commercial space access.',
+		source: 'Space.com',
+		readTime: '5 min read',
+		url: 'https://www.space.com/space-exploration/launches-spacecraft/blushift-aerospace-hopes-to-launch-1st-suborbital-rocket-from-maine-in-2025',
+		score: 75,
+		date: '2025-01-06',
+		tags: ['BluShift', 'Suborbital', 'Biofuel', 'Maine'],
+		type: ARTICLE_TYPES.LAUNCH,
+		dataPoints: [
+			{ label: 'Initial Launch Target', value: 'Late 2025' },
+			{ label: 'Initial Altitude', value: '120-140 km' },
+			{ label: 'Future Altitude', value: '350-400 km' },
+			{ label: 'Recent Funding', value: '$1.4M' },
+			{ label: 'Equity Round', value: '$15M' },
+			{ label: 'Zero-G Time', value: '6-8 minutes' }
+		]
+	},
 	{
 		id: '1',
 		title: 'SpaceX successfully lands Starship after orbital test flight',
@@ -66,7 +85,7 @@ export const NEWS_ITEMS: NewsItem[] = [
 		id: '4',
 		title: 'Amateur Astronomer Spots New Jupiter Impact Event',
 		summary: 'Brazilian amateur astronomer documents potential impact flash in Jupiter\'s southern hemisphere, awaiting confirmation from professional observatories.',
-    source: 'Sky & Telescope',
+		source: 'Sky & Telescope',
 		readTime: '3 min read',
 		url: 'https://skyandtelescope.org/jupiter-impact',
 		score: 72,
@@ -96,23 +115,12 @@ export const NEWS_ITEMS: NewsItem[] = [
 			{ label: 'Resource Focus', value: 'He-3, Water Ice' }
 		]
 	}
-
-	
-
-	
-
-
-
-
-
-
-
 ];
 
-// You can also have featured/pinned items
+// Featured news selection
 export const FEATURED_NEWS = NEWS_ITEMS[0];
 
-// Helper functions if needed
+// Helper functions
 export function getNewsByType(type: string) {
 	return NEWS_ITEMS.filter(item => item.type === type);
 }
