@@ -1,24 +1,25 @@
 <!-- src/lib/features/news/News.svelte -->
-
 <script lang="ts">
   import { writable } from 'svelte/store';
   import { Button } from "$lib/components/ui/button";
   import { 
     LayoutGrid, 
-    Layout, // for 3 columns
-    AlignJustify // for list view
+    Layout,
+    AlignJustify 
   } from 'lucide-svelte';
   import Card from './Card.svelte';
   import NewsModal from './NewsModal.svelte';
-  import { NEWS_ITEMS, ARTICLE_TYPES } from '$lib/data/news';
-  import type { NewsItem } from '$lib/types';
+  import { ARTICLE_TYPES } from '$lib/types';  // Changed: import from types
+  import type { NewsItem, ArticleType } from '$lib/types';
+
+  // Props: Accept news items from parent
+  export let items: NewsItem[] = [];
 
   // Stores
   const columnCount = writable(2);
   let selectedItem: NewsItem | null = null;
-  let selectedType: string | null = null;
+  let selectedType: ArticleType | null = null;
 
-  // Layout controls with icons
   const layouts = [
     { cols: 1, icon: AlignJustify, label: 'List view' },
     { cols: 2, icon: LayoutGrid, label: 'Grid view' },
@@ -29,13 +30,14 @@
     selectedItem = item;
   }
 
-  function filterByType(type: string | null) {
+  function filterByType(type: ArticleType | null) {
     selectedType = type;
   }
 
+  // Filter news based on selected type
   $: filteredNews = selectedType 
-    ? NEWS_ITEMS.filter(item => item.type === selectedType)
-    : NEWS_ITEMS;
+    ? items.filter(item => item.type === selectedType)
+    : items;
 </script>
 
 <div class="bg-gray-200/60 dark:bg-zinc-900/80 md:px-20">
@@ -67,7 +69,7 @@
         {/each}
       </div>
 
-      <!-- Right: Layout Controls -->
+      <!-- Rest of the controls remain the same -->
       <div class="flex gap-1 bg-zinc-800/50 rounded-lg p-1">
         {#each layouts as { cols, icon: Icon, label }}
           <Button
@@ -84,17 +86,23 @@
     </div>
 
     <!-- News Grid -->
-    <div 
-      class="grid gap-6 mx-auto"
-      class:max-w-3xl={$columnCount === 1}
-      class:grid-cols-1={$columnCount === 1}
-      class:grid-cols-2={$columnCount === 2}
-      class:grid-cols-3={$columnCount === 3}
-    >
-      {#each filteredNews as item (item.id)}
-        <Card {item} onClick={handleCardClick} />
-      {/each}
-    </div>
+    {#if filteredNews.length > 0}
+      <div 
+        class="grid gap-6 mx-auto"
+        class:max-w-3xl={$columnCount === 1}
+        class:grid-cols-1={$columnCount === 1}
+        class:grid-cols-2={$columnCount === 2}
+        class:grid-cols-3={$columnCount === 3}
+      >
+        {#each filteredNews as item (item.id)}
+          <Card {item} onClick={handleCardClick} />
+        {/each}
+      </div>
+    {:else}
+      <div class="text-center py-12 text-zinc-500">
+        No articles found{selectedType ? ` for type "${selectedType}"` : ''}
+      </div>
+    {/if}
   </div>
 </div>
 
