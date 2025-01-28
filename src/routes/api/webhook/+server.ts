@@ -1,5 +1,6 @@
 // src/routes/api/webhook/+server.ts
-import { BUILDSHIP_WEBHOOK_URL } from '$env/static/private';
+// import { BUILDSHIP_WEBHOOK_URL } from '$env/static/private';
+import { MAKE_SPACEFOMO_WEBHOOK_URL } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import type { RequestHandler } from './$types';
@@ -10,6 +11,7 @@ interface SubscribePayload {
 }
 
 interface SendNewsPayload {
+	id: string;
 	url: string;
 	comment?: string;
 	fomoScore?: number;
@@ -54,7 +56,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				logPayload('Email Subscription', subscribePayload);
 
 				// if (!dev) {
-					await fetch(BUILDSHIP_WEBHOOK_URL, {
+				await fetch(MAKE_SPACEFOMO_WEBHOOK_URL, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify(subscribePayload)
@@ -87,7 +89,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				logPayload('News Submission', newsPayload);
 
 				// if (!dev) {
-					await fetch(BUILDSHIP_WEBHOOK_URL, {
+				await fetch(MAKE_SPACEFOMO_WEBHOOK_URL, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify(newsPayload)
