@@ -12,7 +12,7 @@
 </script>
 
 <header class="fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-[1920px] px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
         <div class="border-b border-zinc-800 backdrop-blur-sm">
             <div class="h-16 px-4 flex items-center justify-between">
                 <!-- Logo and Navigation -->

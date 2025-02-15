@@ -1,73 +1,48 @@
-<!-- src/lib/features/fomo/WeekTimeline.svelte -->
+<!-- src/lib/features/fomo/Timeline.svelte -->
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { fomoStore } from '$lib/stores/fomoStore';
+  // Mock data - will be replaced with props later
+  const weeks = Array(6).fill(null).map((_, i) => ({
+    weekNumber: 6 - i,
+    score: 85 - (i * 5),
+    startDate: new Date(2024, 0, 1 + (i * 7))
+  }));
 
-  let scrollContainer: HTMLDivElement;
-  
-  onMount(() => {
-    // Scroll to current week on mobile
-    if (window.innerWidth < 1024) {  // Changed from 768 to 1024
-      const weekWidth = scrollContainer.scrollWidth / $fomoStore.weeks.length;
-      scrollContainer.scrollLeft = weekWidth * $fomoStore.currentWeekIndex;
-    }
-  });
+  function formatDate(date: Date): string {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    });
+  }
 </script>
 
-<div class="relative py-4">
-  <!-- Fade effect on the left -->
-  <div class="absolute left-0 top-0 bottom-0 w-32 pointer-events-none
-              bg-gradient-to-r from-zinc-900/80 to-transparent
-              z-10" />
-
-  <!-- Scrollable container -->
+<div class="relative py-8">
+  <!-- Connecting line -->
   <div 
-    bind:this={scrollContainer}
-    class="overflow-x-auto xl:overflow-x-visible 
-           -mx-4 px-4 xl:mx-0 xl:px-0
-           scrollbar-none" 
-  >
-    <!-- Week bars -->
-    <div class="grid grid-cols-4 gap-4 min-w-[600px] xl:min-w-0">
-      {#each $fomoStore.weeks as week, i}
-        <button
-          class="group flex flex-col items-center"
-          on:click={() => fomoStore.setCurrentWeek(i)}
+    class="absolute left-6 top-0 bottom-0 w-px bg-zinc-800"
+    aria-hidden="true"
+  />
+  
+  <!-- Timeline entries -->
+  <div class="space-y-8">
+    {#each weeks as { weekNumber, score, startDate }}
+      <div class="group flex items-center gap-6">
+        <!-- Circle with score -->
+        <div 
+          class="relative w-12 h-12 rounded-full border border-zinc-800
+                 flex items-center justify-center bg-zinc-900"
         >
-          <!-- Progress bar/week selector -->
-          <div class="w-full h-4 rounded-full transition-colors duration-300
-                      {i === $fomoStore.currentWeekIndex ? 
-                        'bg-gradient-to-r from-violet-500 to-fuchsia-500' : 
-                        'bg-zinc-800 group-hover:bg-zinc-700'}"
-          />
-          
-          <!-- Date label -->
-          <div class="mt-2 text-xs font-medium
-                      {i === $fomoStore.currentWeekIndex ?
-                        'text-white' :
-                        'text-zinc-600'}">
-            {week.startDate.toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric'
-            })}
-          </div>
-        </button>
-      {/each}
-    </div>
+          <span class="text-sm font-medium text-transparent bg-clip-text
+                      bg-gradient-to-r from-violet-400 to-fuchsia-400">
+            {score}
+          </span>
+        </div>
+
+        <!-- Date info -->
+        <div class="flex gap-4 text-sm">
+          <span class="text-zinc-400">Week {weekNumber}</span>
+          <span class="text-zinc-600">{formatDate(startDate)}</span>
+        </div>
+      </div>
+    {/each}
   </div>
-
-  <!-- Right fade effect -->
-  <div class="absolute right-0 top-0 bottom-0 w-32 pointer-events-none
-              bg-gradient-to-l from-zinc-900/80 to-transparent
-              z-10 xl:hidden" />
 </div>
-
-<style>
-  .scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
-</style>
