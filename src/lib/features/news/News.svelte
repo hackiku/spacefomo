@@ -1,115 +1,64 @@
 <!-- src/lib/features/news/News.svelte -->
 <script lang="ts">
-  import { writable } from 'svelte/store';
-  import { Button } from "$lib/components/ui/button";
-  import { 
-    LayoutGrid, 
-    Layout,
-    AlignJustify 
-  } from 'lucide-svelte';
-  import Card from './Card.svelte';
-  import NewsModal from './NewsModal.svelte';
-  import { ARTICLE_TYPES } from '$lib/types';  // Changed: import from types
-  import type { NewsItem, ArticleType } from '$lib/types';
+  // Basic news item type
+  type NewsItem = {
+    id: number;
+    title: string;
+    source: string;
+    readTime: string;
+    score: number;
+  };
 
-  // Props: Accept news items from parent
-  export let items: NewsItem[] = [];
-
-  // Stores
-  const columnCount = writable(2);
-  let selectedItem: NewsItem | null = null;
-  let selectedType: ArticleType | null = null;
-
-  const layouts = [
-    { cols: 1, icon: AlignJustify, label: 'List view' },
-    { cols: 2, icon: LayoutGrid, label: 'Grid view' },
-    { cols: 3, icon: Layout, label: 'Wide view' }
-  ];
-
-  function handleCardClick(item: NewsItem) {
-    selectedItem = item;
-  }
-
-  function filterByType(type: ArticleType | null) {
-    selectedType = type;
-  }
-
-  // Filter news based on selected type
-  $: filteredNews = selectedType 
-    ? items.filter(item => item.type === selectedType)
-    : items;
+  // Mock data for testing
+  const news: NewsItem[] = Array(10).fill(null).map((_, i) => ({
+    id: i,
+    title: `SpaceX successfully launches Starship to orbit for the first time`,
+    source: 'Space.com',
+    readTime: '2 min read',
+    score: 85 - (i * 3)
+  }));
 </script>
 
-<div class="bg-gray-200/60 dark:bg-zinc-900/80 md:px-20">
-  <div class="container">
-    <!-- Controls Bar -->
-    <div class="flex justify-between items-center mb-8 sticky top-0 z-10 
-                bg-zinc-900/95 backdrop-blur-sm">
-      <!-- Left: Type Filters -->
-      <div class="flex gap-2">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          class="text-zinc-400 hover:text-zinc-100 
-                 {!selectedType ? 'bg-violet-500/20 text-zinc-100' : ''}"
-          on:click={() => filterByType(null)}
-        >
-          All
-        </Button>
-        {#each Object.entries(ARTICLE_TYPES) as [key, value]}
-          <Button 
-            variant="ghost"
-            size="sm"
-            class="text-zinc-400 hover:text-zinc-100
-                   {selectedType === value ? 'bg-violet-500/20 text-zinc-100' : ''}"
-            on:click={() => filterByType(value)}
-          >
-            {key.charAt(0) + key.slice(1).toLowerCase()}
-          </Button>
-        {/each}
-      </div>
-
-      <!-- Rest of the controls remain the same -->
-      <div class="flex gap-1 bg-zinc-800/50 rounded-lg p-1">
-        {#each layouts as { cols, icon: Icon, label }}
-          <Button
-            variant="ghost"
-            size="icon"
-            class="w-8 h-8 {$columnCount === cols ? 'bg-violet-500/20' : ''}"
-            on:click={() => columnCount.set(cols)}
-            aria-label={label}
-          >
-            <Icon class="w-4 h-4" />
-          </Button>
-        {/each}
-      </div>
-    </div>
-
-    <!-- News Grid -->
-    {#if filteredNews.length > 0}
+<div class="space-y-6">
+  {#each news as article}
+    <button 
+      class="group w-full text-left transition-transform hover:-translate-y-0.5"
+    >
       <div 
-        class="grid gap-6 mx-auto"
-        class:max-w-3xl={$columnCount === 1}
-        class:grid-cols-1={$columnCount === 1}
-        class:grid-cols-2={$columnCount === 2}
-        class:grid-cols-3={$columnCount === 3}
+        class="aspect-video p-6 rounded-2xl border border-zinc-800/50 
+               bg-zinc-900/50 backdrop-blur-sm 
+               group-hover:border-zinc-700/50 group-hover:bg-zinc-900/70
+               transition-all duration-200"
       >
-        {#each filteredNews as item (item.id)}
-          <Card {item} onClick={handleCardClick} />
-        {/each}
-      </div>
-    {:else}
-      <div class="text-center py-12 text-zinc-500">
-        No articles found{selectedType ? ` for type "${selectedType}"` : ''}
-      </div>
-    {/if}
-  </div>
-</div>
+        <div class="h-full flex flex-col justify-between">
+          <!-- Content section -->
+          <div class="space-y-3">
+            <h2 class="text-lg font-medium text-zinc-100 line-clamp-2">
+              {article.title}
+            </h2>
+            
+            <div class="flex items-center gap-3 text-sm text-zinc-500">
+              <span>{article.source}</span>
+              <span class="text-zinc-700">•</span>
+              <span>{article.readTime}</span>
+            </div>
+          </div>
 
-<!-- Modal -->
-{#if selectedItem}
-  <NewsModal 
-    item={selectedItem}
-    on:close={() => selectedItem = null}
-  />
-{/if}
+          <!-- Footer with score -->
+          <div class="flex justify-between items-end">
+            <div class="text-sm text-zinc-600">
+              More details →
+            </div>
+            
+            <div class="text-2xl font-medium bg-clip-text text-transparent
+                        bg-gradient-to-br from-violet-400 to-fuchsia-500
+                        group-hover:from-violet-300 group-hover:to-fuchsia-400
+                        transition-colors">
+              {article.score}
+            </div>
+          </div>
+        </div>
+      </div>
+    </button>
+  {/each}
+</div>

@@ -7,7 +7,7 @@
     let { children } = $props();
 </script>
 
-<div class="overflow-x-hidden">
+<div class="">
     <Nav />
 
     <main class="min-h-screen">
