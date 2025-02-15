@@ -4,18 +4,24 @@
 
 	// import Fomo from "./features/fomo/Fomo.svelte";
 	// import News from "./features/news/News.svelte";
+	import EmailForm from "./components/cta/email/EmailForm.svelte";
 	// import type { NewsItem } from "$lib/types";
 
-	// export let news: NewsItem[] | undefined = undefined;
-
-	// $: console.log("App received:", news?.length, "news items");
-
 </script>
+
+
+<section class="py-24 px-4 sm:px-6 lg:px-32">
+
+	<div class="max-w-sm flex flex-col gap-5">
+
+		<h1 class="text-indigo-100/80 font-mono text-xl leading-relaxed">
+			fix space race missing out <br> in ~100 words a pop
+		</h1>
+
+		<EmailForm />
+	</div>
+
 	
 
-<section class="bg-black mx-auto px-4 sm:px-6 lg:px-8 h-[50vh]">
- 
-	<h1 class="text-gray-300/40">
- 		diomerda
-	</h1>
+
 </section>

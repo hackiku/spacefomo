@@ -1,7 +1,6 @@
 <!-- src/lib/components/cta/EmailForm.svelte -->
 <script lang="ts">
-  import { Rocket, Loader2, Mail } from 'lucide-svelte';
-  import { Button } from '$lib/components/ui/button';
+  import { Rocket, LockLaminated, Envelope } from 'phosphor-svelte';
   import { fly } from 'svelte/transition';
 
   let email = '';
@@ -55,7 +54,7 @@
                 bg-white/50 dark:bg-black/50 backdrop-blur-sm">
       <!-- Mail icon - now fixed width -->
       <div class="flex items-center pl-4 w-10">
-        <Mail class="w-5 h-5 text-zinc-400/50 dark:text-zinc-600/50" />
+        <Envelope class="w-5 h-5 text-zinc-400/50 dark:text-zinc-600/50" />
       </div>
       
       <!-- Input with min-width and flex grow -->
@@ -72,7 +71,7 @@
       
       <!-- Button container with fixed padding -->
       <div class="p-1.5 pr-2 flex-shrink-0">
-        <Button
+        <button
           type="submit"
           variant="default"
           class="h-11 rounded-full px-6 flex items-center gap-2 transition-colors whitespace-nowrap
@@ -80,13 +79,13 @@
           disabled={loading}
         >
           {#if loading}
-            <Loader2 class="w-4 h-4 animate-spin" />
+            <LockLaminated class="w-4 h-4 animate-spin" />
             <span class="hidden sm:inline">Joining...</span>
           {:else}
             <Rocket class="w-4 h-4" />
             <span class="hidden sm:inline">Join</span>
           {/if}
-        </Button>
+				</button>
       </div>
     </div>
 

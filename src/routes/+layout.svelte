@@ -7,7 +7,7 @@
     let { children } = $props();
 </script>
 
-<div class="bg-linear-to-r from-stone-950 to-indigo-950 overflow-x-hidden">
+<div class="overflow-x-hidden">
     <Nav />
 
     <main class="min-h-screen">
