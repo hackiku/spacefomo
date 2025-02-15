@@ -12,4 +12,10 @@
 
 </script>
 	
-codio
+
+<section class="bg-black mx-auto px-4 sm:px-6 lg:px-8 h-[50vh]">
+ 
+	<h1 class="text-gray-300/40">
+ 		diomerda
+	</h1>
+</section>
