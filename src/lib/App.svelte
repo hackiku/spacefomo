@@ -13,11 +13,9 @@
 <section class="py-24 px-4 sm:px-6 lg:px-32">
 
 	<div class="max-w-sm flex flex-col gap-5">
-
-		<h1 class="text-indigo-100/80 font-mono text-xl leading-relaxed">
-			fix space race missing out <br> in ~100 words a pop
+		<h1 class="text-indigo-100/80 sfont-mono text-3xl leading-relaxed">
+			Space race missing out relief in ~100 words a pop
 		</h1>
-
 		<EmailForm />
 	</div>
 

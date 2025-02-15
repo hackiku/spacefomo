@@ -2,6 +2,7 @@
 <script lang="ts">
   import { Rocket, LockLaminated, Envelope } from 'phosphor-svelte';
   import { fly } from 'svelte/transition';
+  import Status from './Status.svelte';
 
   let email = '';
   let loading = false;
@@ -42,76 +43,52 @@
 </script>
 
 {#if !success}
-  <form 
-    on:submit|preventDefault={handleSubmit}
-    class="relative group"
-  >
-    <!-- Gradient background with theme support -->
-    <div class="absolute -inset-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-200" />
-    
-    <!-- Main container with fixed height -->
-    <div class="relative flex items-stretch rounded-full overflow-hidden h-14
-                bg-white/50 dark:bg-black/50 backdrop-blur-sm">
-      <!-- Mail icon - now fixed width -->
-      <div class="flex items-center pl-4 w-10">
-        <Envelope class="w-5 h-5 text-zinc-400/50 dark:text-zinc-600/50" />
-      </div>
-      
-      <!-- Input with min-width and flex grow -->
-      <input
-        type="email"
-        bind:value={email}
-        placeholder="you@email.com"
-        class="min-w-[120px] flex-1 px-2 bg-transparent text-base
-               text-zinc-900 dark:text-white 
-               placeholder:text-zinc-400/50 dark:placeholder:text-zinc-600/50
-               border-0 focus:outline-none"
-        disabled={loading}
-      />
-      
-      <!-- Button container with fixed padding -->
-      <div class="p-1.5 pr-2 flex-shrink-0">
-        <button
-          type="submit"
-          variant="default"
-          class="h-11 rounded-full px-6 flex items-center gap-2 transition-colors whitespace-nowrap
-                 bg-violet-500 hover:bg-violet-600 text-white"
-          disabled={loading}
-        >
-          {#if loading}
-            <LockLaminated class="w-4 h-4 animate-spin" />
-            <span class="hidden sm:inline">Joining...</span>
-          {:else}
-            <Rocket class="w-4 h-4" />
-            <span class="hidden sm:inline">Join</span>
-          {/if}
-				</button>
-      </div>
-    </div>
+    <form 
+        on:submit|preventDefault={handleSubmit}
+        class="relative"
+    >
+        <div class="flex items-stretch h-14 rounded-full border border-zinc-600">
+            <div class="flex items-center pl-4 w-10">
+                <Envelope weight="light" class="w-5 h-5 text-zinc-500/40" />
+            </div>
+            
+            <input
+                type="email"
+                bind:value={email}
+                placeholder="you@email.com"
+                class="min-w-[120px] flex-1 px-2 bg-transparent text-base
+                       text-zinc-100 placeholder:text-zinc-600
+                       border-0 focus:outline-none focus:ring-1 
+                       focus:ring-zinc-700 rounded-lg"
+                disabled={loading}
+            />
+            
+            <div class="p-2">
+                <button
+                    type="submit"
+                    class="h-10 px-4 flex items-center gap-2 
+                           border border-zinc-800 rounded-full
+                           hover:bg-zinc-800/50 text-zinc-100
+                           transition-colors disabled:opacity-50"
+                    disabled={loading}
+                >
+                    {#if loading}
+                        <LockLaminated weight="light" class="w-4 h-4 animate-spin" />
+                        <span class="hidden sm:inline">Joining...</span>
+                    {:else}
+                        <span class="hidden sm:inline">Join Up</span>
+                    {/if}
+                </button>
+            </div>
+        </div>
 
-    {#if error}
-      <div 
-        class="absolute -bottom-6 left-0 text-sm text-red-500 dark:text-red-400"
-        transition:fly={{ y: -10, duration: 200 }}
-      >
-        {error}
-      </div>
-    {/if}
-  </form>
+        {#if error}
+            <Status type="error" message={error} />
+        {/if}
+    </form>
 {:else}
-  <div 
-    class="relative"
-    in:fly={{ y: 20, duration: 300 }}
-  >
-    <div class="relative rounded-full overflow-hidden p-6 text-center
-                bg-emerald-50 dark:bg-emerald-500/10 
-                border border-emerald-200 dark:border-emerald-500/20">
-      <div class="text-xl font-medium mb-2 text-emerald-700 dark:text-emerald-400">
-        You're on the launch pad! 🚀
-      </div>
-      <p class="text-emerald-600 dark:text-emerald-500">
-        Check your inbox for confirmation.
-      </p>
-    </div>
-  </div>
+    <Status 
+        type="success" 
+        message="Check your inbox for confirmation." 
+    />
 {/if}
