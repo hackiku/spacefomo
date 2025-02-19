@@ -6,16 +6,17 @@
 </script>
 
 <div class="max-w-[1920px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
-  <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_1.5fr] gap-6">
+  diomerda
+	<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_1.5fr] gap-6">
     <!-- Left column: Hero + Timeline -->
     <div>
       <!-- Hero section -->
       <div class="pt-36">
         <div class="max-w-sm space-y-5">
           <h1 class="text-indigo-100/80 text-3xl leading-relaxed">
-            Space race missing out relief in ~100 words a pop
+            Space race ssmissing out relief in ~100 words a pop
           </h1>
-          <EmailForm />
+          <!-- <EmailForm /> -->
         </div>
       </div>
 

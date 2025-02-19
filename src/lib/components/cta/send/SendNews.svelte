@@ -1,4 +1,4 @@
-<!-- src/lib/components/cta/SendNews.svelte -->
+<!-- src/lib/components/cta/send/SendNews.svelte -->
 <script lang="ts">
   import { Plus, X, Send, Loader2 } from 'lucide-svelte';
   import { scale, slide, fade } from 'svelte/transition';

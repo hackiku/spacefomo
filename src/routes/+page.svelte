@@ -2,20 +2,29 @@
 <script lang="ts">
   import Timeline from '$lib/features/fomo/week/Timeline.svelte';
   import EmailForm from '$lib/components/cta/email/EmailForm.svelte';
+  import Hero from '$lib/components/Hero.svelte';
   import News from '$lib/features/news/News.svelte';
+  // import SendNews from '$lib/components/cta/send/SendNews.svelte;
+
 </script>
 
 <div class="min-h-screen">
+	<!-- Email prompt (initially visible, disappears on signup) -->
+	<div class="max-w-md mx-auto py-20">
+		<h1 class="max-w-md text-center text-indigo-100/80 text-4xl leading-relaxed mb-8">
+			Space race hot news in 100 words a pop
+		</h1>
+
+		<button class="text-center bg-indigo-900/20 py-3 px-8 rounded-full">+ SHARE NEWS</button>
+
+		<!-- <EmailForm /> -->
+	</div>
   <div class="grid-layout">
-    <!-- Email prompt (initially visible, disappears on signup) -->
-    <div class="grid-area-email py-20">
-			<h1 class="text-indigo-100/80 text-3xl leading-relaxed mb-8">
-				Space race missing out relief in ~100 words a pop
-			</h1>
-
-			<EmailForm />
-    </div>
-
+		<div class="grid-area-email py-20">
+			controls
+			// 3 grid icon selctor row 
+			// s
+		</div>
     <!-- Main content areas -->
     <div class="grid-area-timeline">
       <Timeline />
