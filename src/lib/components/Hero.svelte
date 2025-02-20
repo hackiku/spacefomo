@@ -1,41 +1,44 @@
 <!-- src/lib/components/Hero.svelte -->
 <script lang="ts">
-    import { Plus } from 'phosphor-svelte';
-    import ShareModal from './cta/share/ShareModal.svelte';
-    
-    let showShareModal = $state(false);
+	import { Plus } from 'phosphor-svelte';
+	import ShareModal from './cta/share/ShareModal.svelte';
+
+	let showShareModal = $state(false);
 </script>
 
-<section class="relative overflow-hidden py-20 sm:py-32 bg-black/20 border-b border-white/10">
-    <div class="container mx-auto px-4 text-center">
-        <!-- Main Heading -->
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent 
-                   bg-gradient-to-r from-violet-400 to-fuchsia-500 mb-6">
-            Space race hot news in 100 words a pop
-        </h1>
+<section class="relative overflow-hidden border-b border-white/10 bg-black/20 py-20 sm:py-32">
+	<div class="container mx-auto px-6 md:px-32 text-center">
+		<!-- Main Heading -->
+		<h1
+			class="mb-6 bg-gradient-to-r from-violet-400 to-fuchsia-500 bg-clip-text text-4xl
+                   font-bold text-transparent sm:text-5xl lg:text-6xl"
+		>
+			Space race hot news in 100 words a pop
+		</h1>
 
-        <!-- Share Button -->
-        <button
-            onclick={() => showShareModal = true}
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-full
-                   bg-gradient-to-r from-violet-500 to-fuchsia-500
-                   hover:from-violet-600 hover:to-fuchsia-600
-                   text-white font-medium transition-all
+		<!-- Share Button -->
+		<button
+			onclick={() => (showShareModal = true)}
+			class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500
+                   to-fuchsia-500 px-6 py-3
+                   font-medium text-white
+                   transition-all hover:from-violet-600 hover:to-fuchsia-600
                    hover:shadow-lg hover:shadow-violet-500/25"
-        >
-            <Plus weight="bold" class="w-5 h-5" />
-            Share News
-        </button>
-    </div>
+		>
+			<Plus weight="bold" class="h-5 w-5" />
+			Share News
+		</button>
+	</div>
 
-    <!-- Gradient Orb -->
-    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full
+	<!-- Gradient Orb -->
+	<div
+		class="absolute -top-24 -right-24 h-96 w-96 rounded-full
                 bg-gradient-to-br from-violet-500/30 to-fuchsia-500/30
-                blur-3xl opacity-50">
-		</div>
+                opacity-50 blur-3xl"
+	></div>
 </section>
 
 <!-- Share Modal -->
 {#if showShareModal}
-    <ShareModal onClose={() => showShareModal = false} />
+	<ShareModal onClose={() => (showShareModal = false)} />
 {/if}

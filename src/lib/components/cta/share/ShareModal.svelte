@@ -1,93 +1,172 @@
-<!-- src/lib/components/cta/share/ShareModal.svelte -->
+<!-- src/lib/components/cta/ShareModal.svelte -->
 <script lang="ts">
-    import { scale, fade } from 'svelte/transition';
-    import { cubicOut } from 'svelte/easing';
-    import { X, Envelope } from 'phosphor-svelte';
-    import FomoSlider from '$lib/features/fomo/FomoSlider.svelte';
-    import UrlInput from './inputs/UrlInput.svelte';
-    import CommentInput from './inputs/CommentInput.svelte';
-    import EmailInput from './inputs/EmailInput.svelte';
-    import SubmitButton from './SubmitButton.svelte';
-    import StatusMessage from './StatusMessage.svelte';
-    
-    let { onClose } = $props<{
-        onClose: () => void;
-    }>();
+	import { scale, fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import { X, Envelope, Plus } from 'phosphor-svelte';
+	import FomoSlider from '$lib/features/fomo/FomoSlider.svelte';
 
-    // Form state using Svelte 5's $state
-    let formData = $state({
-        url: '',
-        email: '',
-        comment: '',
-        fomoScore: 0
-    });
+	let { onClose } = $props<{
+		onClose: () => void;
+	}>();
 
-    let status = $state({
-        loading: false,
-        type: 'idle' as 'idle' | 'success' | 'error'
-    });
+	// Form state
+	let url = $state('');
+	let email = $state('');
+	let comment = $state('');
+	let fomoScore = $state<number | null>(null);
+	let loading = $state(false);
+	let status = $state<'idle' | 'success' | 'error'>('idle');
+
+	async function handleSubmit() {
+		if (!url) return;
+
+		loading = true;
+		status = 'idle';
+
+		try {
+			const response = await fetch('/api/webhook', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					type: 'send-news',
+					url,
+					comment: comment || undefined,
+					fomoScore: fomoScore || undefined,
+					email: email || undefined
+				})
+			});
+
+			if (!response.ok) throw new Error();
+
+			status = 'success';
+			setTimeout(() => onClose(), 1500);
+		} catch (err) {
+			status = 'error';
+		} finally {
+			loading = false;
+		}
+	}
+
+	function handleOutsideClick(event: MouseEvent) {
+		if (event.target === event.currentTarget) {
+			onClose();
+		}
+	}
 </script>
 
-<div 
-    role="dialog"
-    aria-labelledby="modal-title"
-    class="fixed inset-0 z-50"
-    transition:fade={{ duration: 200 }}
-    onclick={(e) => e.target === e.currentTarget && onClose()}
->
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-    
-    <!-- Modal -->
-    <div class="relative h-full flex items-center justify-center p-4">
-        <div
-            class="w-full max-w-2xl bg-zinc-900/95 rounded-3xl border border-white/10 
-                   overflow-hidden backdrop-blur-sm"
-            transition:scale={{ duration: 300, easing: cubicOut, start: 0.5 }}
-        >
-            <!-- Header -->
-            <header class="flex items-center justify-between p-6 border-b border-white/10">
-                <h2 id="modal-title" class="text-2xl font-medium text-zinc-100">
-                    Share Space News
-                </h2>
-                <button
-                    class="p-2 text-zinc-400 hover:text-zinc-100 rounded-lg 
-                           hover:bg-white/5 transition-colors"
-                    onclick={onClose}
-                >
-                    <X weight="bold" class="w-6 h-6" />
-                </button>
-            </header>
+<a 
+	class="fixed inset-0 z-50"
+	transition:fade={{ duration: 200 }}
+	onclick={handleOutsideClick}>
+	<!-- Backdrop -->
+	<div class="absolute inset-0 bg-black/50 backdrop-blur-sm p-44" />
 
-            <!-- Form -->
-            <div class="p-6 space-y-6">
-                <UrlInput bind:value={formData.url} />
+	<!-- Modal -->
+	<div class="relative flex h-full items-center justify-center p-4 md:p-12">
+		<div
+			class="w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10
+                   bg-zinc-900/95 backdrop-blur-sm"
+			transition:scale={{ duration: 300, easing: cubicOut, start: 0.5 }}
+		>
+			<!-- Header -->
+			<div class="flex items-center justify-between border-b border-white/10 p-6">
+				<h2 class="text-2xl font-medium text-zinc-100">Share Space News</h2>
+				<button
+					class="rounded-lg p-2 text-zinc-400 transition-colors
+                           hover:bg-white/5 hover:text-zinc-100"
+					onclick={onClose}
+				>
+					<X class="h-6 w-6" />
+				</button>
+			</div>
 
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-zinc-400">
-                        FOMO Score
-                    </label>
-                    <FomoSlider 
-                        score={formData.fomoScore}
-                        onUpvote={() => formData.fomoScore = Math.min(formData.fomoScore + 1, 100)}
-                        onDownvote={() => formData.fomoScore = Math.max(formData.fomoScore - 1, 0)}
-                    />
-                </div>
+			<!-- Form -->
+			<div class="space-y-6 p-6">
+				<!-- URL Input -->
+				<div class="space-y-2">
+					<label for="url" class="block text-sm font-medium text-zinc-400"> News URL </label>
+					<input
+						id="url"
+						type="url"
+						bind:value={url}
+						placeholder="https://..."
+						class="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2
+                               text-zinc-100 placeholder:text-zinc-600
+                               focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
+					/>
+				</div>
 
-                <CommentInput bind:value={formData.comment} />
-                <EmailInput bind:value={formData.email} />
+				<!-- FOMO Score -->
+				<div class="space-y-2">
+					<label class="block text-sm font-medium text-zinc-400"> FOMO Score </label>
+					<FomoSlider
+						score={fomoScore ?? 0}
+						onUpvote={() => (fomoScore = Math.min((fomoScore ?? 0) + 1, 100))}
+						onDownvote={() => (fomoScore = Math.max((fomoScore ?? 0) - 1, 0))}
+					/>
+				</div>
 
-                <button
-                    class="w-full flex items-center justify-center gap-2 px-6 py-3 
-                           bg-gradient-to-r from-violet-500 to-fuchsia-500
-                           hover:from-violet-600 hover:to-fuchsia-600
-                           text-white rounded-lg transition-all"
-                    onclick={() => onClose()}
-                >
-                    <Envelope weight="bold" class="w-5 h-5" />
-                    <span>Share News</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+				<!-- Comment -->
+				<div class="space-y-2">
+					<label for="comment" class="block text-sm font-medium text-zinc-400">
+						Why is this interesting?
+					</label>
+					<textarea
+						id="comment"
+						bind:value={comment}
+						rows="3"
+						class="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2
+                               text-zinc-100 placeholder:text-zinc-600
+                               focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
+					/>
+				</div>
+
+				<!-- Email (Optional) -->
+				<div class="space-y-2">
+					<label for="email" class="block text-sm font-medium text-zinc-400">
+						Your email (optional)
+					</label>
+					<input
+						id="email"
+						type="email"
+						bind:value={email}
+						placeholder="you@example.com"
+						class="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2
+                               text-zinc-100 placeholder:text-zinc-600
+                               focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
+					/>
+				</div>
+
+				<!-- Submit Button -->
+				<button
+					onclick={handleSubmit}
+					disabled={loading || !url}
+					class="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r
+                           from-violet-500 to-fuchsia-500 px-6
+                           py-3 text-white
+                           transition-all hover:from-violet-600
+                           hover:to-fuchsia-600 disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					{#if loading}
+						<Plus class="h-5 w-5 animate-spin" />
+						<span>Sending...</span>
+					{:else}
+						<Envelope class="h-5 w-5" />
+						<span>Share News</span>
+					{/if}
+				</button>
+
+				<!-- Status Messages -->
+				{#if status === 'success'}
+					<p class="text-center text-sm text-emerald-400" transition:fade>
+						News shared successfully!
+					</p>
+				{:else if status === 'error'}
+					<p class="text-center text-sm text-red-400" transition:fade>
+						Failed to share news. Please try again.
+					</p>
+				{/if}
+			</div>
+		</div>
+	</div>
+</a>
