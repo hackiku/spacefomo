@@ -1,7 +1,7 @@
 <!-- src/lib/components/Hero.svelte -->
 <script lang="ts">
     import { Plus } from 'phosphor-svelte';
-    // import { ShareModal } from './cta/share/ShareModal.svelte';
+    import ShareModal from './cta/share/ShareModal.svelte';
     
     let showShareModal = $state(false);
 </script>
@@ -23,7 +23,7 @@
                    text-white font-medium transition-all
                    hover:shadow-lg hover:shadow-violet-500/25"
         >
-            <Plus class="w-5 h-5" />
+            <Plus weight="bold" class="w-5 h-5" />
             Share News
         </button>
     </div>
@@ -36,6 +36,6 @@
 </section>
 
 <!-- Share Modal -->
-<!-- {#if showShareModal}
-    <ShareModal on:close={() => showShareModal = false} />
-{/if} -->
+{#if showShareModal}
+    <ShareModal onClose={() => showShareModal = false} />
+{/if}

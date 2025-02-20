@@ -9,17 +9,10 @@
 </script>
 
 <div class="min-h-screen">
-	<!-- Email prompt (initially visible, disappears on signup) -->
-	<div class="max-w-md mx-auto py-20">
-		<h1 class="max-w-md text-center text-indigo-100/80 text-4xl leading-relaxed mb-8">
-			Space race hot news in 100 words a pop
-		</h1>
+	
+	<Hero />
 
-		<button class="text-center bg-indigo-900/20 py-3 px-8 rounded-full">+ SHARE NEWS</button>
-
-		<!-- <EmailForm /> -->
-	</div>
-  <div class="grid-layout">
+	<div class="grid-layout">
 		<div class="grid-area-email py-20">
 			controls
 			// 3 grid icon selctor row 
