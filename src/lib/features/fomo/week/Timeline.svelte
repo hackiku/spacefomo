@@ -73,7 +73,7 @@
         transition:slide={{ duration: 200 }}
         class="absolute bottom-full w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-32"
       >
-        <div class="relative {activeWeek ? `left-[${(activeWeek.weekNumber - 1) * 20}%]` : ''} w-1/5">
+        <div class="relative {activeWeek ? `left-[${(activeWeek.weekNumber - 1) * 20}%]` : ''} w-1/5 bottom">
           <FomoCard
             weekNumber={activeWeek.weekNumber}
             dateRange={formatDateRange(activeWeek.startDate, activeWeek.endDate)}
