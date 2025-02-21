@@ -17,30 +17,49 @@
 	}
 </script>
 
-<div class="space-y-8 p-8">
+<div class="space-y-2 p-8">
 	<!-- Product -->
-	<section class="space-y-4">
+	<section class="space-y-4 pb-8">
 		<h2 class="text-2xl font-medium text-zinc-100">About Spacefomo</h2>
 		<p class="text-lg leading-normal text-zinc-400">
-			Space news sent by you, digested by AI, with summaries, data and a FOMO score for how much
-			you'll dread being out of the loop.
+			Space news sent by you, digested by AI. Summaries, data and a FOMO score—how much will you
+			dread being out of the loop.
 		</p>
 		<EmailForm />
 	</section>
 
 	<!-- Personal -->
-	<section class="space-y-6">
+	<section class="space-y-3">
 		<div class="flex items-start gap-6">
 			<div class="flex-1 space-y-4">
-				<h3 class="text-xl font-medium text-zinc-200">Hi I'm Ivan 👋</h3>
+				<h3 class="text-xl font-medium text-zinc-200">Hi I'm Ivan 👋 Wanna go to space?</h3>
 				<p class="leading-relaxed text-zinc-400">
-					Indie founder & aerospacey product designer.
-								Dayjob bootstrapping <a
+					Indie founder & product designer. Building Spacefomo and <a
 						href="https://pipewriter.io"
 						class="text-violet-400 transition-colors hover:text-violet-300"
 						target="_blank"
 						rel="noopener noreferrer">Pipewriter</a
-					>, the UX app for writers.
+					>, UX app for writers. Since day 1 of flight school I've been obsessed with 
+				
+				
+							<a
+				href="https://wingy.vercel.app"
+				class="text-violet-400 transition-colors hover:text-violet-300"
+				target="_blank"
+				rel="noopener noreferrer">wing design</a
+			>,
+			<a
+				href="https://6pack.cc"
+				class="text-violet-400 transition-colors hover:text-violet-300"
+				target="_blank"
+				rel="noopener noreferrer">pilot UX</a
+			>, 
+			<a
+				href="https://jzro.co"
+				class="text-violet-400 transition-colors hover:text-violet-300"
+				target="_blank"
+				rel="noopener noreferrer">orbital flight</a
+			> aerospacey interfaces.
 				</p>
 			</div>
 
@@ -49,26 +68,8 @@
 			</div>
 		</div>
 
-						<p class="leading-relaxed text-zinc-400">
-		 For fun, I fiddle with
-					<a
-						href="https://wingy.vercel.app"
-						class="text-violet-400 transition-colors hover:text-violet-300"
-						target="_blank"
-						rel="noopener noreferrer"
-						>wing prototyping</a
-					>, or
-					<a
-						href="https://6pack.cc"
-						class="text-violet-400 transition-colors hover:text-violet-300"
-						target="_blank"
-						rel="noopener noreferrer"
-						>cat avionics</a
-					> to push pilot UX to the max. And of course, Spacefomo 💜
-					</p>
-
 		<p class="leading-relaxed text-zinc-400">
-			Let's work together. I help space startups rock websites that convert users & investors.
+			Maybe I can help build yours? Let's test in prod together
 		</p>
 	</section>
 
