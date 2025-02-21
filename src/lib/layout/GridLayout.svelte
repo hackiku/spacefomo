@@ -1,34 +1,34 @@
 <!-- src/lib/components/layout/GridLayout.svelte -->
 <script lang="ts">
-  type LayoutConfig = {
-    columns: 1 | 2;
-    padding: 'compact' | 'normal' | 'wide';
-    width: 'narrow' | 'normal' | 'wide';
-  };
+  import type { LayoutConfig } from '$lib/types/layout';
 
   let { layout } = $props<{
     layout: LayoutConfig;
   }>();
 
   // Scroll tracking for sticky behavior
+  let sidebarRef: HTMLDivElement;
   let controlsRef: HTMLDivElement;
   let isSticky = $state(false);
   let hasPassedThreshold = $state(false);
 
-  // Use effect for scroll handling
+  // Enhanced scroll handling with intersection observer
   $effect(() => {
-    const handleScroll = () => {
-      if (!controlsRef) return;
-      
-      const rect = controlsRef.getBoundingClientRect();
-      const threshold = window.innerHeight * 0.8; // 80% of viewport height
-      
-      isSticky = rect.top <= 0;
-      hasPassedThreshold = window.scrollY > threshold;
-    };
+    if (!sidebarRef || !controlsRef) return;
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isSticky = !entry.isIntersecting;
+      },
+      {
+        threshold: 0,
+        rootMargin: '-1px 0px 0px 0px'
+      }
+    );
+
+    observer.observe(sidebarRef);
+
+    return () => observer.disconnect();
   });
 
   // Reactive classes with improved organization
@@ -43,37 +43,41 @@
       }[layout.padding]
     ].join(' '),
 
+    sidebar: [
+      'grid-area-sidebar space-y-6',
+      isSticky ? 'lg:h-screen lg:overflow-auto' : ''
+    ].join(' '),
+
     controls: [
-      'py-8',
-      isSticky && !hasPassedThreshold ? 'sticky top-0 z-10' : ''
+      'space-y-6',
+      isSticky ? 'lg:sticky lg:top-0 lg:z-10' : ''
     ].join(' '),
 
     news: [
-      'grid gap-6',
+      'grid-area-news grid gap-6',
       layout.columns === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-1'
     ].join(' ')
   });
 </script>
 
 <div class="grid-layout {gridClasses.container}">
-  <!-- Controls Panel with sticky behavior -->
-  <div 
-    bind:this={controlsRef}
-    class="grid-area-controls {gridClasses.controls}
-           transition-all duration-300"
-  >
+  <!-- Left Sidebar: Controls + FOMO -->
+  <div bind:this={sidebarRef} class={gridClasses.sidebar}>
+    <!-- Controls Panel -->
+    <div bind:this={controlsRef} class={gridClasses.controls}>
+      <div class="bg-zinc-900/80 backdrop-blur-sm rounded-xl border border-zinc-800 p-6">
+        <slot name="controls" />
+      </div>
+    </div>
+
+    <!-- FOMO Card -->
     <div class="bg-zinc-900/80 backdrop-blur-sm rounded-xl border border-zinc-800">
-      <slot name="controls" />
+      <slot name="fomo" />
     </div>
   </div>
 
-  <!-- Timeline Section -->
-  <div class="grid-area-timeline">
-    <slot name="timeline" />
-  </div>
-
   <!-- News Feed -->
-  <div class="grid-area-news {gridClasses.news}">
+  <div class={gridClasses.news}>
     <slot name="news" />
   </div>
 </div>
@@ -82,33 +86,21 @@
   .grid-layout {
     display: grid;
     gap: 1.5rem;
+    
+    /* Mobile: Stack everything */
     grid-template-areas:
-      "controls"
-      "news"
-      "timeline";
+      "sidebar"
+      "news";
   }
 
-  @media (min-width: 768px) {
-    .grid-layout {
-      grid-template-columns: 1fr 1fr;
-      grid-template-areas:
-        "controls controls"
-        "news news"
-        "timeline timeline";
-    }
-  }
-
+  /* Desktop layout */
   @media (min-width: 1024px) {
     .grid-layout {
       grid-template-columns: minmax(280px, 1fr) minmax(0, 3fr);
-      grid-template-rows: auto 1fr;
-      grid-template-areas:
-        "controls news"
-        "timeline news";
+      grid-template-areas: "sidebar news";
     }
   }
 
-  .grid-area-controls { grid-area: controls; }
-  .grid-area-timeline { grid-area: timeline; }
+  .grid-area-sidebar { grid-area: sidebar; }
   .grid-area-news { grid-area: news; }
 </style>

@@ -1,56 +1,6 @@
 <!-- src/lib/features/fomo/week/Timeline.svelte -->
 <script lang="ts">
-  import { slide } from 'svelte/transition';
-  import type { Week } from '$lib/types';
-  import FomoCard from '../score/FomoCard.svelte';
-  
-  const weeks = [
-    {
-      weekNumber: 5,
-      score: 85,
-      startDate: new Date(2024, 1, 17),
-      endDate: new Date(2024, 1, 23),
-      summary: "SpaceX's Starship orbital test exceeds expectations. Private sector space competition intensifies as Rocket Lab announces new heavy-lift vehicle development."
-    },
-    {
-      weekNumber: 4,
-      score: 72,
-      startDate: new Date(2024, 1, 10),
-      endDate: new Date(2024, 1, 16),
-      summary: "NASA confirms critical Artemis milestone ahead of schedule. Blue Origin's New Glenn preparations signal major launch capabilities expansion."
-    },
-    {
-      weekNumber: 3,
-      score: 68,
-      startDate: new Date(2024, 1, 3),
-      endDate: new Date(2024, 1, 9),
-      summary: "ESA and JAXA announce joint Mars sample return mission. Virgin Galactic achieves new altitude record with next-gen spacecraft."
-    },
-    {
-      weekNumber: 2,
-      score: 78,
-      startDate: new Date(2024, 0, 27),
-      endDate: new Date(2024, 0, 2),
-      summary: "Breakthrough in space solar power transmission demos practical energy beaming. China's space station expansion enters new phase."
-    },
-    {
-      weekNumber: 1,
-      score: 65,
-      startDate: new Date(2024, 0, 20),
-      endDate: new Date(2024, 0, 26),
-      summary: "First commercial lunar lander touches down successfully. Space tourism bookings surge as new providers enter market."
-    }
-  ] as const;
-
-  let activeTab = $state<number | null>(null);
-
-  const formatDateRange = (start: Date, end: Date): string => {
-    const format = (d: Date) => d.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
-    return `${format(start)} - ${format(end)}`;
-  };
+  import { fomoStore } from '../stores/fomoStore';
 
   const getFomoEmoji = (score: number): string => {
     if (score >= 80) return '🤯';
@@ -60,56 +10,41 @@
     return '😴';
   };
 
-  $effect(() => {
-    // Reset active tab when component mounts
-    activeTab = 5;
-  });
+  const formatDate = (date: Date): string => {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    });
+  };
 </script>
 
-<div class="fixed bottom-0 left-0 right-0 z-50 bg-zinc-900/80">
-  <!-- Active Tab Content -->
-  {#if activeTab}
-    {@const activeWeek = weeks.find(w => w.weekNumber === activeTab)}
-    {#if activeWeek}
-      <div 
-        transition:slide|local={{ duration: 200 }}
-        class="absolute bottom-full w-full"
-      >
-        <div class="max-w-[1920px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
-          <div class="relative w-1/5" style="left: {(activeWeek.weekNumber - 1) * 20}%;">
-            <FomoCard
-              weekNumber={activeWeek.weekNumber}
-              dateRange={formatDateRange(activeWeek.startDate, activeWeek.endDate)}
-              score={activeWeek.score}
-              emoji={getFomoEmoji(activeWeek.score)}
-              summary={activeWeek.summary}
-            />
-          </div>
-        </div>
-      </div>
-    {/if}
-  {/if}
-
-  <!-- Tab Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-50">
   <div class="max-w-[1920px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
-    <div class="flex gap-5">
-      {#each weeks as week}
-        {@const isActive = activeTab === week.weekNumber}
+    <div class="flex gap-2">
+      {#each $fomoStore.weeks as week}
+        {@const isActive = $fomoStore.activeWeek === week.weekNumber}
         <button 
-          class="group flex-1 flex items-center px-4 py-3 text-sm transition-all
+          class="group flex-1 flex items-center px-4 py-2.5 text-sm transition-all
+                 rounded-t-lg border-t border-l border-r
                  {isActive 
-                   ? 'bg-zinc-800 text-zinc-200 border-t border-l border-r border-zinc-700 rounded-t-lg -mb-px' 
-                   : 'bg-zinc-900/80 hover:bg-zinc-800/50'}
-                 relative overflow-hidden"
-          onclick={() => activeTab = isActive ? null : week.weekNumber}
+                   ? 'bg-zinc-800 text-zinc-200 border-zinc-700' 
+                   : 'bg-zinc-900 text-zinc-400 border-zinc-800/50 hover:bg-zinc-800/80'}"
+          onclick={() => fomoStore.activeWeek = isActive ? null : week.weekNumber}
         >
           <div class="flex items-center gap-3 w-full">
-            <span class="whitespace-nowrap">
-              {week.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            <span class="text-xs whitespace-nowrap opacity-60">
+              {formatDate(week.startDate)}
             </span>
-            <div class="flex items-center gap-2 ml-auto transition-opacity {isActive ? 'opacity-100' : 'opacity-60'}">
-              <span>{getFomoEmoji(week.score)}</span>
-              <span class="font-medium">{week.score}</span>
+            <div class="flex items-center gap-2 ml-auto">
+              <span class="opacity-60 group-hover:opacity-100 transition-opacity">
+                {getFomoEmoji(week.score)}
+              </span>
+              <span class="font-medium 
+                         {isActive 
+                           ? 'bg-clip-text text-transparent bg-gradient-to-br from-violet-400 to-fuchsia-500' 
+                           : 'opacity-60 group-hover:opacity-100 transition-opacity'}">
+                {week.score}
+              </span>
             </div>
           </div>
           
