@@ -1,18 +1,18 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
-    import '../app.css';
-    import Nav from "$lib/layout/Nav.svelte"
-    import Footer from "$lib/layout/Footer.svelte"
+	import '../app.css';
+	import Nav from '$lib/layout/Nav.svelte';
+	import Footer from '$lib/layout/Footer.svelte';
 
-    let { children } = $props();
+	let { children } = $props();
 </script>
 
 <div class="">
-    <Nav />
+	<Nav />
 
-    <main class="min-h-screen">
-        {@render children()}
-    </main>
+	<main class="min-h-screen">
+		{@render children()}
+	</main>
 
-    <Footer />
+	<Footer />
 </div>

@@ -1,113 +1,40 @@
 <!-- src/lib/features/news/controls/Controls.svelte -->
 <script lang="ts">
-  import { SquaresFour, ArrowsOut, ArrowsIn } from 'phosphor-svelte';
+  import { Stack, Rows, SquaresFour, Table } from 'phosphor-svelte';
 
-  let { layout = {
-    columns: 1,
-    padding: 'normal',
-    width: 'normal'
-  }} = $props();
+  const layouts = [
+    { icon: Stack, label: 'Compact' },
+    { icon: Rows, label: 'Normal' },
+    { icon: SquaresFour, label: 'Grid' },
+    { icon: Table, label: 'Wide' }
+  ];
 
-  // Layout control states using runes
-  let columns = $state(1);
-  let padding = $state('normal'); // 'compact' | 'normal' | 'wide'
-  let width = $state('normal');   // 'narrow' | 'normal' | 'wide'
-
-  $effect(() => {
-    layout = {
-      columns,
-      padding,
-      width
-    };
-  });
+  let activeLayout = $state('Normal');
 </script>
 
-<div class="space-y-6">
-  <!-- Control Section -->
-  <div class="space-y-4">
-    <!-- Column Layout -->
-    <div class="space-y-2">
-      <label class="text-sm text-zinc-500">Grid Columns</label>
-      <div class="flex gap-2">
-        <button
-          class="flex-1 h-10 rounded-full border border-zinc-800 
-                 hover:bg-zinc-800/50 transition-colors
-                 flex items-center justify-center gap-2
-                 {columns === 1 ? 'bg-zinc-800/50' : ''}"
-          on:click={() => columns = 1}
-        >
-          <SquaresFour weight="light" class="w-4 h-4" />
-          <span class="text-sm">Single</span>
-        </button>
-        <button
-          class="flex-1 h-10 rounded-full border border-zinc-800 
-                 hover:bg-zinc-800/50 transition-colors
-                 flex items-center justify-center gap-2
-                 {columns === 2 ? 'bg-zinc-800/50' : ''}"
-          on:click={() => columns = 2}
-        >
-          <SquaresFour weight="light" class="w-4 h-4" />
-          <span class="text-sm">Double</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Padding Control -->
-    <div class="space-y-2">
-      <label class="text-sm text-zinc-500">Padding</label>
-      <div class="flex gap-2">
-        <button
-          class="flex-1 h-10 rounded-full border border-zinc-800 
-                 hover:bg-zinc-800/50 transition-colors
-                 {padding === 'compact' ? 'bg-zinc-800/50' : ''}"
-          on:click={() => padding = 'compact'}
-        >
-          <span class="text-sm">Compact</span>
-        </button>
-        <button
-          class="flex-1 h-10 rounded-full border border-zinc-800 
-                 hover:bg-zinc-800/50 transition-colors
-                 {padding === 'normal' ? 'bg-zinc-800/50' : ''}"
-          on:click={() => padding = 'normal'}
-        >
-          <span class="text-sm">Normal</span>
-        </button>
-        <button
-          class="flex-1 h-10 rounded-full border border-zinc-800 
-                 hover:bg-zinc-800/50 transition-colors
-                 {padding === 'wide' ? 'bg-zinc-800/50' : ''}"
-          on:click={() => padding = 'wide'}
-        >
-          <span class="text-sm">Wide</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Width Control -->
-    <div class="space-y-2">
-      <label class="text-sm text-zinc-500">Feed Width</label>
-      <div class="flex gap-2">
-        <button
-          class="flex-1 h-10 rounded-full border border-zinc-800 
-                 hover:bg-zinc-800/50 transition-colors
-                 flex items-center justify-center gap-2
-                 {width === 'narrow' ? 'bg-zinc-800/50' : ''}"
-          on:click={() => width = 'narrow'}
-        >
-          <ArrowsIn weight="light" class="w-4 h-4" />
-          <span class="text-sm">Narrow</span>
-        </button>
-        <button
-          class="flex-1 h-10 rounded-full border border-zinc-800 
-                 hover:bg-zinc-800/50 transition-colors
-                 flex items-center justify-center gap-2
-                 {width === 'wide' ? 'bg-zinc-800/50' : ''}"
-          on:click={() => width = 'wide'}
-        >
-          <ArrowsOut weight="light" class="w-4 h-4" />
-          <span class="text-sm">Wide</span>
-        </button>
-      </div>
-    </div>
+<div class="space-y-4">
+  <label class="text-sm text-zinc-500">Layout</label>
+  <div class="grid grid-cols-4 gap-2">
+    {#each layouts as layout}
+      {@const active = layout.label === activeLayout}
+      <button
+        class="group flex flex-col items-center gap-2 p-2 rounded-xl border
+               transition-all duration-200
+               {active 
+                 ? 'bg-zinc-800/80 border-zinc-700' 
+                 : 'border-zinc-800 hover:bg-zinc-800/50'}"
+        on:click={() => activeLayout = layout.label}
+      >
+        <svelte:component 
+          this={layout.icon}
+          weight="light"
+          class="w-5 h-5 transition-colors
+                {active 
+                  ? 'text-violet-400' 
+                  : 'text-zinc-500 group-hover:text-zinc-400'}"
+        />
+        <span class="text-xs text-zinc-500">{layout.label}</span>
+      </button>
+    {/each}
   </div>
 </div>

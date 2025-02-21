@@ -6,14 +6,19 @@ export type LayoutConfig = {
 	width: 'narrow' | 'normal' | 'wide';
 };
 
+export type LayoutOption = {
+	name: 'compact' | 'normal' | 'grid' | 'wide';
+	label: string;
+	config: LayoutConfig;
+};
+
 export type LayoutState = {
 	isSticky: boolean;
-	hasPassedThreshold: boolean;
 };
 
 export type GridClasses = {
 	container: string;
-	controls: string;
-	news: string;
+	main: string;
 	sidebar: string;
+	content: string;
 };
