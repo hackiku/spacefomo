@@ -13,7 +13,6 @@
 </script>
 
 <div class="space-y-4">
-  <label class="text-sm text-zinc-500">Layout</label>
   <div class="grid grid-cols-4 gap-2">
     {#each layouts as layout}
       {@const active = layout.label === activeLayout}
