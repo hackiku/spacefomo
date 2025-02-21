@@ -2,7 +2,7 @@
 <script lang="ts">
     import { Info, X } from 'phosphor-svelte';
     import Logo from '$lib/components/branding/Logo.svelte';
-    import AboutDrawer from '$lib/components/cta/contact/AboutDrawer.svelte';
+    import AboutDrawer from '$lib/components/contact/AboutDrawer.svelte';
     import github from '$lib/images/github.svg';
 
     let showAbout = $state(false);
