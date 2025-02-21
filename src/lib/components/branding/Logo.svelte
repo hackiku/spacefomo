@@ -1,13 +1,13 @@
 <!-- src/lib/components/branding/Logo.svelte -->
 <script lang="ts">
   let { size = 'default' } = $props<{
-    size?: 'small' | 'default' | 'large';
+    size?: 'sm' | 'md' | 'lg';
   }>();
 
   const sizeClasses = {
-    small: 'h-6',
-    default: 'h-8',
-    large: 'h-10'
+    sm: 'h-5',
+    md: 'h-7',
+    lg: 'h-10'
   };
 </script>
 

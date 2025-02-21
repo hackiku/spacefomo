@@ -1,8 +1,8 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
     import '../app.css';
-    import Nav from "$lib/components/navigation/Nav.svelte"
-    import Footer from "$lib/components/navigation/Footer.svelte"
+    import Nav from "$lib/layout/Nav.svelte"
+    import Footer from "$lib/layout/Footer.svelte"
 
     let { children } = $props();
 </script>
