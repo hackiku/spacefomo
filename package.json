@@ -13,6 +13,9 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check .",
 		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio",
+		"db:check": "drizzle-kit check",
 		"seed": "tsx src/lib/db/seed.ts"
 	},
 	"devDependencies": {

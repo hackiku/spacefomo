@@ -5,10 +5,10 @@ import { weeks } from './schema';
 const seedData = [
 	{
 		weekNumber: 5,
-		score: 85,
+		score: 55,
 		startDate: new Date('2024-02-17'),
 		endDate: new Date('2024-02-23'),
-		summary: "SpaceX's Starship orbital test exceeds expectations. Private sector space competition intensifies as Rocket Lab announces new heavy-lift vehicle development.",
+		summary: "Hey SpaceX's Starship orbital test exceeds expectations. Private sector space competition intensifies as Rocket Lab announces new heavy-lift vehicle development.",
 		stats: {
 			launchActivity: 92,
 			industryBuzz: 88,
@@ -17,7 +17,7 @@ const seedData = [
 	},
 	{
 		weekNumber: 4,
-		score: 72,
+		score: 44,
 		startDate: new Date('2024-02-10'),
 		endDate: new Date('2024-02-16'),
 		summary: "NASA confirms critical Artemis milestone ahead of schedule. Blue Origin's New Glenn preparations signal major launch capabilities expansion.",
@@ -29,7 +29,7 @@ const seedData = [
 	},
 	{
 		weekNumber: 3,
-		score: 68,
+		score: 33,
 		startDate: new Date('2024-02-03'),
 		endDate: new Date('2024-02-09'),
 		summary: "ESA and JAXA announce joint Mars sample return mission. Virgin Galactic achieves new altitude record with next-gen spacecraft.",
@@ -41,7 +41,7 @@ const seedData = [
 	},
 	{
 		weekNumber: 2,
-		score: 78,
+		score: 22,
 		startDate: new Date('2024-01-27'),
 		endDate: new Date('2024-02-02'),
 		summary: "Breakthrough in space solar power transmission demos practical energy beaming. China's space station expansion enters new phase.",
@@ -53,7 +53,7 @@ const seedData = [
 	},
 	{
 		weekNumber: 1,
-		score: 65,
+		score: 115,
 		startDate: new Date('2024-01-20'),
 		endDate: new Date('2024-01-26'),
 		summary: "First commercial lunar lander touches down successfully. Space tourism bookings surge as new providers enter market.",
@@ -69,16 +69,21 @@ async function seed() {
 	try {
 		console.log('🌱 Seeding database...');
 
-		// Clean existing data
-		await db.delete(weeks);
+		for (const week of weekData) {
+			// Update if exists, insert if doesn't
+			await db
+				.insert(weeks)
+				.values(week)
+				.onConflictDoUpdate({
+					target: weeks.weekNumber,
+					set: week
+				});
+		}
 
-		// Insert new data
-		await db.insert(weeks).values(seedData);
-		console.log('✅ Seeding complete!');
+		console.log('Data update complete!');
 	} catch (error) {
-		console.error('❌ Seeding failed:', error);
+		console.error('Data update failed:', error);
 	}
-	process.exit(0);
 }
 
 seed();
