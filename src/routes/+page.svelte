@@ -1,7 +1,7 @@
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
 	import Hero from '$lib/layout/Hero.svelte';
-	import Timeline from '$lib/features/fomo/week/Timeline.svelte';
+	import Timeline from '$lib/features/fomo/Timeline.svelte';
 	import GridLayout from '$lib/layout/GridLayout.svelte';
 	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
 	import { fomoStore } from '$lib/stores/fomoStore';

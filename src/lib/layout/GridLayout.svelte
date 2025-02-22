@@ -21,7 +21,7 @@ const gridClasses: Record<LayoutOption['name'], GridClasses> = {
   },
   normal: {
     container: 'max-w-6xl px-6',
-    main: 'md:grid-cols-12 gap-8',
+    main: 'md:grid-cols-12 gap-20',
     sidebar: 'md:col-span-4',
     content: 'md:col-span-8'
   },
@@ -82,7 +82,7 @@ const gridClasses: Record<LayoutOption['name'], GridClasses> = {
     </div>
 
     <!-- Right Column - News Grid -->
-    <div class="{gridClasses[activeLayout].content} grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-screen">
+    <div class="{gridClasses[activeLayout].content} grid grid-cols-1 lg:grid-cols-1 gap-6 min-h-screen">
       <News />
     </div>
   </div>
