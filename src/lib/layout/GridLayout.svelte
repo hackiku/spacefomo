@@ -13,40 +13,31 @@
   
   const gridClasses: Record<LayoutOption['name'], GridClasses> = {
     compact: {
-      container: 'max-w-5xl px-4',
+      container: 'max-w-5xl px-4 sm:px-6',
       main: 'md:grid-cols-12 gap-6',
       sidebar: 'md:col-span-3',
       content: 'md:col-span-9'
     },
     normal: {
-      container: 'max-w-6xl px-6',
+      container: 'max-w-6xl px-4 sm:px-8',
       main: 'md:grid-cols-12 gap-8',
       sidebar: 'md:col-span-4',
       content: 'md:col-span-8'
     },
-    grid: {
-      container: 'max-w-7xl px-8',
-      main: 'md:grid-cols-12 gap-10',
-      sidebar: 'md:col-span-5',
-      content: 'md:col-span-7'
-    },
     wide: {
-      container: 'max-w-[96rem] px-12',
-      main: 'md:grid-cols-12 gap-12',
-      sidebar: 'md:col-span-6',
-      content: 'md:col-span-6'
+      container: 'max-w-7xl px-4 sm:px-12',
+      main: 'md:grid-cols-12 gap-10',
+      sidebar: 'md:col-span-4',
+      content: 'md:col-span-8'
     }
-  };  
+  };
 
   onMount(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         isSticky = !entry.isIntersecting;
       },
-      { 
-        threshold: 0,
-        rootMargin: '-1px 0px 0px 0px'
-      }
+      { threshold: 0, rootMargin: '-1px 0px 0px 0px' }
     );
     
     if (sidebarRef) {
@@ -68,7 +59,10 @@
       class:sticky={isSticky}
       class:top-0={isSticky}
     >
-      <Controls {activeLayout} />
+      <Controls 
+        bind:activeLayout
+        class="md:sticky md:top-4"
+      />
       
       {#if currentWeek}
         <FomoCard

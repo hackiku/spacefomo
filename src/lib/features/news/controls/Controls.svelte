@@ -1,40 +1,74 @@
 <!-- src/lib/features/news/controls/Controls.svelte -->
 <script lang="ts">
+  import { Rows, Table, Columns } from 'phosphor-svelte';
   import type { LayoutOption } from '$lib/types/layout';
-  import { Stack } from 'phosphor-svelte';  // Using phosphor-svelte for now
-
-  const layouts: LayoutOption[] = [
-    { name: 'compact', label: 'Compact', icon: Stack },
-    { name: 'normal', label: 'Normal', icon: Stack },
-    { name: 'grid', label: 'Grid', icon: Stack },
-    { name: 'wide', label: 'Wide', icon: Stack }
-  ];
 
   let { activeLayout = $bindable('normal') } = $props<{
     activeLayout?: LayoutOption['name']
   }>();
+
+  // Width controls
+  const widthLayouts = [
+    { name: 'compact', label: 'Compact', icon: Columns },
+    { name: 'normal', label: 'Medium', icon: Columns },
+    { name: 'wide', label: 'Wide', icon: Columns }
+  ];
+
+  // Column controls - we'll integrate this with the grid system
+  const columnLayouts = [
+    { label: 'Single', icon: Rows },
+    { label: 'Grid', icon: Table }
+  ];
+
+  let columnCount = $state(2);
 </script>
 
-<div class="grid grid-cols-4 gap-2">
-  {#each layouts as layout}
-    {@const active = layout.name === activeLayout}
-    <button
-      type="button"
-      class="group flex flex-col items-center gap-2 p-2 rounded-xl border
-             transition-all duration-200
-             {active 
-               ? 'bg-zinc-800/80 border-zinc-700' 
-               : 'border-zinc-800 hover:bg-zinc-800/50'}"
-      onclick={() => activeLayout = layout.name}
-    >
-      <Stack
-        weight="light"
-        class="w-5 h-5 transition-colors
-              {active 
-                ? 'text-violet-400' 
-                : 'text-zinc-500 group-hover:text-zinc-400'}"
-      />
-      <span class="text-xs text-zinc-500">{layout.label}</span>
-    </button>
-  {/each}
+<div class="space-y-3">
+  <!-- Width controls -->
+  <div class="flex gap-2">
+    {#each widthLayouts as layout}
+      {@const active = layout.name === activeLayout}
+      <button
+        type="button"
+        class="group flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border
+               transition-all duration-200 text-xs
+               {active 
+                 ? 'bg-zinc-800/80 border-zinc-700 text-zinc-200' 
+                 : 'border-zinc-800 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
+        onclick={() => activeLayout = layout.name}
+      >
+        <svelte:component 
+          this={layout.icon}
+          weight={active ? 'regular' : 'light'}
+          class="w-4 h-4 transition-colors
+                {active ? 'text-violet-400' : ''}"
+        />
+        <span>{layout.label}</span>
+      </button>
+    {/each}
+  </div>
+
+  <!-- Column layout controls -->
+  <div class="flex gap-2">
+    {#each columnLayouts as layout, i}
+      {@const active = columnCount === (i + 1)}
+      <button
+        type="button"
+        class="group flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border
+               transition-all duration-200 text-xs
+               {active 
+                 ? 'bg-zinc-800/80 border-zinc-700 text-zinc-200' 
+                 : 'border-zinc-800 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
+        onclick={() => columnCount = i + 1}
+      >
+        <svelte:component 
+          this={layout.icon}
+          weight={active ? 'regular' : 'light'}
+          class="w-4 h-4 transition-colors
+                {active ? 'text-violet-400' : ''}"
+        />
+        <span>{layout.label}</span>
+      </button>
+    {/each}
+  </div>
 </div>
