@@ -1,10 +1,13 @@
-import type { Config } from 'drizzle-kit';
+import { config } from 'dotenv';
+import { defineConfig } from 'drizzle-kit';
 
-export default {
+config({ path: '.env' });
+
+export default defineConfig({
+	dialect: 'postgresql',
 	schema: './src/lib/db/schema.ts',
-	out: './src/lib/db/migrations',
-	driver: 'pg',
+	out: './supabase/migrations',
 	dbCredentials: {
-		connectionString: process.env.DATABASE_URL!
-	}
-} satisfies Config;
+		url: process.env.DATABASE_URL!,
+	},
+});
