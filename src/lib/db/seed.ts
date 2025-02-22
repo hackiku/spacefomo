@@ -2,6 +2,7 @@
 import { db } from './index';
 import { weeks } from './schema';
 
+
 const seedData = [
 	{
 		weekNumber: 5,
@@ -69,21 +70,17 @@ async function seed() {
 	try {
 		console.log('🌱 Seeding database...');
 
-		for (const week of weekData) {
-			// Update if exists, insert if doesn't
-			await db
-				.insert(weeks)
-				.values(week)
-				.onConflictDoUpdate({
-					target: weeks.weekNumber,
-					set: week
-				});
-		}
+		// Clean existing data
+		await db.delete(weeks);
 
-		console.log('Data update complete!');
+		// Insert new data
+		await db.insert(weeks).values(seedData);
+
+		console.log('✅ Seeding complete!');
 	} catch (error) {
-		console.error('Data update failed:', error);
+		console.error('❌ Seeding failed:', error);
 	}
+	process.exit(0);
 }
 
 seed();
