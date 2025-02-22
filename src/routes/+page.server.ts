@@ -2,13 +2,21 @@
 import { supabase } from "$lib/supabaseClient";
 
 export async function load() {
-	const { data: week } = await supabase
-		.from("weeks")
-		.select()
-		.eq('week_number', 1)
-		.single();
+	try {
+		const { data: week, error } = await supabase
+			.from("weeks")
+			.select()
+			.eq('week_number', 1)
+			.single();
 
-	return {
-		week: week ?? null
-	};
+		if (error) {
+			console.error('Error fetching week:', error);
+			return { week: null };
+		}
+
+		return { week };
+	} catch (error) {
+		console.error('Error:', error);
+		return { week: null };
+	}
 }
