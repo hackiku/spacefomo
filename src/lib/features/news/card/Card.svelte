@@ -1,7 +1,7 @@
-<!-- src/lib/features/news/Card.svelte -->
+<!-- src/lib/features/news/card/Card.svelte -->
 <script lang="ts">
   import type { NewsItem } from '$lib/types';
-  import NewsScore from './NewsScore.svelte';
+  import NewsScore from './Score.svelte';
   
   export let item: NewsItem;
   export let onClick: (item: NewsItem) => void = () => {};

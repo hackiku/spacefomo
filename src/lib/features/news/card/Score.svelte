@@ -1,11 +1,11 @@
-<!-- src/lib/features/news/card/FomoScore.svelte -->
+<!-- src/lib/features/news/card/Score.svelte -->
 
 <script lang="ts">
   export let score: number;
   export let onUpvote: () => void = () => {};
   export let onDownvote: () => void = () => {};
 
-  import { ArrowUp, ArrowDown } from 'lucide-svelte';
+  import { ArrowUp, ArrowDown } from 'phosphor-svelte';
 </script>
 
 <div class="flex flex-col items-center gap-2">

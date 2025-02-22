@@ -1,48 +1,33 @@
 // src/routes/+page.server.ts
-import { supabase } from "$lib/supabaseClient";
+import { db } from '$lib/db';
+import { weeks } from '$lib/db/schema';
+import { desc } from 'drizzle-orm';
 
 export async function load() {
 	try {
-		// First, let's check if we can connect by getting a count
-		const { count, error: countError } = await supabase
-			.from("weeks")
-			.select('*', { count: 'exact' });
+		// Get all weeks, ordered by week number
+		const data = await db.select().from(weeks).orderBy(desc(weeks.weekNumber));
 
-		if (countError) {
-			console.error('Count error:', countError);
+		if (!data?.length) {
 			return {
-				week: null,
-				debug: { error: 'Count failed', details: countError.message }
-			};
-		}
-
-		console.log(`Found ${count} weeks in database`);
-
-		// Now try to get the most recent week
-		const { data: week, error } = await supabase
-			.from("weeks")
-			.select()
-			.order('week_number', { ascending: false })
-			.limit(1)
-			.single();
-
-		if (error) {
-			console.error('Week fetch error:', error);
-			return {
-				week: null,
-				debug: { error: 'Fetch failed', details: error.message }
+				weeks: [],
+				currentWeek: null,
+				debug: { error: 'No weeks found' }
 			};
 		}
 
 		return {
-			week,
-			debug: { success: true, weekCount: count }
+			weeks: data,
+			currentWeek: data[0], // Most recent week
+			debug: { success: true, weekCount: data.length }
 		};
+
 	} catch (error) {
-		console.error('Unexpected error:', error);
+		console.error('Data fetch error:', error);
 		return {
-			week: null,
-			debug: { error: 'Unexpected error', details: String(error) }
+			weeks: [],
+			currentWeek: null,
+			debug: { error: 'Fetch failed', details: String(error) }
 		};
 	}
 }
