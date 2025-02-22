@@ -11,33 +11,33 @@
   let sidebarRef: HTMLDivElement;
   let activeLayout = $state<LayoutOption['name']>('normal');
   
-  // Grid layout configurations
-const gridClasses: Record<LayoutOption['name'], GridClasses> = {
-  compact: {
-    container: 'max-w-5xl px-4',
-    main: 'md:grid-cols-12 gap-6',
-    sidebar: 'md:col-span-3',
-    content: 'md:col-span-9'
-  },
-  normal: {
-    container: 'max-w-6xl px-6',
-    main: 'md:grid-cols-12 gap-20',
-    sidebar: 'md:col-span-4',
-    content: 'md:col-span-8'
-  },
-  grid: {
-    container: 'max-w-7xl px-8',
-    main: 'md:grid-cols-12 gap-10',
-    sidebar: 'md:col-span-5',
-    content: 'md:col-span-7'
-  },
-  wide: {
-    container: 'max-w-[96rem] px-12',
-    main: 'md:grid-cols-12 gap-12',
-    sidebar: 'md:col-span-6',
-    content: 'md:col-span-6'
-  }
-};  
+  const gridClasses: Record<LayoutOption['name'], GridClasses> = {
+    compact: {
+      container: 'max-w-5xl px-4',
+      main: 'md:grid-cols-12 gap-6',
+      sidebar: 'md:col-span-3',
+      content: 'md:col-span-9'
+    },
+    normal: {
+      container: 'max-w-6xl px-6',
+      main: 'md:grid-cols-12 gap-8',
+      sidebar: 'md:col-span-4',
+      content: 'md:col-span-8'
+    },
+    grid: {
+      container: 'max-w-7xl px-8',
+      main: 'md:grid-cols-12 gap-10',
+      sidebar: 'md:col-span-5',
+      content: 'md:col-span-7'
+    },
+    wide: {
+      container: 'max-w-[96rem] px-12',
+      main: 'md:grid-cols-12 gap-12',
+      sidebar: 'md:col-span-6',
+      content: 'md:col-span-6'
+    }
+  };  
+
   onMount(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -45,7 +45,7 @@ const gridClasses: Record<LayoutOption['name'], GridClasses> = {
       },
       { 
         threshold: 0,
-        rootMargin: '-1px 0px 0px 0px' // Trigger as soon as the top edge touches the viewport
+        rootMargin: '-1px 0px 0px 0px'
       }
     );
     
@@ -82,8 +82,10 @@ const gridClasses: Record<LayoutOption['name'], GridClasses> = {
     </div>
 
     <!-- Right Column - News Grid -->
-    <div class="{gridClasses[activeLayout].content} grid grid-cols-1 lg:grid-cols-1 gap-6 min-h-screen">
-      <News />
+    <div class="{gridClasses[activeLayout].content}">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <News />
+      </div>
     </div>
   </div>
 </div>
