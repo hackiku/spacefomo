@@ -25,7 +25,7 @@
              {active 
                ? 'bg-zinc-800/80 border-zinc-700' 
                : 'border-zinc-800 hover:bg-zinc-800/50'}"
-      on:click={() => activeLayout = layout.name}
+      onclick={() => activeLayout = layout.name}
     >
       <Stack
         weight="light"
