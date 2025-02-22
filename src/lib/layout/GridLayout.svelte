@@ -2,8 +2,8 @@
 <script lang="ts">
   import Controls from '$lib/features/news/controls/Controls.svelte';
   import News from '$lib/features/news/News.svelte';
-  import FomoCard from '$lib/features/fomo/score/FomoCard.svelte';
-  import { fomoStore } from '$lib/features/fomo/stores/fomoStore';
+  import FomoCard from '$lib/features/fomo/FomoCard.svelte';
+  import { fomoStore } from '$lib/stores/fomoStore';
   import type { LayoutOption, GridClasses } from '$lib/types/layout';
   import { onMount } from 'svelte';
   

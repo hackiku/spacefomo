@@ -16,7 +16,10 @@
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
 		"db:check": "drizzle-kit check",
-		"seed": "tsx src/lib/db/seed.ts"
+		"seed": "tsx src/lib/db/seed.ts",
+		"db:sync-news": "tsx src/lib/db/news/sync.ts",
+		"db:sync-all": "npm run seed && npm run db:sync-news",
+		"db:validate": "tsx src/lib/db/content/validate.ts"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^5.0.0",
