@@ -16,7 +16,7 @@
 	<section class="relative">
 		<div
 			class="-z-10 pointer-events-none absolute top-0 left-0 w-full
-			h-44 bg-gradient-to-b from-black/40 to-transparent"
+						h-44 bg-gradient-to-b from-black/40 to-transparent"
 		></div>
 		<GridLayout />
 	</section>

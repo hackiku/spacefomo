@@ -1,52 +1,17 @@
+<!-- src/lib/features/news/controls/Controls.svelte -->
 <script lang="ts">
-  import { Stack, Rows, SquaresFour, Table } from 'phosphor-svelte';
   import type { LayoutOption } from '$lib/types/layout';
+  import { Stack } from 'phosphor-svelte';  // Using phosphor-svelte for now
 
   const layouts: LayoutOption[] = [
-    { 
-      name: 'compact',
-      label: 'Compact',
-      icon: Stack,
-      config: {
-        columns: 1,
-        padding: 'compact',
-        width: 'narrow'
-      }
-    },
-    {
-      name: 'normal',
-      label: 'Normal',
-      icon: Rows,
-      config: {
-        columns: 1,
-        padding: 'normal',
-        width: 'normal'
-      }
-    },
-    {
-      name: 'grid',
-      label: 'Grid',
-      icon: SquaresFour,
-      config: {
-        columns: 2,
-        padding: 'normal',
-        width: 'wide'
-      }
-    },
-    {
-      name: 'wide',
-      label: 'Wide',
-      icon: Table,
-      config: {
-        columns: 2,
-        padding: 'wide',
-        width: 'wide'
-      }
-    }
+    { name: 'compact', label: 'Compact', icon: Stack },
+    { name: 'normal', label: 'Normal', icon: Stack },
+    { name: 'grid', label: 'Grid', icon: Stack },
+    { name: 'wide', label: 'Wide', icon: Stack }
   ];
 
   let { activeLayout = $bindable('normal') } = $props<{
-    activeLayout: LayoutOption['name']
+    activeLayout?: LayoutOption['name']
   }>();
 </script>
 
@@ -54,6 +19,7 @@
   {#each layouts as layout}
     {@const active = layout.name === activeLayout}
     <button
+      type="button"
       class="group flex flex-col items-center gap-2 p-2 rounded-xl border
              transition-all duration-200
              {active 
@@ -61,8 +27,7 @@
                : 'border-zinc-800 hover:bg-zinc-800/50'}"
       on:click={() => activeLayout = layout.name}
     >
-      <svelte:component 
-        this={layout.icon}
+      <Stack
         weight="light"
         class="w-5 h-5 transition-colors
               {active 

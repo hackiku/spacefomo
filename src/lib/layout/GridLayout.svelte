@@ -1,9 +1,11 @@
+<!-- src/lib/layout/GridLayout.svelte -->
 <script lang="ts">
   import Controls from '$lib/features/news/controls/Controls.svelte';
   import News from '$lib/features/news/News.svelte';
   import FomoCard from '$lib/features/fomo/score/FomoCard.svelte';
   import { fomoStore } from '$lib/features/fomo/stores/fomoStore';
   import type { LayoutOption, GridClasses } from '$lib/types/layout';
+  import { onMount } from 'svelte';
   
   let isSticky = $state(false);
   let sidebarRef: HTMLDivElement;
@@ -37,13 +39,21 @@
     }
   };
   
-  $effect(() => {
-    if (!sidebarRef) return;
+  onMount(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => isSticky = !entry.isIntersecting,
-      { threshold: 0 }
+      ([entry]) => {
+        isSticky = !entry.isIntersecting;
+      },
+      { 
+        threshold: 0,
+        rootMargin: '-1px 0px 0px 0px' // Trigger as soon as the top edge touches the viewport
+      }
     );
-    observer.observe(sidebarRef);
+    
+    if (sidebarRef) {
+      observer.observe(sidebarRef);
+    }
+
     return () => observer.disconnect();
   });
 
@@ -57,9 +67,9 @@
       bind:this={sidebarRef}
       class="space-y-4 transition-all duration-200 md:{gridClasses[activeLayout].sidebar}"
       class:md:sticky={isSticky}
-      class:md:top-4={isSticky}
+      class:md:top-0={isSticky}
     >
-      <Controls {activeLayout} />
+      <Controls activeLayout={activeLayout} />
       
       {#if currentWeek}
         <FomoCard
