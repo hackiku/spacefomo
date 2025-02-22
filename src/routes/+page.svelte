@@ -6,44 +6,35 @@
 
 	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
 
-	interface WeekData {
-		id: number;
-		created_at: string;
-		week_number: number;
-		score: number;
-	}
+  interface WeekData {
+    id: number;
+    created_at: string;
+    week_number: number;
+    score: number;
+  }
 
 	let { data } = $props<{ week: WeekData | null }>();
 </script>
 
 <ViewportSize />
 
-<div class="mx-auto max-w-2xl px-4">
-	{#if data.week}
-		<div class="rounded-lg bg-zinc-800 p-6 shadow-lg">
-			<div class="mb-4 flex items-center justify-between">
-				<h2 class="text-xl font-semibold text-white">
-					Week {data.week.week_number}
-				</h2>
-				<span class="text-sm text-zinc-400">
-					Created: {new Date(data.week.created_at).toLocaleDateString()}
-				</span>
-			</div>
-			<div class="flex items-center gap-3">
-				<span class="text-3xl">
-					{data.week.score >= 80 ? '🚀' : '🛸'}
-				</span>
-				<span
-					class="bg-gradient-to-r from-violet-400 to-fuchsia-500 bg-clip-text text-2xl font-bold text-transparent"
-				>
-					{data.week.score}
-				</span>
-			</div>
-		</div>
-	{:else}
-		<div class="text-center text-zinc-400">No week data found</div>
-	{/if}
+
+<div class="absolute top-4 left-4 z-50 w-64 rounded-lg bg-zinc-900/90 p-4 shadow-xl backdrop-blur">
+  {#if data.week}
+    <div class="space-y-2">
+      <div class="flex items-center justify-between border-b border-zinc-700 pb-2">
+        <h3 class="font-medium text-zinc-200">Week {data.week.week_number}</h3>
+        <span class="text-sm text-zinc-400">{data.week.score}%</span>
+      </div>
+      <p class="text-xs text-zinc-500">
+        Created: {new Date(data.week.created_at).toLocaleDateString()}
+      </p>
+    </div>
+  {:else}
+    <p class="text-sm text-zinc-500">Loading week data...</p>
+  {/if}
 </div>
+
 
 <div class="flex min-h-screen flex-col">
 	<section
