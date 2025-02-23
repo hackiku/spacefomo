@@ -1,3 +1,5 @@
+// supabase/migrations/schema.ts
+
 import { pgTable, unique, bigint, varchar, timestamp, bigserial, integer, text, jsonb, foreignKey, boolean, index, date, pgEnum } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 

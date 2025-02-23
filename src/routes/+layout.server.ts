@@ -1,16 +1,17 @@
 // src/routes/+layout.server.ts
 import { db } from '$lib/db';
 import { weeks, news } from '$lib/db/schema';
-import { desc } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 export async function load() {
 	try {
-		// Fetch weeks and news concurrently for better performance
+		// Fetch weeks and news concurrently with correct ordering
 		const [weeksData, newsData] = await Promise.all([
-			db.select().from(weeks).orderBy(desc(weeks.weekNumber)),
+			db.select().from(weeks)
+				.orderBy(sql`"week_number" DESC`),
 			db.select().from(news)
-				.orderBy(desc(news.fomo_score))
-				.limit(50)  // Adjust based on your needs
+				.orderBy(sql`"fomo_score" DESC`)
+				.limit(50)
 		]);
 
 		return {
