@@ -1,5 +1,5 @@
 // src/lib/stores/newsStore.ts
-import { writable, derived } from 'svelte/store';
+import { writable, derived, type Readable } from 'svelte/store';
 
 export interface NewsItem {
 	id: number;
@@ -18,15 +18,24 @@ export interface NewsItem {
 	viral_title: string | null;
 }
 
-const createNewsStore = () => {
-	const { subscribe, set, update } = writable<{
-		items: NewsItem[];
-		activeItemId: number | null;
-		filter: {
-			weekId: number | null;
-			tags: string[];
-		};
-	}>({
+interface NewsStoreState {
+	items: NewsItem[];
+	activeItemId: number | null;
+	filter: {
+		weekId: number | null;
+		tags: string[];
+	};
+}
+
+interface NewsStore extends Readable<NewsStoreState> {
+	filteredItems: Readable<NewsItem[]>;
+	setFilter: (weekId: number | null, tags?: string[]) => void;
+	setActiveItem: (id: number | null) => void;
+	initializeNews: (news: NewsItem[]) => void;
+}
+
+const createNewsStore = (): NewsStore => {
+	const { subscribe, set, update } = writable<NewsStoreState>({
 		items: [],
 		activeItemId: null,
 		filter: {
@@ -35,22 +44,29 @@ const createNewsStore = () => {
 		}
 	});
 
-	const filteredItems = derived(
+	const filteredItems = derived<Readable<NewsStoreState>, NewsItem[]>(
 		{ subscribe },
 		($state) => {
 			let items = $state.items;
 
-			if ($state.filter.weekId) {
+			// Filter by week if specified
+			if ($state.filter.weekId !== null) {
 				items = items.filter(item => item.week_id === $state.filter.weekId);
 			}
 
-			if ($state.filter.tags.length && items[0]?.tags) {
+			// Filter by tags if any are selected
+			if ($state.filter.tags.length > 0) {
 				items = items.filter(item =>
-					item.tags && $state.filter.tags.some(tag => item.tags.includes(tag))
+					item.tags?.some(tag => $state.filter.tags.includes(tag))
 				);
 			}
 
-			return items.sort((a, b) => (b.fomo_score ?? 0) - (a.fomo_score ?? 0));
+			// Sort by FOMO score (descending), handling null values
+			return items.sort((a, b) => {
+				const scoreA = a.fomo_score ?? -Infinity;
+				const scoreB = b.fomo_score ?? -Infinity;
+				return scoreB - scoreA;
+			});
 		}
 	);
 
@@ -58,11 +74,25 @@ const createNewsStore = () => {
 		subscribe,
 		filteredItems,
 		setFilter: (weekId: number | null, tags: string[] = []) =>
-			update(state => ({ ...state, filter: { weekId, tags } })),
+			update(state => ({
+				...state,
+				filter: { weekId, tags }
+			})),
 		setActiveItem: (id: number | null) =>
-			update(state => ({ ...state, activeItemId: id })),
+			update(state => ({
+				...state,
+				activeItemId: id
+			})),
 		initializeNews: (news: NewsItem[]) =>
-			set({ items: news, activeItemId: null, filter: { weekId: null, tags: [] } })
+			set({
+				items: news.map(item => ({
+					...item,
+					created_at: new Date(item.created_at),
+					publication_date: item.publication_date ? new Date(item.publication_date) : null
+				})),
+				activeItemId: null,
+				filter: { weekId: null, tags: [] }
+			})
 	};
 };
 
