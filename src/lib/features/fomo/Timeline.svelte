@@ -1,7 +1,7 @@
 <!-- src/lib/features/fomo/Timeline.svelte -->
 <script lang="ts">
   import { fomoStore } from '$lib/stores/fomoStore';
-  import FomoCard from './cards/FomoCard.svelte';
+  import FomoCard from './FomoCard.svelte';
   
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('en-US', {
@@ -32,17 +32,18 @@
 <div class="relative h-full overflow-y-auto no-scrollbar">
   <div class="relative pr-4">
     <!-- Center line with gradient -->
-    <div class="absolute left-[0.875rem] top-0 bottom-0 w-px">
+    <!-- <div class="absolute left-[0.875rem] top-0 bottom-0 w-px"> -->
+    <div class="absolute left-6 top-0 bottom-0 w-px">
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-800 to-transparent"></div>
     </div>
 
     <!-- Timeline items -->
-    <div class="space-y-6">
+    <div class="flex md:flex-col gap-12">
       {#each $fomoStore.weeks as week (week.id)}
         {@const isActive = $fomoStore.currentWeek?.id === week.id}
         <div class="relative">
           <!-- Date indicator -->
-          <div class="flex items-center gap-4 mb-2">
+          <div class="flex md:mx-4.5 flex-col md:flex-row items-center gap-2 mb-2">
             <div class="relative w-3.5 h-3.5">
               <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
                         w-2 h-2 rounded-full bg-zinc-700"></div>
@@ -55,7 +56,7 @@
           </div>
 
           <!-- FOMO Card -->
-          <div class="ml-7">
+          <div class="">
             <FomoCard
               weekNumber={week.weekNumber}
               dateRange={`${formatDate(week.startDate)} - ${formatDate(week.endDate)}`}

@@ -1,4 +1,4 @@
-<!-- src/lib/features/fomo/cards/FomoCard.svelte -->
+<!-- src/lib/features/fomo/FomoCard.svelte -->
 <script lang="ts">
   import { CaretDown, CaretUp } from 'phosphor-svelte';
 
