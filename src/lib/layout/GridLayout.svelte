@@ -2,7 +2,6 @@
 <script lang="ts">
 	import Controls from '$lib/features/news/controls/Controls.svelte';
 	import News from '$lib/features/news/News.svelte';
-	import FomoCard from '$lib/features/fomo/FomoCard.svelte';
 	import Timeline from '$lib/features/fomo/Timeline.svelte';
 	import { fomoStore } from '$lib/stores/fomoStore';
 	import type { LayoutOption, GridClasses } from '$lib/types/layout';
@@ -15,13 +14,13 @@
 
 	const gridClasses: Record<LayoutOption['name'], GridClasses> = {
 		compact: {
-			container: 'max-w-5xl px-4 sm:px-6 md:px-12',
-			main: 'md:grid-cols-12 gap-12',
-			sidebar: 'md:col-span-3',
-			content: 'md:col-span-9'
+			container: 'max-w-2xl px-4',
+			main: 'md:grid-cols-12 gap-16',
+			sidebar: 'md:col-span-3 bg-violet-900/10 -ml-44 mr-44',
+			content: 'md:col-span-9 -ml-22 pr-44'
 		},
 		normal: {
-			container: 'max-w-6xl px-4 sm:px-20',
+			container: 'max-w-4xl',
 			main: 'md:grid-cols-12 gap-20',
 			sidebar: 'md:col-span-4',
 			content: 'md:col-span-8'
@@ -67,19 +66,8 @@
 			class:sticky={isSticky}
 			class:top-0={isSticky}
 		>
-			<Controls bind:activeLayout bind:columnCount class="md:sticky md:top-4" />
-
-			{#if currentWeek}
-				<FomoCard
-					weekNumber={currentWeek.weekNumber}
-					dateRange={currentWeek.startDate.toLocaleDateString()}
-					score={currentWeek.score}
-					emoji={currentWeek.score >= 80 ? '🤯' : '🚀'}
-					summary={currentWeek.summary}
-				/>
-			{/if}
-
-			<div class="h-[calc(100vh-200px)] sticky top-24">
+			<div class="h-screen sticky flex flex-col gap-12 top-24">
+				<Controls bind:activeLayout bind:columnCount class="md:sticky md:top-4" />
   	  	<Timeline />
 	  	</div>
 
@@ -87,8 +75,7 @@
 
 		<!-- Right Column - News Grid -->
 		<div class={gridClasses[activeLayout].content}>
-			<div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
-			<!-- <div class="grid gap-6 {gridClass}"> -->
+			<div class="gap-6 {gridClass}">
 				<News />
 			</div>
 		
