@@ -6,7 +6,7 @@
   import DevJson from './DevJson.svelte';
   
   let { article } = $props<{ article: NewsItem }>();
-  let showJson = $state(false);
+  let showJson = $state(true);
   
   function copyUrl() {
     navigator.clipboard.writeText(article.url);
@@ -126,7 +126,7 @@
             class="rounded-xl bg-zinc-800 px-6 py-2.5 text-sm text-zinc-100 
                    hover:bg-zinc-700 transition-colors"
           >
-            Read Article
+            Open Link
           </a>
         </div>
       </div>

@@ -3,6 +3,7 @@
 	import Controls from '$lib/features/news/controls/Controls.svelte';
 	import News from '$lib/features/news/News.svelte';
 	import FomoCard from '$lib/features/fomo/FomoCard.svelte';
+	import Timeline from '$lib/features/fomo/Timeline.svelte';
 	import { fomoStore } from '$lib/stores/fomoStore';
 	import type { LayoutOption, GridClasses } from '$lib/types/layout';
 	import { onMount } from 'svelte';
@@ -77,6 +78,11 @@
 					summary={currentWeek.summary}
 				/>
 			{/if}
+
+			<div class="h-[calc(100vh-200px)] sticky top-24">
+  	  	<Timeline />
+	  	</div>
+
 		</div>
 
 		<!-- Right Column - News Grid -->
@@ -85,6 +91,8 @@
 			<!-- <div class="grid gap-6 {gridClass}"> -->
 				<News />
 			</div>
+		
+
 		</div>
 	</div>
 </div>

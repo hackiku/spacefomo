@@ -1,7 +1,7 @@
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
   import Hero from '$lib/layout/Hero.svelte';
-  import Timeline from '$lib/features/fomo/Timeline.svelte';
+  // import Timeline from '$lib/features/fomo/Timeline.svelte';
   import GridLayout from '$lib/layout/GridLayout.svelte';
   import { fomoStore } from '$lib/stores/fomoStore';
 	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
@@ -23,5 +23,5 @@
     <div class="pointer-events-none absolute top-0 left-0 -z-10 h-44 w-full bg-gradient-to-b from-black/40 to-transparent"></div>
     <GridLayout />
   </section>
-  <Timeline />
+  <!-- <Timeline /> -->
 </div>
