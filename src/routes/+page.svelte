@@ -27,9 +27,9 @@
   });
 </script>
 
-<ViewportSize />
 
-<DebugPanel currentWeek={data.currentWeek} debug={data.debug} />
+<ViewportSize />
+<!-- <DebugPanel currentWeek={data.currentWeek} debug={data.debug} /> -->
 
 <div class="flex min-h-screen flex-col">
   <section

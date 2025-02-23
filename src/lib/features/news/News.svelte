@@ -10,7 +10,7 @@
     title: `AerospaceUX launches Moonship to orbit for the first time`,
     source: 'Space.com',
     readTime: 2,
-    score: 85 - (i * 3),
+    score: 85 - (i * 3), 
     url: 'https://example.com',
     tags: ['launch', 'spacex'],
     weekId: 5,
