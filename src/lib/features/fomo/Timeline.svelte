@@ -26,10 +26,10 @@
 	});
 </script>
 
-<div class="fixed right-0 bottom-0 left-0 z-50">
+<div class="fixed right-0 -bottom-1 left-0 z-50">
 	<div class="relative">
 		<div class="mx-auto max-w-[1920px] px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
-			<div class="flex gap-2 pb-0.5">
+			<div class="flex gap-4 pb-0.5">
 				{#each $fomoStore.weeks as week (week.id)}
 					{@const isActive = selectedTab === week.weekNumber}
 					<button
@@ -63,7 +63,7 @@
 
 						{#if isActive}
 							<div
-								class="absolute right-0 bottom-0 left-0 h-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500"
+								class="absolute right-0 bottom-[2px] left-0 h-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500"
 							/>
 						{/if}
 					</button>

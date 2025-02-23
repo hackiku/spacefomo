@@ -4,7 +4,7 @@
   // import EmailForm from './cta/EmailForm.svelte';
 </script>
 
-<footer class="border-t border-border">
+<footer class="border-t border-stone-800">
   <div class="container py-8">
     <!-- Email Form Section -->
     <div class="max-w-md mx-auto mb-16">
@@ -39,5 +39,6 @@
         <LinkedinLogo class="w-6 h-6" />
       </a>
     </div>
+		<a href="https://www.buymeacoffee.com/spacefomo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
   </div>
 </footer>

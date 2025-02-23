@@ -81,8 +81,8 @@
 
 		<!-- Right Column - News Grid -->
 		<div class={gridClasses[activeLayout].content}>
-			<!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> -->
-			<div class="grid gap-6 {gridClass}">
+			<div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+			<!-- <div class="grid gap-6 {gridClass}"> -->
 				<News />
 			</div>
 		</div>
