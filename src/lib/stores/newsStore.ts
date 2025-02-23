@@ -5,12 +5,17 @@ export interface NewsItem {
 	id: number;
 	title: string;
 	url: string;
-	source: string;
-	readTime: number;
-	score: number;
-	tags: string[];
-	weekId: number;
-	createdAt: Date;
+	source: string | null;
+	read_time: number | null;
+	fomo_score: number | null;
+	tags: string[] | null;
+	week_id: number | null;
+	created_at: Date;
+	entities: Record<string, any> | null;
+	context: Record<string, any> | null;
+	impact_score: number | null;
+	publication_date: Date | null;
+	viral_title: string | null;
 }
 
 const createNewsStore = () => {
@@ -22,30 +27,7 @@ const createNewsStore = () => {
 			tags: string[];
 		};
 	}>({
-		items: [
-			{
-				id: 1,
-				title: "SpaceX successfully launches Starship to orbit for the first time",
-				url: "https://www.space.com/spacex-starship",
-				source: "Space.com",
-				readTime: 2,
-				score: 39,
-				tags: ["launch", "spacex", "starship"],
-				weekId: 5,
-				createdAt: new Date()
-			},
-			{
-				id: 2,
-				title: "Blue Origin reveals new heavy-lift rocket details",
-				url: "https://www.space.com/blue-origin-new-glenn",
-				source: "r/aerospace",
-				readTime: 7,
-				score: 82,
-				tags: ["development", "blue-origin", "new-glenn"],
-				weekId: 5,
-				createdAt: new Date()
-			}
-		],
+		items: [],
 		activeItemId: null,
 		filter: {
 			weekId: null,
@@ -59,16 +41,16 @@ const createNewsStore = () => {
 			let items = $state.items;
 
 			if ($state.filter.weekId) {
-				items = items.filter(item => item.weekId === $state.filter.weekId);
+				items = items.filter(item => item.week_id === $state.filter.weekId);
 			}
 
-			if ($state.filter.tags.length) {
+			if ($state.filter.tags.length && items[0]?.tags) {
 				items = items.filter(item =>
-					$state.filter.tags.some(tag => item.tags.includes(tag))
+					item.tags && $state.filter.tags.some(tag => item.tags.includes(tag))
 				);
 			}
 
-			return items.sort((a, b) => b.score - a.score);
+			return items.sort((a, b) => (b.fomo_score ?? 0) - (a.fomo_score ?? 0));
 		}
 	);
 
@@ -80,7 +62,7 @@ const createNewsStore = () => {
 		setActiveItem: (id: number | null) =>
 			update(state => ({ ...state, activeItemId: id })),
 		initializeNews: (news: NewsItem[]) =>
-			update(state => ({ ...state, items: news }))
+			set({ items: news, activeItemId: null, filter: { weekId: null, tags: [] } })
 	};
 };
 

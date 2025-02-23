@@ -1,6 +1,6 @@
 // src/lib/stores/fomoStore.ts
+
 import { writable, derived } from 'svelte/store';
-import type { Week } from '$lib/db/schema';
 
 export type FomoWeek = {
 	id: number;
