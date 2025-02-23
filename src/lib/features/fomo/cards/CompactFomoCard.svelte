@@ -1,4 +1,4 @@
-<!-- src/lib/features/fomo/card/CompactFomoCard.svelte -->
+<!-- src/lib/features/fomo/cards/CompactFomoCard.svelte -->
 <script lang="ts">
   let { 
     score,
