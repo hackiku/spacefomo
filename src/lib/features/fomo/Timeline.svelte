@@ -2,7 +2,7 @@
 <script lang="ts">
   import { fomoStore } from '$lib/stores/fomoStore';
   import FomoCard from './FomoCard.svelte';
-  
+
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('en-US', {
       month: 'short',
@@ -18,55 +18,67 @@
     return '😴';
   };
 
-  let expandedCards = $state(new Set<number>());
+  // Global expansion state
+  let isExpanded = $state(false);
+  let expandedCardId = $state<number | null>(null);
 
-  function toggleCard(weekId: number) {
-    if (expandedCards.has(weekId)) {
-      expandedCards.delete(weekId);
+  function handleCardClick(week: { id: number; weekNumber: number }) {
+    fomoStore.setActiveWeek(week.weekNumber);
+    
+    if (isExpanded && expandedCardId !== week.id) {
+      expandedCardId = week.id;
+    } else if (!isExpanded) {
+      isExpanded = true;
+      expandedCardId = week.id;
     } else {
-      expandedCards.add(weekId);
+      isExpanded = false;
+      expandedCardId = null;
     }
   }
 </script>
 
-<div class="relative h-full overflow-y-auto no-scrollbar">
+<div class="no-scrollbar relative h-full overflow-y-auto">
   <div class="relative pr-4">
-    <!-- Center line with gradient -->
-    <!-- <div class="absolute left-[0.875rem] top-0 bottom-0 w-px"> -->
-    <div class="absolute left-6 top-0 bottom-0 w-px">
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-800 to-transparent"></div>
-    </div>
+    <div class="flex gap-10 sm:gap-16 md:gap-20 md:flex-col">
+      {#each $fomoStore.weeks as week, i (week.id)}
+        {@const isSelected = $fomoStore.currentWeek?.id === week.id}
+        <div class="relative flex-shrink-0 md:flex-shrink">
+          
+					<!-- Line connecting timeline points -->
+          {#if i < $fomoStore.weeks.length - 1}
+            <div class="absolute left-6 h-full w-px">
+              <div class="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-800 to-transparent">
+              </div>
+            </div>
+          {/if}
 
-    <!-- Timeline items -->
-    <div class="flex md:flex-col gap-12">
-      {#each $fomoStore.weeks as week (week.id)}
-        {@const isActive = $fomoStore.currentWeek?.id === week.id}
-        <div class="relative">
-          <!-- Date indicator -->
-          <div class="flex md:mx-4.5 flex-col md:flex-row items-center gap-2 mb-2">
-            <div class="relative w-3.5 h-3.5">
-              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                        w-2 h-2 rounded-full bg-zinc-700"></div>
-              {#if isActive}
-                <div class="absolute inset-0 rounded-full border-2 border-violet-500/50 
-                          animate-ping"></div>
+          <!-- Date marker -->
+          <div class="mb-6 flex flex-col items-center gap-2 md:mx-4.5 md:flex-row">
+            <div class="relative h-3.5 w-3.5">
+              <div class="absolute top-1/2 left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 
+                          rounded-full bg-zinc-700">
+              </div>
+              {#if isSelected}
+                <div class="absolute inset-0 animate-ping rounded-full border-2 border-violet-500/50">
+                </div>
               {/if}
             </div>
-            <span class="text-sm text-zinc-500">{formatDate(week.startDate)}</span>
+            <time datetime={week.startDate.toISOString()} class="text-sm text-zinc-500">
+              {formatDate(week.startDate)}
+            </time>
           </div>
 
           <!-- FOMO Card -->
-          <div class="">
+          <div class="relative">
             <FomoCard
               weekNumber={week.weekNumber}
               dateRange={`${formatDate(week.startDate)} - ${formatDate(week.endDate)}`}
               score={week.score}
               emoji={getFomoEmoji(week.score)}
               summary={week.summary}
-              isActive={isActive}
-              isExpanded={expandedCards.has(week.id)}
-              onClick={() => fomoStore.setActiveWeek(week.weekNumber)}
-              onToggle={() => toggleCard(week.id)}
+              isSelected={isSelected}
+              isExpanded={expandedCardId === week.id}
+              onClick={() => handleCardClick(week)}
             />
           </div>
         </div>

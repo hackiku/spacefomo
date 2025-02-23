@@ -20,7 +20,7 @@
     <Hero />
   </section>
   <section class="relative">
-    <div class="pointer-events-none absolute top-0 left-0 -z-10 h-44 w-full bg-gradient-to-b from-black/40 to-transparent"></div>
+    <div class="pointer-events-none absolute top-0 left-0 -z-10 h-56 w-full bg-gradient-to-b from-black/40 to-transparent"></div>
     <GridLayout />
   </section>
   <!-- <Timeline /> -->
