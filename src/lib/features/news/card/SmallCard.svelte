@@ -1,10 +1,10 @@
 <!-- src/lib/features/news/card/SmallCard.svelte -->
 <script lang="ts">
-  import { CaretDown } from 'phosphor-svelte';
+  import { ArrowUpRight } from 'phosphor-svelte';
   import type { NewsItem } from '$lib/stores/newsStore';
   import { newsStore } from '$lib/stores/newsStore';
   
-  export let article: NewsItem;
+  let { article } = $props<{ article: NewsItem }>();
 
   const formatDate = (date: Date | null) => {
     if (!date) return '';
@@ -18,7 +18,8 @@
 <button 
   type="button"
   class="group w-full text-left hover:-translate-y-0.5 transition-transform"
-  on:click={() => newsStore.setActiveItem(article.id)}
+  onclick={() => newsStore.setActiveItem(article.id)}
+	aria-label={`Open article: ${article.title}`}
 >
   <div class="p-4 rounded-2xl border border-zinc-800/50 
               bg-zinc-900/50 backdrop-blur-sm 
@@ -26,9 +27,12 @@
               transition-all duration-200">
     <div class="flex flex-col gap-3">
       <div class="space-y-2">
-        <h2 class="text-lg font-medium text-zinc-100 line-clamp-2">
-          {article.title}
-        </h2>
+        <div class="flex justify-between items-start gap-4">
+          <h2 class="text-lg font-medium text-zinc-100 line-clamp-2">
+            {article.title}
+          </h2>
+          <ArrowUpRight class="h-5 w-5 text-zinc-600 group-hover:text-zinc-400 transition-colors flex-shrink-0" />
+        </div>
         
         {#if article.viral_title}
           <p class="text-sm text-zinc-400 line-clamp-2">

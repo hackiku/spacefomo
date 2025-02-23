@@ -2,7 +2,7 @@
 <script lang="ts">
   import { newsStore } from '$lib/stores/newsStore';
   import SmallCard from './card/SmallCard.svelte';
-  import BigCard from './card/BigCard.svelte';
+  import NewsModal from './NewsModal.svelte';
   
   const store = $derived($newsStore);
   const items = $derived(store.items || []);
@@ -16,5 +16,5 @@
 </div>
 
 {#if activeArticle}
-  <BigCard article={activeArticle} />
+  <NewsModal article={activeArticle} />
 {/if}

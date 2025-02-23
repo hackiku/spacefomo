@@ -1,16 +1,15 @@
 <!-- src/lib/features/news/card/BigCard.svelte -->
 <script lang="ts">
   import type { NewsItem } from '$lib/stores/newsStore';
-  import { newsStore } from '$lib/stores/newsStore';
-  import { Info } from 'phosphor-svelte';
+  import { Copy, Info } from 'phosphor-svelte';
+  import Summary from './Summary.svelte';
+  import DevJson from './DevJson.svelte';
   
-	let { article } = $props<{ article: NewsItem }>();
-
-  // export let article: NewsItem;
+  let { article } = $props<{ article: NewsItem }>();
   let showJson = $state(false);
   
-  function handleClose() {
-    newsStore.setActiveItem(null);
+  function copyUrl() {
+    navigator.clipboard.writeText(article.url);
   }
 
   const formatDate = (date: Date | null) => {
@@ -23,34 +22,15 @@
   };
 </script>
 
-<div 
-  role="dialog"
-  aria-modal="true"
-  class="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 md:p-8"
->
-  <button
-    type="button"
-    class="fixed inset-0 bg-black/80 backdrop-blur-sm"
-    onclick={handleClose}
-  />
+<div class="relative flex gap-4">
+  <!-- Main Content -->
+  <div class="flex-1 rounded-2xl bg-zinc-900 p-8">
+    <div class="space-y-8">
+      <!-- Header -->
+      <Summary title={article.title} viralTitle={article.viral_title} />
 
-  <div 
-    class="relative flex w-full max-w-6xl gap-4 pt-8"
-  >
-    <!-- Main Content -->
-    <div class="flex-1 rounded-2xl bg-zinc-900 p-8">
-      <div class="mb-8">
-        <h2 class="text-3xl font-medium text-zinc-100 mb-4">
-          {article.viral_title || article.title}
-        </h2>
-        {#if article.viral_title}
-          <p class="text-lg text-zinc-400">
-            {article.title}
-          </p>
-        {/if}
-      </div>
-
-      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-zinc-500 mb-6">
+      <!-- Metadata -->
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-zinc-500">
         {#if article.source}
           <span>{article.source}</span>
           <span class="text-zinc-700">•</span>
@@ -59,13 +39,12 @@
           <span>{article.read_time} min read</span>
           <span class="text-zinc-700">•</span>
         {/if}
-        {#if article.publication_date}
-          <span>Published {formatDate(article.publication_date)}</span>
-        {/if}
+        <span>Published {formatDate(article.publication_date)}</span>
       </div>
 
+      <!-- Tags -->
       {#if article.tags?.length}
-        <div class="mb-8 flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2">
           {#each article.tags as tag}
             <span class="rounded-full border border-zinc-800 px-3 py-1 text-sm text-zinc-400">
               {tag}
@@ -74,9 +53,10 @@
         </div>
       {/if}
 
-      <div class="grid grid-cols-2 gap-4 mb-8">
+      <!-- Entities Grid -->
+      <div class="grid grid-cols-2 gap-4">
         {#if article.entities?.organizations}
-          <div class="rounded-lg bg-zinc-800/50 p-4">
+          <div class="rounded-xl bg-zinc-800/30 p-4">
             <h3 class="text-sm font-medium text-zinc-300 mb-3">Organizations</h3>
             <div class="space-y-2">
               {#each article.entities.organizations as org}
@@ -90,8 +70,8 @@
         {/if}
 
         {#if article.entities?.people}
-          <div class="rounded-lg bg-zinc-800/50 p-4">
-            <h3 class="text-sm font-medium text-zinc-300 mb-3">People</h3>
+          <div class="rounded-xl bg-zinc-800/30 p-4">
+            <h3 class="text-sm font-medium text-zinc-300 mb-3">Key People</h3>
             <div class="space-y-2">
               {#each article.entities.people as person}
                 <div class="text-sm">
@@ -104,11 +84,13 @@
         {/if}
       </div>
 
-      <div class="flex justify-between items-center">
+      <!-- Footer -->
+      <div class="flex items-center justify-between pt-4">
         <div class="flex items-center gap-4">
           <button
             type="button"
             class="rounded-full p-2 hover:bg-zinc-800 transition-colors"
+					  aria-label="Show JSON data"
             onclick={() => showJson = !showJson}
           >
             <Info class="h-5 w-5 text-zinc-400" />
@@ -121,43 +103,44 @@
             </div>
             {#if article.impact_score}
               <div class="text-sm text-zinc-500">
-                Impact Score: {article.impact_score}
+                Impact {article.impact_score}
               </div>
             {/if}
           </div>
         </div>
 
-        <div class="flex gap-4">
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            class="rounded-full p-2 hover:bg-zinc-800 transition-colors"
+            onclick={copyUrl}
+					  aria-label="Copy article URL"
+          >
+            <Copy class="h-5 w-5 text-zinc-400" />
+          </button>
+          
           <a
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="rounded-lg bg-zinc-800 px-4 py-2 text-sm text-zinc-100 
+            class="rounded-xl bg-zinc-800 px-6 py-2.5 text-sm text-zinc-100 
                    hover:bg-zinc-700 transition-colors"
           >
             Read Article
           </a>
-          <button
-            type="button"
-            onclick={handleClose}
-            class="rounded-lg border border-zinc-800 px-4 py-2 text-sm text-zinc-400
-                   hover:bg-zinc-800 transition-colors"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>
-
-    <!-- JSON Panel -->
-    {#if showJson}
-      <div class="w-96 rounded-2xl bg-zinc-900 p-6 overflow-auto max-h-[90vh]">
-        <h3 class="text-sm font-medium text-zinc-300 mb-4">Raw Data</h3>
-        <pre class="text-xs text-zinc-400 whitespace-pre-wrap">{JSON.stringify({
-          context: article.context,
-          entities: article.entities
-        }, null, 2)}</pre>
-      </div>
-    {/if}
   </div>
+
+  <!-- JSON Panel -->
+  {#if showJson}
+    <DevJson 
+      data={{
+        context: article.context,
+        entities: article.entities
+      }}
+      onClose={() => showJson = false}
+    />
+  {/if}
 </div>
