@@ -7,42 +7,34 @@
     weekNumber,
     dateRange,
     score,
-    emoji,
     summary,
     isExpanded = false,
-    isSelected = false,
     onClick = () => {}
   } = $props<{
     weekNumber: number;
     dateRange: string;
     score: number;
-    emoji: string;
     summary: string;
     isExpanded?: boolean;
-    isSelected?: boolean;
     onClick?: () => void;
   }>();
+
+  const baseClasses = "w-full text-left transition-all duration-200 group rounded-2xl bg-zinc-800/80 border border-zinc-700/80 p-3 relative hover:bg-zinc-800/90";
+  const caretClasses = "w-4 h-4 text-zinc-500 group-hover:text-zinc-400 transition-transform duration-200";
+  const scoreClasses = "text-xl font-medium bg-clip-text text-transparent bg-gradient-to-br from-violet-400 to-fuchsia-500";
 </script>
 
 <button
   type="button"
-  class="w-full text-left transition-all duration-200 group rounded-2xl bg-zinc-800/80 
-         border p-3 relative hover:opacity-100
-         {isSelected ? 'border-violet-500/50' : 'border-zinc-700/80'}
-         {!isSelected ? 'opacity-60' : ''}"
-  on:click={onClick}
+  class={baseClasses}
+  onclick={onClick}
 >
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <span class="text-xl font-medium bg-clip-text text-transparent 
-                   bg-gradient-to-br from-violet-400 to-fuchsia-500">
-        {score}
-      </span>
-      <span class="text-lg" aria-hidden="true">{emoji}</span>
-    </div>
+    <span class={scoreClasses}>
+      {score}
+    </span>
     
-    <div class="w-4 h-4 text-zinc-500 group-hover:text-zinc-400 transition-transform duration-200"
-         class:rotate-180={isExpanded}>
+    <div class={caretClasses} class:rotate-180={isExpanded}>
       <CaretDown />
     </div>
   </div>

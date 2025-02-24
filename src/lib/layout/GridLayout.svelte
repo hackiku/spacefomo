@@ -2,9 +2,11 @@
 <script lang="ts">
   import Controls from '$lib/features/fomo/Controls.svelte';
   import News from '$lib/features/news/News.svelte';
-  import Timeline from '$lib/features/fomo/Timeline.svelte';
+	// import Timeline from '$lib/features/fomo/Timeline.svelte';
+	import FomoCardContainer from '$lib/features/fomo/FomoCardContainer.svelte';
   import TabsTimeline from '$lib/features/fomo/timeline/TabsTimeline.svelte';
-  import type { LayoutOption, GridClasses } from '$lib/types/layout';
+ 
+	import type { LayoutOption, GridClasses } from '$lib/types/layout';
 
   let activeLayout = $state<LayoutOption['name']>('normal');
   let columnCount = $state(2);
@@ -40,8 +42,10 @@
     <!-- Sidebar -->
     <div class="{gridClasses[activeLayout].sidebar}">
       <div class="sticky top-18 flex flex-col gap-12"> <!-- This gives us sticky behavior -->
-        <Controls bind:activeLayout bind:columnCount />
-        <!-- <Timeline /> -->
+
+				<Controls bind:activeLayout bind:columnCount />
+				<!-- <Timeline /> -->
+				<FomoCardContainer />
       </div>
     </div>
 
@@ -53,7 +57,9 @@
     </div>
 		
   </div>
-
-	<TabsTimeline />
-
+	
 </div>
+
+	<div class="sticky right-0 -bottom-1 left-0 z-50">
+		<TabsTimeline />
+	</div>

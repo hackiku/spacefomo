@@ -1,4 +1,4 @@
-<!-- src/lib/features/fomo/Timeline.svelte -->
+<!-- src/lib/features/fomo/timeline/VerticalTimeline.svelte -->
 <script lang="ts">
   import { fomoStore } from '$lib/stores/fomoStore';
   import FomoCard from './FomoCard.svelte';
