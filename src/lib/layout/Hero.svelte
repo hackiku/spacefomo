@@ -28,13 +28,13 @@
 	<div class="absolute -bottom-42 md:-bottom-36 right-6 md:right-20 lg:right-16 flex items-end">
 	<div class="text-left rotate-6">
 			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-2xl lg:text-3xl font-bold inline-block">
-				Summaries & data<br/> in ~100 words a pop
+				~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
 				<!-- Arrow SVG pointing down-left -->
 				<svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M75 5 C40 5, 20 5, 5 55" stroke="url(#arrow-gradient)" stroke-width="3" stroke-linecap="round"/>
-					<path d="M15 45 L5 55 L20 55" stroke="url(#arrow-gradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+					<path d="M15 45 L5 55 L20 55" stroke="url(#arrow-gradient)" stroke-width="3" transform="rotate(-48 6 57)" stroke-linecap="round" stroke-linejoin="round"/>
 					<defs>
 						<linearGradient id="arrow-gradient" x1="75" y1="5" x2="5" y2="55" gradientUnits="userSpaceOnUse">
 							<stop stop-color="#A78BFA"/>
