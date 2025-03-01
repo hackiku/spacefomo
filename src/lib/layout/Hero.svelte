@@ -1,32 +1,50 @@
 <!-- src/lib/layout/Hero.svelte -->
 <script lang="ts">
-	import { Plus } from 'phosphor-svelte';
+	import ShareButton from '$lib/components/cta/ShareButton.svelte';
 	import ShareModal from '../features/news/share/ShareModal.svelte';
 
 	let showShareModal = $state(false);
+  
+	function handleShareClick() {
+		showShareModal = true;
+	}
 </script>
 
-<div class="container mx-auto px-6 text-center md:px-32 lg:px-72">
+<div class="container mx-auto text-center px-6 sm:px-12 md:px-32 lg:px-44 xl:px-72 relative">
 	<!-- Main Heading -->
 	<h1
-		class="mb-6 bg-gradient-to-r from-violet-400 to-fuchsia-500 bg-clip-text text-4xl
-                   font-bold text-transparent sm:text-5xl lg:text-6xl"
+		class="mb-6 text-4xl text-white
+                   font-bold sm:text-5xl lg:text-6xl"
 	>
-		Space race hot news in 100 words a pop
+		Space race news you can't miss out on
 	</h1>
 
 	<!-- Share Button -->
-	<button
-		onclick={() => (showShareModal = true)}
-		class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500
-                   to-fuchsia-500 px-6 py-3
-                   font-medium text-white
-                   transition-all hover:from-violet-600 hover:to-fuchsia-600
-                   hover:shadow-lg hover:shadow-violet-500/25"
-	>
-		<Plus weight="bold" class="h-5 w-5" />
-		Share News
-	</button>
+	<div class="mb-12">
+		<ShareButton onClick={handleShareClick} />
+	</div>
+  
+	<!-- 100 words tagline with arrow -->
+	<div class="absolute -bottom-42 md:-bottom-36 right-6 md:right-20 lg:right-16 flex items-end">
+	<div class="text-left rotate-6">
+			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-2xl lg:text-3xl font-bold inline-block">
+				Summaries & data<br/> in ~100 words a pop
+			</span>
+			<div class="h-16 mt-2">
+				<!-- Arrow SVG pointing down-left -->
+				<svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M75 5 C40 5, 20 5, 5 55" stroke="url(#arrow-gradient)" stroke-width="3" stroke-linecap="round"/>
+					<path d="M15 45 L5 55 L20 55" stroke="url(#arrow-gradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+					<defs>
+						<linearGradient id="arrow-gradient" x1="75" y1="5" x2="5" y2="55" gradientUnits="userSpaceOnUse">
+							<stop stop-color="#A78BFA"/>
+							<stop offset="1" stop-color="#E879F9"/>
+						</linearGradient>
+					</defs>
+				</svg>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- Gradient Orb -->
