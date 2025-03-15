@@ -16,23 +16,11 @@
         <p class="text-zinc-400 text-sm mb-6">
           Space news distilled to 100 words with FOMO score.
         </p>
-        <a 
-          href="https://www.buymeacoffee.com/spacefomo" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="inline-block transition-transform hover:-translate-y-1"
-        >
-          <img 
-            src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" 
-            alt="Buy Me A Coffee" 
-            class="h-10 w-auto"
-          >
-        </a>
+
       </div>
       
       <!-- Quick Links -->
       <div class="md:col-span-1">
-        <h3 class="text-lg font-medium text-zinc-200 mb-4">Quick Links</h3>
         <ul class="space-y-2">
           <li>
             <a href="/" class="text-zinc-400 hover:text-zinc-200 transition-colors">Home</a>
@@ -40,9 +28,9 @@
           <li>
             <a href="/about" class="text-zinc-400 hover:text-zinc-200 transition-colors">About</a>
           </li>
-          <li>
+          <!-- <li>
             <a href="https://github.com/spacefomo" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-zinc-200 transition-colors">GitHub</a>
-          </li>
+          </li> -->
         </ul>
       </div>
       

@@ -16,7 +16,7 @@
 		class="mb-6 text-4xl text-white
                    font-bold sm:text-5xl lg:text-6xl"
 	>
-		Space race news you can't miss out on
+		There's no Place <br/> Like Space
 	</h1>
 
 	<!-- Share Button -->
@@ -28,7 +28,7 @@
 	<div class="absolute -bottom-42 md:-bottom-36 right-6 md:right-20 lg:right-16 flex items-end">
 	<div class="text-left rotate-6">
 			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-2xl lg:text-3xl font-bold inline-block">
-				~100 words a pop
+				Space news by FOMO <br/> in ~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
 				<!-- Arrow SVG pointing down-left -->
