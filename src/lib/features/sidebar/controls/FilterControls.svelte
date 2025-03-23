@@ -3,7 +3,7 @@
 <script lang="ts">
   import { ArrowsLeftRight } from 'phosphor-svelte';
   import TagSelector from './TagSelector.svelte';
-  // import type { Writable } from 'svelte/store';
+  import type { Writable } from 'svelte/store';
 
   type SidebarSettings = {
     fomoThreshold: number;
