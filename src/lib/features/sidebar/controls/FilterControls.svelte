@@ -1,44 +1,18 @@
 <!-- src/lib/features/sidebar/controls/FilterControls.svelte -->
-
 <script lang="ts">
-  import { ArrowsLeftRight } from 'phosphor-svelte';
   import TagSelector from './TagSelector.svelte';
-  import type { Writable } from 'svelte/store';
-
-  type SidebarSettings = {
-    fomoThreshold: number;
-    selectedTags: string[];
-    showOnlyActive: boolean;
-  };
-
-  let { settings } = $props<{
-    settings: Writable<SidebarSettings>;
+  
+  let { 
+    fomoThreshold = $bindable(0),
+    selectedTags = $bindable<string[]>([]),
+    showOnlyActive = $bindable(false)
+  } = $props<{
+    fomoThreshold?: number;
+    selectedTags?: string[];
+    showOnlyActive?: boolean;
   }>();
 
-  // Local state from the store
-  let fomoThreshold = $state(0);
-  let selectedTags = $state<string[]>([]);
-  let showOnlyActive = $state(false);
-
-  // Initialize from the store
-  $effect(() => {
-    const currentSettings = $settings;
-    fomoThreshold = currentSettings.fomoThreshold;
-    selectedTags = currentSettings.selectedTags;
-    showOnlyActive = currentSettings.showOnlyActive;
-  });
-
-  // Update store when local state changes
-  $effect(() => {
-    settings.update(current => ({
-      ...current,
-      fomoThreshold,
-      selectedTags,
-      showOnlyActive
-    }));
-  });
-
-  // Placeholder for available tags
+  // Available tags for filtering - ideally this would come from API/store
   const availableTags = [
     'SpaceX', 'NASA', 'Rocket Lab', 'Blue Origin', 
     'Virgin Galactic', 'Mars', 'Moon', 'ISS'
@@ -67,7 +41,7 @@
     <p class="text-xs text-zinc-500">Filter by Tags</p>
     <div class="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3">
       <TagSelector 
-        {availableTags} 
+        availableTags={availableTags} 
         bind:selectedTags
       />
     </div>
@@ -77,17 +51,17 @@
   <div class="flex items-center space-x-3">
     <button
       type="button"
-      class={`relative inline-flex h-6 w-11 items-center rounded-full 
+      class="relative inline-flex h-6 w-11 items-center rounded-full 
               transition-colors duration-200 
-              ${showOnlyActive ? 'bg-violet-600' : 'bg-zinc-700'}`}
+              {showOnlyActive ? 'bg-violet-600' : 'bg-zinc-700'}"
       role="switch"
       aria-checked={showOnlyActive}
       onclick={() => showOnlyActive = !showOnlyActive}
     >
       <span
-        class={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md
+        class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md
                 transition-transform duration-200 ease-in-out
-                ${showOnlyActive ? 'translate-x-5' : 'translate-x-1'}`}
+                {showOnlyActive ? 'translate-x-5' : 'translate-x-1'}"
       />
     </button>
     <span class="text-sm text-zinc-400">Show active week only</span>
