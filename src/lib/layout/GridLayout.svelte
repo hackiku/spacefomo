@@ -3,9 +3,9 @@
   import Controls from '$lib/features/fomo/Controls.svelte';
   import News from '$lib/features/news/News.svelte';
 	// import Timeline from '$lib/features/fomo/Timeline.svelte';
-	import FomoCardContainer from '$lib/features/fomo/FomoCardContainer.svelte';
+	// import FomoCardContainer from '$lib/features/fomo/FomoCardContainer.svelte';
   import TabsTimeline from '$lib/features/fomo/timeline/TabsTimeline.svelte';
- 
+	import Sidebar from '$lib/features/sidebar/Sidebar.svelte'
 	import type { LayoutOption, GridClasses } from '$lib/types/layout';
 
   let activeLayout = $state<LayoutOption['name']>('normal');
@@ -43,9 +43,10 @@
     <div class="{gridClasses[activeLayout].sidebar}">
       <div class="sticky top-18 flex flex-col gap-12"> <!-- This gives us sticky behavior -->
 
-				<Controls bind:activeLayout bind:columnCount />
+				<Sidebar />
+				<!-- <Controls bind:activeLayout bind:columnCount /> -->
 				<!-- <Timeline /> -->
-				<FomoCardContainer />
+				<!-- <FomoCardContainer /> -->
       </div>
     </div>
 

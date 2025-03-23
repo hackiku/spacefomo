@@ -2,29 +2,37 @@
 <script lang="ts">
   import { fomoStore } from '$lib/stores/fomoStore';
 
-  const formatDate = (date: Date): string => {
+  // Format date function
+  function formatDate(date: Date): string {
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric'
     });
-  };
+  }
 
-  const getTabClasses = (isActive: boolean): string => {
+  // Get proper CSS classes for tabs
+  function getTabClasses(isActive: boolean): string {
     return `group relative flex flex-1 items-center rounded-t-2xl border-t border-r border-l
             px-4 py-2.5 text-sm transition-all ${
               isActive
                 ? 'border-zinc-700 bg-zinc-800 text-zinc-200'
-                : 'border-zinc-800/50 bg-zinc-900/30 backdrop-blur-md text-zinc-500 hover:bg-zinc-800'
+                : 'border-zinc-800 bg-zinc-900/30 backdrop-blur-md text-zinc-500 hover:bg-zinc-800'
             }`;
-  };
+  }
 
-  const getScoreClasses = (isActive: boolean): string => {
+  // Get score CSS classes
+  function getScoreClasses(isActive: boolean): string {
     return `font-semibold ${
       isActive
         ? 'bg-gradient-to-br from-violet-400 to-fuchsia-500 bg-clip-text text-transparent'
         : 'opacity-70 transition-opacity group-hover:opacity-100'
     }`;
-  };
+  }
+  
+  // Select a week
+  function selectWeek(weekNumber: number) {
+    fomoStore.setActiveWeek(weekNumber);
+  }
 </script>
 
 <div class="sticky right-0 -bottom-1 left-0 z-50">
@@ -36,7 +44,7 @@
           <button
             type="button"
             class={getTabClasses(isActive)}
-            onclick={() => fomoStore.setActiveWeek(week.weekNumber)}
+            onclick={() => selectWeek(week.weekNumber)}
           >
             <div class="flex w-full items-center gap-3">
               <span class="text-xs whitespace-nowrap opacity-60">
