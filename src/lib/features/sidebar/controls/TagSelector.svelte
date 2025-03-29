@@ -3,7 +3,10 @@
   import { Check, Plus } from 'phosphor-svelte';
 
   let { 
-    availableTags, selectedTags, onTagToggle, onClearTags
+    availableTags = [],
+    selectedTags = [], 
+    onTagToggle,
+    onClearTags
   } = $props<{
     availableTags: string[];
     selectedTags: string[];

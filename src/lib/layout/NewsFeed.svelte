@@ -25,11 +25,11 @@
   // Helper function to get container classes based on current layout
   const getContainerClasses = $derived(() => {
     if (sidebarMode === 'thin') {
-      return 'max-w-[60vh] mr-[12vh]'; // Centered, narrow
+      return 'lg:max-w-[60vh] lg:mr-[12vh]'; // Centered, narrow
     } else if (sidebarMode === 'wide') {
-      return 'max-w-2xl'; // Wide, not necessarily centered
+      return 'lg:max-w-2xl'; // Wide, not necessarily centered
     } else {
-      return 'max-w-[60vw] mr-[30vh]'; // Centered, medium width
+      return 'lg:max-w-[60vw] lg:mr-[30vh]'; // Centered, medium width
     }
   });
   
