@@ -1,5 +1,15 @@
 // src/lib/types/layout.ts
+export type SidebarMode = 'thin' | 'default' | 'wide'; // Controls feed width
+export type CardWidth = 'normal' | 'wide';
+export type ColumnCount = 1 | 2;
 
+export interface LayoutSettings {
+	sidebarMode: SidebarMode;
+	cardWidth: CardWidth;
+	columnCount: ColumnCount;
+}
+
+// Legacy types, kept for backward compatibility
 export type LayoutConfig = {
 	columns: 1 | 2;
 	padding: 'compact' | 'normal' | 'wide';

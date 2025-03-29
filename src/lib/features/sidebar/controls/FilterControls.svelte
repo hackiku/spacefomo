@@ -19,7 +19,7 @@
   ];
 </script>
 
-<div class="space-y-6">
+<div class="space-y-6 w-full max-w-full overflow-hidden">
   <!-- FOMO Threshold -->
   <div class="space-y-2">
     <div class="flex items-center justify-between">
@@ -39,7 +39,7 @@
   <!-- Tags Selection -->
   <div class="space-y-2">
     <p class="text-xs text-zinc-500">Filter by Tags</p>
-    <div class="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3">
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 overflow-hidden">
       <TagSelector 
         availableTags={availableTags} 
         bind:selectedTags
@@ -52,7 +52,7 @@
     <button
       type="button"
       class="relative inline-flex h-6 w-11 items-center rounded-full 
-              transition-colors duration-200 
+              transition-colors duration-200 flex-shrink-0
               {showOnlyActive ? 'bg-violet-600' : 'bg-zinc-700'}"
       role="switch"
       aria-checked={showOnlyActive}
@@ -64,6 +64,6 @@
                 {showOnlyActive ? 'translate-x-5' : 'translate-x-1'}"
       />
     </button>
-    <span class="text-sm text-zinc-400">Show active week only</span>
+    <span class="text-sm text-zinc-400 truncate">Show active week only</span>
   </div>
 </div>

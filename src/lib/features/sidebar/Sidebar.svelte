@@ -2,17 +2,13 @@
 <script lang="ts">
   import Controls from './controls/Controls.svelte';
   import FilterControls from './controls/FilterControls.svelte';
-  import FomoCardContainer from '$lib/features/fomo/FomoCardContainer.svelte';
-  import type { LayoutOption } from '$lib/types/layout';
+  import type { SidebarMode, CardWidth, ColumnCount } from '$lib/types/layout';
 
-  // Props with bindable values for layout settings
   let { 
-    activeLayout = $bindable<LayoutOption['name']>('normal'),
-    columnCount = $bindable(2)
-  } = $props<{
-    activeLayout?: LayoutOption['name'];
-    columnCount?: number;
-  }>();
+    sidebarMode = $bindable<SidebarMode>('default'),
+    cardWidth = $bindable<CardWidth>('normal'),
+    columnCount = $bindable<ColumnCount>(1)
+  } = $props();
   
   // Local filter state
   let fomoThreshold = $state(0);
@@ -26,15 +22,16 @@
   });
 </script>
 
-<div class="flex flex-col gap-12">
+<div class="flex flex-col gap-8 py-4 overflow-hidden">
   <!-- Controls Section -->
-  <Controls bind:activeLayout bind:columnCount />
-
-  <!-- FOMO Card Container -->
-  <FomoCardContainer />
+  <Controls 
+    bind:sidebarMode 
+    bind:cardWidth 
+    bind:columnCount 
+  />
 
   <!-- Filter options -->
-  <div class="space-y-4">
+  <div class="space-y-4 max-w-50">
     <h3 class="text-base font-medium text-zinc-300">Filters</h3>
     <FilterControls 
       bind:fomoThreshold

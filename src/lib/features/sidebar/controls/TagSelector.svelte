@@ -19,25 +19,25 @@
   }
 </script>
 
-<div class="space-y-3">
-  <div class="flex flex-wrap gap-2">
+<div class="space-y-3 max-w-full">
+  <div class="flex flex-wrap gap-2 overflow-hidden">
     {#each availableTags as tag}
       {@const isSelected = selectedTags.includes(tag)}
       <button
         type="button"
-        class="group flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs
-               transition-all duration-200
+        class="group flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs
+               transition-all duration-200 truncate max-w-full
                {isSelected 
                  ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40' 
                  : 'border border-zinc-700 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
         onclick={() => toggleTag(tag)}
         aria-pressed={isSelected}
       >
-        <span>{tag}</span>
+        <span class="truncate">{tag}</span>
         {#if isSelected}
-          <Check weight="bold" class="h-3 w-3" />
+          <Check weight="bold" class="h-3 w-3 flex-shrink-0" />
         {:else}
-          <Plus weight="bold" class="h-3 w-3 opacity-50 group-hover:opacity-100" />
+          <Plus weight="bold" class="h-3 w-3 opacity-50 group-hover:opacity-100 flex-shrink-0" />
         {/if}
       </button>
     {/each}
