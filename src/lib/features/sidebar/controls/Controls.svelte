@@ -48,22 +48,11 @@
           aria-label={option.label}
           aria-pressed={active}
         >
-          {#if option.icon === ArrowsInLineHorizontal}
-            <ArrowsInLineHorizontal 
-              weight={active ? 'regular' : 'light'}
-              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
-            />
-          {:else if option.icon === Columns}
-            <Columns 
-              weight={active ? 'regular' : 'light'}
-              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
-            />
-          {:else if option.icon === Table}
-            <Table 
-              weight={active ? 'regular' : 'light'}
-              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
-            />
-          {/if}
+          <svelte:component 
+            this={option.icon}
+            weight={active ? 'regular' : 'light'}
+            class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+          />
         </button>
       {/each}
     </div>
@@ -88,17 +77,11 @@
           aria-label={option.label}
           aria-pressed={active}
         >
-          {#if option.icon === Rows}
-            <Rows 
-              weight={active ? 'regular' : 'light'}
-              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
-            />
-          {:else if option.icon === SquaresFour}
-            <SquaresFour 
-              weight={active ? 'regular' : 'light'}
-              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
-            />
-          {/if}
+          <svelte:component 
+            this={option.icon}
+            weight={active ? 'regular' : 'light'}
+            class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+          />
         </button>
       {/each}
     </div>

@@ -16,15 +16,17 @@
 
 <div class="w-full space-y-6">
   {#if items.length > 0}
-    <!-- Simple column of cards by default -->
     {#if columnCount === 1}
-      {#each items as article (article.id)}
-        <div>
-          <SmallCard article={article} />
-        </div>
-      {/each}
+      <!-- Single column layout: cards get natural width with side margins -->
+      <div class="space-y-6">
+        {#each items as article (article.id)}
+          <div class="mx-auto">
+            <SmallCard article={article} />
+          </div>
+        {/each}
+      </div>
     {:else}
-      <!-- Two-column grid on larger screens if selected -->
+      <!-- Two-column grid for larger screens -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {#each items as article (article.id)}
           <SmallCard article={article} />

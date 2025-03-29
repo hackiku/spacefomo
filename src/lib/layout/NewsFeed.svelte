@@ -20,39 +20,19 @@
       // Other layouts: open sidebar
       sidebarOpen = true;
     }
-    
-    // Don't auto-change column count, let user control it
   });
 
-  // Calculate content width and positioning based on layout mode
-  const contentStyles = $derived(() => {
-    // Base container classes
-    let containerClass = "flex-1";
-    
+  // Helper function to get container classes based on current layout
+  const getContainerClasses = $derived(() => {
     if (sidebarMode === 'thin') {
-      // Thin layout: narrower centered content
-      return {
-        width: 'max-w-3xl', 
-        padding: 'md:px-0 w-full mx-auto', // Center with auto margins
-        position: 'center'
-      };
+      return 'max-w-[60vh] mr-[12vh]'; // Centered, narrow
     } else if (sidebarMode === 'wide') {
-      // Wide layout: wider content that follows sidebar
-      return {
-        width: 'max-w-5xl',
-        padding: 'w-full', // No centering padding
-        position: 'left'
-      };
+      return 'max-w-2xl'; // Wide, not necessarily centered
     } else {
-      // Default layout: medium centered content
-      return {
-        width: 'max-w-4xl',
-        padding: 'md:px-0 w-full mx-auto', // Center with auto margins
-        position: 'center'
-      };
+      return 'max-w-[60vw] mr-[30vh]'; // Centered, medium width
     }
   });
-
+  
   // Function to toggle sidebar open/closed
   function toggleSidebar() {
     sidebarOpen = !sidebarOpen;
@@ -62,11 +42,13 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-32">
   <div class="flex flex-col md:flex-row gap-6">
     <!-- Sidebar with toggle -->
-    <div class="md:sticky md:top-20 md:h-[calc(100vh-5rem)] flex-shrink-0 mb-8 md:mb-0 {sidebarOpen ? 'md:w-48' : 'md:w-16'} transition-all duration-300">
+    <div class="md:sticky md:top-20 md:h-[calc(100vh-5rem)] flex-shrink-0 mb-8 md:mb-0 
+                {sidebarOpen ? 'md:w-48' : 'md:w-16'} transition-all duration-300">
       <div class="flex h-full">
         <!-- Toggle button -->
         <button 
-          class="hidden md:flex absolute -right-3 top-4 w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 items-center justify-center"
+          class="hidden md:flex absolute -right-3 top-4 w-6 h-6 rounded-full 
+                 bg-zinc-800 text-zinc-300 items-center justify-center"
           onclick={toggleSidebar}
           aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
         >
@@ -86,10 +68,10 @@
       </div>
     </div>
     
-    <!-- Main content with explicit positioning classes -->
-    <div class="flex-1">
-      <!-- Content container with explicit width, padding and positioning -->
-      <div class="{contentStyles.width} {contentStyles.padding}">
+    <!-- Main content area -->
+    <div class="flex-1 flex justify-center"> <!-- This flex container helps with centering -->
+      <!-- Content container with explicit width control -->
+      <div class="{getContainerClasses()} w-full">
         <News columnCount={columnCount} />
       </div>
     </div>

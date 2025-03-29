@@ -3,6 +3,7 @@
 // Core layout types
 export type SidebarMode = 'thin' | 'default' | 'wide';
 export type ColumnCount = 1 | 2;
+export type CardWidth = 'normal' | 'wide';
 
 // Current settings interface
 export interface LayoutSettings {
