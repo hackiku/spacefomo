@@ -4,21 +4,28 @@
   import type { SidebarMode, CardWidth, ColumnCount } from '$lib/types/layout';
 
   let { 
-    sidebarMode = $bindable<SidebarMode>('default'),
-    cardWidth = $bindable<CardWidth>('normal'),
-    columnCount = $bindable<ColumnCount>(1)
-  } = $props();
+    sidebarMode, cardWidth, columnCount, compact,
+    onSidebarModeChange, onCardWidthChange, onColumnCountChange
+  } = $props<{
+    sidebarMode: SidebarMode;
+    cardWidth: CardWidth;
+    columnCount: ColumnCount;
+    compact: boolean;
+    onSidebarModeChange: (mode: SidebarMode) => void;
+    onCardWidthChange: (width: CardWidth) => void;
+    onColumnCountChange: (count: ColumnCount) => void;
+  }>();
 
   // Sidebar mode options
   const sidebarOptions = [
-    { value: 'thin', label: 'Thin sidebar', icon: ArrowsInLineHorizontal },
+    { value: 'thin', label: 'Compact view', icon: ArrowsInLineHorizontal },
     { value: 'default', label: 'Default layout', icon: Columns },
     { value: 'wide', label: 'Wide layout', icon: Table }
   ] as const;
 
   // Card width options
   const cardOptions = [
-    { value: 'normal', label: 'Normal width', icon: Columns },
+    { value: 'normal', label: 'Normal cards', icon: Columns },
     { value: 'wide', label: 'Wide cards', icon: ArrowsOutCardinal }
   ] as const;
 
@@ -29,31 +36,42 @@
   ] as const;
 </script>
 
-<div class="space-y-6">
+<div class="space-y-6 w-full">
   <!-- Sidebar layout controls -->
   <div class="space-y-2">
-    <p class="text-xs text-zinc-500">Layout</p>
-    <div class="flex gap-2">
+    {#if !compact}
+      <p class="text-xs text-zinc-500">Layout</p>
+    {/if}
+    <div class="{compact ? 'flex flex-col gap-2' : 'flex gap-2'}">
       {#each sidebarOptions as option}
         {@const active = option.value === sidebarMode}
         <button
           type="button"
-          class="group flex items-center gap-1.5 px-2.5 py-2.5 rounded-lg border
-                 transition-all duration-200 text-xs
+          class="w-10 h-10 flex items-center justify-center rounded-lg border
+                 transition-all duration-200
                  {active 
                    ? 'bg-zinc-800/80 border-zinc-700 text-zinc-200' 
                    : 'border-zinc-800 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
-          onclick={() => sidebarMode = option.value}
+          onclick={() => onSidebarModeChange(option.value)}
           aria-label={option.label}
           aria-pressed={active}
         >
-          <svelte:component 
-            this={option.icon}
-            weight={active ? 'regular' : 'light'}
-            class="w-5 h-5 transition-colors
-                  {active ? 'text-violet-400' : ''}"
-          />
-          <span class="sr-only">{option.label}</span>
+          {#if option.icon === ArrowsInLineHorizontal}
+            <ArrowsInLineHorizontal 
+              weight={active ? 'regular' : 'light'}
+              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+            />
+          {:else if option.icon === Columns}
+            <Columns 
+              weight={active ? 'regular' : 'light'}
+              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+            />
+          {:else if option.icon === Table}
+            <Table 
+              weight={active ? 'regular' : 'light'}
+              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+            />
+          {/if}
         </button>
       {/each}
     </div>
@@ -61,28 +79,34 @@
 
   <!-- Card width controls -->
   <div class="space-y-2">
-    <p class="text-xs text-zinc-500">Card width</p>
-    <div class="flex gap-2">
+    {#if !compact}
+      <p class="text-xs text-zinc-500">Width</p>
+    {/if}
+    <div class="{compact ? 'flex flex-col gap-2' : 'flex gap-2'}">
       {#each cardOptions as option}
         {@const active = option.value === cardWidth}
         <button
           type="button"
-          class="group flex items-center gap-1.5 px-2.5 py-2.5 rounded-lg border
-                 transition-all duration-200 text-xs
+          class="w-10 h-10 flex items-center justify-center rounded-lg border
+                 transition-all duration-200
                  {active 
                    ? 'bg-zinc-800/80 border-zinc-700 text-zinc-200' 
                    : 'border-zinc-800 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
-          onclick={() => cardWidth = option.value}
+          onclick={() => onCardWidthChange(option.value)}
           aria-label={option.label}
           aria-pressed={active}
         >
-          <svelte:component 
-            this={option.icon}
-            weight={active ? 'regular' : 'light'}
-            class="w-5 h-5 transition-colors
-                  {active ? 'text-violet-400' : ''}"
-          />
-          <span class="sr-only">{option.label}</span>
+          {#if option.icon === Columns}
+            <Columns 
+              weight={active ? 'regular' : 'light'}
+              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+            />
+          {:else if option.icon === ArrowsOutCardinal}
+            <ArrowsOutCardinal 
+              weight={active ? 'regular' : 'light'}
+              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+            />
+          {/if}
         </button>
       {/each}
     </div>
@@ -90,28 +114,34 @@
 
   <!-- Column layout controls -->
   <div class="space-y-2">
-    <p class="text-xs text-zinc-500">Columns</p>
-    <div class="flex gap-2">
+    {#if !compact}
+      <p class="text-xs text-zinc-500">Columns</p>
+    {/if}
+    <div class="{compact ? 'flex flex-col gap-2' : 'flex gap-2'}">
       {#each columnOptions as option}
         {@const active = option.value === columnCount}
         <button
           type="button"
-          class="group flex items-center gap-1.5 px-2.5 py-2.5 rounded-lg border
-                 transition-all duration-200 text-xs
+          class="w-10 h-10 flex items-center justify-center rounded-lg border
+                 transition-all duration-200
                  {active 
                    ? 'bg-zinc-800/80 border-zinc-700 text-zinc-200' 
                    : 'border-zinc-800 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
-          onclick={() => columnCount = option.value}
+          onclick={() => onColumnCountChange(option.value)}
           aria-label={option.label}
           aria-pressed={active}
         >
-          <svelte:component 
-            this={option.icon}
-            weight={active ? 'regular' : 'light'}
-            class="w-5 h-5 transition-colors
-                  {active ? 'text-violet-400' : ''}"
-          />
-          <span class="sr-only">{option.label}</span>
+          {#if option.icon === Rows}
+            <Rows 
+              weight={active ? 'regular' : 'light'}
+              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+            />
+          {:else if option.icon === SquaresFour}
+            <SquaresFour 
+              weight={active ? 'regular' : 'light'}
+              class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
+            />
+          {/if}
         </button>
       {/each}
     </div>

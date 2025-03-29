@@ -3,34 +3,27 @@
   import { Check, Plus } from 'phosphor-svelte';
 
   let { 
-    availableTags = [], 
-    selectedTags = $bindable<string[]>([]) 
+    availableTags, selectedTags, onTagToggle, onClearTags
   } = $props<{
     availableTags: string[];
-    selectedTags?: string[];
+    selectedTags: string[];
+    onTagToggle: (tag: string) => void;
+    onClearTags: () => void;
   }>();
-
-  function toggleTag(tag: string) {
-    if (selectedTags.includes(tag)) {
-      selectedTags = selectedTags.filter(t => t !== tag);
-    } else {
-      selectedTags = [...selectedTags, tag];
-    }
-  }
 </script>
 
-<div class="space-y-3 max-w-full">
-  <div class="flex flex-wrap gap-2 overflow-hidden">
+<div class="space-y-3 w-full">
+  <div class="flex flex-wrap gap-2">
     {#each availableTags as tag}
       {@const isSelected = selectedTags.includes(tag)}
       <button
         type="button"
         class="group flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs
-               transition-all duration-200 truncate max-w-full
+               transition-all duration-200 truncate max-w-[110px]
                {isSelected 
                  ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40' 
                  : 'border border-zinc-700 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
-        onclick={() => toggleTag(tag)}
+        onclick={() => onTagToggle(tag)}
         aria-pressed={isSelected}
       >
         <span class="truncate">{tag}</span>
@@ -53,7 +46,7 @@
       <button
         type="button"
         class="text-xs text-violet-400 hover:text-violet-300 transition-colors"
-        onclick={() => selectedTags = []}
+        onclick={onClearTags}
       >
         Clear all
       </button>

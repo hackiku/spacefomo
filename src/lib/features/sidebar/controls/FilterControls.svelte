@@ -3,13 +3,15 @@
   import TagSelector from './TagSelector.svelte';
   
   let { 
-    fomoThreshold = $bindable(0),
-    selectedTags = $bindable<string[]>([]),
-    showOnlyActive = $bindable(false)
+    fomoThreshold, selectedTags, showOnlyActive,
+    onFomoThresholdChange, onSelectedTagsChange, onShowOnlyActiveChange
   } = $props<{
-    fomoThreshold?: number;
-    selectedTags?: string[];
-    showOnlyActive?: boolean;
+    fomoThreshold: number;
+    selectedTags: string[];
+    showOnlyActive: boolean;
+    onFomoThresholdChange: (value: number) => void;
+    onSelectedTagsChange: (tags: string[]) => void;
+    onShowOnlyActiveChange: (value: boolean) => void;
   }>();
 
   // Available tags for filtering - ideally this would come from API/store
@@ -17,9 +19,17 @@
     'SpaceX', 'NASA', 'Rocket Lab', 'Blue Origin', 
     'Virgin Galactic', 'Mars', 'Moon', 'ISS'
   ];
+  
+  function handleTagToggle(tag: string) {
+    const newTags = selectedTags.includes(tag)
+      ? selectedTags.filter(t => t !== tag)
+      : [...selectedTags, tag];
+    
+    onSelectedTagsChange(newTags);
+  }
 </script>
 
-<div class="space-y-6 w-full max-w-full overflow-hidden">
+<div class="space-y-6 w-full">
   <!-- FOMO Threshold -->
   <div class="space-y-2">
     <div class="flex items-center justify-between">
@@ -31,7 +41,9 @@
       type="range"
       min="0"
       max="100"
-      bind:value={fomoThreshold}
+      value={fomoThreshold}
+      onchange={(e) => onFomoThresholdChange(parseInt(e.currentTarget.value))}
+      oninput={(e) => onFomoThresholdChange(parseInt(e.currentTarget.value))}
       class="w-full appearance-none bg-zinc-800 h-2 rounded-full accent-violet-500"
     />
   </div>
@@ -42,7 +54,9 @@
     <div class="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 overflow-hidden">
       <TagSelector 
         availableTags={availableTags} 
-        bind:selectedTags
+        selectedTags={selectedTags}
+        onTagToggle={handleTagToggle}
+        onClearTags={() => onSelectedTagsChange([])}
       />
     </div>
   </div>
@@ -56,7 +70,7 @@
               {showOnlyActive ? 'bg-violet-600' : 'bg-zinc-700'}"
       role="switch"
       aria-checked={showOnlyActive}
-      onclick={() => showOnlyActive = !showOnlyActive}
+      onclick={() => onShowOnlyActiveChange(!showOnlyActive)}
     >
       <span
         class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md

@@ -3,6 +3,12 @@
   import { newsStore } from '$lib/stores/newsStore';
   import SmallCard from './card/SmallCard.svelte';
   import NewsModal from './NewsModal.svelte';
+  import type { CardWidth, ColumnCount } from '$lib/types/layout';
+  
+  let { columnCount, cardWidth } = $props<{
+    columnCount: ColumnCount;
+    cardWidth: CardWidth;
+  }>();
   
   const store = $derived($newsStore);
   const items = $derived(store?.items || []);
@@ -11,9 +17,21 @@
 
 <div class="w-full space-y-6">
   {#if items.length > 0}
-    {#each items as article (article.id)}
-      <SmallCard {article} />
-    {/each}
+    <!-- Simple column of cards by default -->
+    {#if columnCount === 1}
+      {#each items as article (article.id)}
+        <div class={cardWidth === 'wide' ? 'w-full' : 'max-w-xl mx-auto'}>
+          <SmallCard article={article} wide={cardWidth === 'wide'} />
+        </div>
+      {/each}
+    {:else}
+      <!-- Two-column grid on larger screens if selected -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {#each items as article (article.id)}
+          <SmallCard article={article} wide={cardWidth === 'wide'} />
+        {/each}
+      </div>
+    {/if}
   {:else}
     <div class="p-8 text-center border border-zinc-800 rounded-xl bg-zinc-900/50">
       <p class="text-zinc-400">No news articles available</p>

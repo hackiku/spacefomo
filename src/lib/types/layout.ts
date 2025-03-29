@@ -32,3 +32,12 @@ export type GridClasses = {
 	sidebar: string;
 	content: string;
 };
+
+
+export interface LayoutClasses {
+	container: string;
+	sidebar: string;
+	content: string;
+	card: string;
+}
+
