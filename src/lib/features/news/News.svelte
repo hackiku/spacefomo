@@ -3,11 +3,10 @@
   import { newsStore } from '$lib/stores/newsStore';
   import SmallCard from './card/SmallCard.svelte';
   import NewsModal from './NewsModal.svelte';
-  import type { CardWidth, ColumnCount } from '$lib/types/layout';
+  import type { ColumnCount } from '$lib/types/layout';
   
-  let { columnCount, cardWidth } = $props<{
+  let { columnCount } = $props<{
     columnCount: ColumnCount;
-    cardWidth: CardWidth;
   }>();
   
   const store = $derived($newsStore);
@@ -20,15 +19,15 @@
     <!-- Simple column of cards by default -->
     {#if columnCount === 1}
       {#each items as article (article.id)}
-        <div class={cardWidth === 'wide' ? 'w-full' : 'max-w-xl mx-auto'}>
-          <SmallCard article={article} wide={cardWidth === 'wide'} />
+        <div>
+          <SmallCard article={article} />
         </div>
       {/each}
     {:else}
       <!-- Two-column grid on larger screens if selected -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {#each items as article (article.id)}
-          <SmallCard article={article} wide={cardWidth === 'wide'} />
+          <SmallCard article={article} />
         {/each}
       </div>
     {/if}

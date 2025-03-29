@@ -4,9 +4,8 @@
   import type { NewsItem } from '$lib/stores/newsStore';
   import { newsStore } from '$lib/stores/newsStore';
   
-  let { article, wide } = $props<{ 
+  let { article } = $props<{ 
     article: NewsItem;
-    wide?: boolean;
   }>();
 
   const formatDate = (date: Date | null) => {
@@ -31,7 +30,7 @@
     <div class="flex flex-col gap-3">
       <div class="space-y-2">
         <div class="flex justify-between items-start gap-4">
-          <h2 class="{wide ? 'text-xl' : 'text-lg'} font-medium text-zinc-100 line-clamp-2">
+          <h2 class="text-lg font-medium text-zinc-100 line-clamp-2">
             {article.title}
           </h2>
           <ArrowUpRight class="h-5 w-5 text-zinc-600 group-hover:text-zinc-400 transition-colors flex-shrink-0" />
@@ -67,14 +66,14 @@
 
       {#if article.tags?.length}
         <div class="flex flex-wrap gap-2">
-          {#each article.tags.slice(0, wide ? 7 : 5) as tag}
+          {#each article.tags.slice(0, 5) as tag}
             <span class="rounded-full border border-zinc-800 px-2 py-0.5 text-xs text-zinc-400 truncate max-w-[120px]">
               {tag}
             </span>
           {/each}
-          {#if article.tags.length > (wide ? 7 : 5)}
+          {#if article.tags.length > 5}
             <span class="rounded-full border border-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
-              +{article.tags.length - (wide ? 7 : 5)}
+              +{article.tags.length - 5}
             </span>
           {/if}
         </div>

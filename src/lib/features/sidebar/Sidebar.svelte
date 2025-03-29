@@ -1,18 +1,16 @@
 <!-- src/lib/features/sidebar/Sidebar.svelte -->
 <script lang="ts">
   import Controls from './controls/Controls.svelte';
-  import type { SidebarMode, CardWidth, ColumnCount } from '$lib/types/layout';
+  import type { SidebarMode, ColumnCount } from '$lib/types/layout';
 
   let { 
-    sidebarMode, cardWidth, columnCount, compact,
-    onSidebarModeChange, onCardWidthChange, onColumnCountChange
+    sidebarMode, columnCount, compact,
+    onSidebarModeChange, onColumnCountChange
   } = $props<{
     sidebarMode: SidebarMode;
-    cardWidth: CardWidth;
     columnCount: ColumnCount;
     compact: boolean;
     onSidebarModeChange: (mode: SidebarMode) => void;
-    onCardWidthChange: (width: CardWidth) => void;
     onColumnCountChange: (count: ColumnCount) => void;
   }>();
 </script>
@@ -21,11 +19,9 @@
   <!-- Controls Section -->
   <Controls 
     {sidebarMode}
-    {cardWidth}
     {columnCount}
     {compact}
     onSidebarModeChange={onSidebarModeChange}
-    onCardWidthChange={onCardWidthChange}
     onColumnCountChange={onColumnCountChange}
   />
 
