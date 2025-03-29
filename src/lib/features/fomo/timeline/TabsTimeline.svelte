@@ -76,7 +76,8 @@
             </div>
 
             {#if isActive}
-              <div class="absolute right-0 bottom-[2px] left-0 h-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500" />
+              <div class="absolute right-0 bottom-[2px] left-0 h-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500">
+							</div>
             {/if}
           </button>
         {/each}

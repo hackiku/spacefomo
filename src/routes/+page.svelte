@@ -6,10 +6,8 @@
 	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
   import type { PageData } from './$types';
   // import type { LayoutLoad } from './$types';
-
   // let { data } = $props<PageData>();
   // let { data } = $props();
-
 </script>
 
 <ViewportSize />
