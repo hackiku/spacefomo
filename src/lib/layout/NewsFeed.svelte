@@ -42,13 +42,13 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-32">
   <div class="flex flex-col md:flex-row gap-6">
     <!-- Sidebar with toggle -->
-    <div class="md:sticky md:top-20 md:h-[calc(100vh-5rem)] flex-shrink-0 mb-8 md:mb-0 
+    <div class="md:sticky md:top-16 md:h-[calc(100vh-5rem)] flex-shrink-0 mb-8 md:mb-0 
                 {sidebarOpen ? 'md:w-48' : 'md:w-16'} transition-all duration-300">
       <div class="flex h-full">
         <!-- Toggle button -->
         <button 
-          class="hidden md:flex absolute -right-3 top-4 w-6 h-6 rounded-full 
-                 bg-zinc-800 text-zinc-300 items-center justify-center"
+          class="hidden md:flex absolute right-0 top-2 w-7 h-7 rounded-full 
+                 bg-neutral-800/70 text-zinc-300 items-center justify-center"
           onclick={toggleSidebar}
           aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
         >
