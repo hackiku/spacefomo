@@ -1,9 +1,8 @@
-<!-- src/lib/layout/Hero.svelte -->
+<!-- src/lib/layout/HeroWithShare.svelte -->
 <script lang="ts">
-	// import ShareButton from '$lib/components/cta/ShareButton.svelte';
-	// import ShareModal from '../features/news/share/ShareModal.svelte';
-	import ShareButton from '$lib/components/share/ShareButton.svelte';
+	import { PlusCircle, Share } from 'phosphor-svelte';
 	import ShareModal from '$lib/components/share/ShareModal.svelte';
+	import ShareButton from '$lib/components/share/ShareButton.svelte';
 
 	let showShareModal = $state(false);
   
@@ -21,16 +20,22 @@
 		There's no place <br/> like space
 	</h1>
 
+	<!-- Subtitle -->
+	<p class="mb-8 text-2xl text-zinc-300 max-w-2xl mx-auto">
+		Space news missing-out relief.
+	</p>
+
 	<!-- Share Button -->
-	<div class="mb-12">
-		<ShareButton onClick={handleShareClick} />
+	<div class="mb-12 flex justify-center">
+		<ShareButton onClick={handleShareClick}/>
+
 	</div>
   
 	<!-- 100 words tagline with arrow -->
-	<div class="absolute -bottom-42 md:-bottom-36 right-6 md:right-20 lg:right-16 flex items-end">
-	<div class="text-left rotate-6">
-			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-2xl lg:text-3xl font-semibold inline-block">
-				Space news in ~100 <br/> words a pop
+	<div class="absolute -bottom-36 right-6 md:right-20 lg:right-16 hidden md:flex items-end">
+		<div class="text-left rotate-6">
+			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-xl lg:text-2xl font-semibold inline-block">
+				Summaries + data <br/> ~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
 				<!-- Arrow SVG pointing down-left -->
