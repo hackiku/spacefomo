@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { scale, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
-	import { X, Envelope, ArrowClockwise } from 'phosphor-svelte';
+	import { X, Link, Envelope, ArrowClockwise } from 'phosphor-svelte';
 	import FomoSlider from '$lib/features/fomo/FomoSlider.svelte';
 
 	let { onClose } = $props<{
@@ -12,7 +12,6 @@
 	// Form state
 	let url = $state('');
 	let email = $state('');
-	let comment = $state('');
 	let fomoScore = $state(50);
 	let loading = $state(false);
 	let status = $state<'idle' | 'success' | 'error'>('idle');
@@ -69,7 +68,6 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					url,
-					comment: comment || undefined,
 					fomoScore: fomoScore || undefined,
 					email: email || undefined
 				})
@@ -126,22 +124,34 @@
 			<!-- Form -->
 			<div class="space-y-6 p-6">
 				<!-- URL Input -->
-				<div class="space-y-2">
-					<label for="url" class="block text-sm font-medium text-zinc-400"> News URL </label>
-					<input
-						id="url"
-						type="url"
-						bind:value={url}
-						placeholder="https://..."
-						class="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2
-                               text-zinc-100 placeholder:text-zinc-600
-                               focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
-					/>
+				<div class="relative">
+					<div class="flex items-stretch h-14 rounded-full border border-zinc-600">
+						<div class="flex items-center pl-4 w-10">
+							<Link weight="light" class="w-5 h-5 text-zinc-500/40" />
+						</div>
+						
+						<input
+							type="url"
+							bind:value={url}
+							placeholder="https://..."
+							class="min-w-[120px] flex-1 px-2 bg-transparent text-base
+									text-zinc-100 placeholder:text-zinc-600
+									border-0 focus:outline-none focus:ring-1 
+									focus:ring-zinc-700 rounded-lg"
+							disabled={loading}
+						/>
+					</div>
+                    
+                    {#if errorMessage && errorMessage.includes('URL')}
+                        <p class="absolute -bottom-6 left-0 text-sm text-red-400" transition:fade={{ duration: 200 }}>
+                            {errorMessage}
+                        </p>
+                    {/if}
 				</div>
 
 				<!-- FOMO Score -->
-				<div class="space-y-2">
-					<label class="block text-sm font-medium text-zinc-400"> FOMO Score </label>
+				<div class="space-y-2 pt-2">
+					<label class="block text-sm font-medium text-zinc-400">FOMO Score</label>
 					<FomoSlider
 						score={fomoScore}
 						onUpvote={() => (fomoScore = Math.min(fomoScore + 5, 100))}
@@ -149,68 +159,63 @@
 					/>
 				</div>
 
-				<!-- Comment -->
-				<div class="space-y-2">
-					<label for="comment" class="block text-sm font-medium text-zinc-400">
-						Why is this interesting?
-					</label>
-					<textarea
-						id="comment"
-						bind:value={comment}
-						rows="3"
-						class="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2
-                               text-zinc-100 placeholder:text-zinc-600
-                               focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
-					/>
-				</div>
-
 				<!-- Email (Optional) -->
-				<div class="space-y-2">
-					<label for="email" class="block text-sm font-medium text-zinc-400">
-						Your email (optional)
-					</label>
-					<input
-						id="email"
-						type="email"
-						bind:value={email}
-						placeholder="you@example.com"
-						class="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2
-                               text-zinc-100 placeholder:text-zinc-600
-                               focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
-					/>
+				<div class="relative">
+					<div class="flex items-stretch h-14 rounded-full border border-zinc-600">
+						<div class="flex items-center pl-4 w-10">
+							<Envelope weight="light" class="w-5 h-5 text-zinc-500/40" />
+						</div>
+						
+						<input
+							type="email"
+							bind:value={email}
+							placeholder="your@email.com (optional)"
+							class="min-w-[120px] flex-1 px-2 bg-transparent text-base
+									text-zinc-100 placeholder:text-zinc-600
+									border-0 focus:outline-none focus:ring-1 
+									focus:ring-zinc-700 rounded-lg"
+							disabled={loading}
+						/>
+					</div>
+                    
+                    {#if errorMessage && errorMessage.includes('email')}
+                        <p class="absolute -bottom-6 left-0 text-sm text-red-400" transition:fade={{ duration: 200 }}>
+                            {errorMessage}
+                        </p>
+                    {/if}
 				</div>
-
-				<!-- Error Message -->
-				{#if errorMessage}
-					<p class="text-center text-sm text-red-400" transition:fade>
-						{errorMessage}
-					</p>
-				{/if}
 
 				<!-- Submit Button -->
 				<button
 					onclick={handleSubmit}
 					disabled={loading || !url}
-					class="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r
+					class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r
                            from-violet-500 to-fuchsia-500 px-6
-                           py-3 text-white
+                           py-3 text-white mt-8
                            transition-all hover:from-violet-600
                            hover:to-fuchsia-600 disabled:cursor-not-allowed disabled:opacity-50"
 				>
-
-						<span>Share News</span>
-					<!-- {/if} -->
+                    {#if loading}
+                        <ArrowClockwise class="h-5 w-5 animate-spin" />
+                        <span>Sending...</span>
+                    {:else}
+                        <span>Share News</span>
+                    {/if}
 				</button>
 
 				<!-- Status Messages -->
 				{#if status === 'success'}
-					<p class="text-center text-sm text-emerald-400" transition:fade>
-						News shared successfully!
-					</p>
-				{:else if status === 'error'}
-					<p class="text-center text-sm text-red-400" transition:fade>
-						Failed to share news. Please try again.
-					</p>
+					<div class="flex items-center justify-center">
+						<p class="text-center text-sm text-emerald-400 bg-emerald-500/10 px-4 py-2 rounded-full" transition:fade>
+							News shared successfully!
+						</p>
+					</div>
+				{:else if status === 'error' && !errorMessage.includes('URL') && !errorMessage.includes('email')}
+					<div class="flex items-center justify-center">
+						<p class="text-center text-sm text-red-400 bg-red-500/10 px-4 py-2 rounded-full" transition:fade>
+							Failed to share news. Please try again.
+						</p>
+					</div>
 				{/if}
 			</div>
 		</div>

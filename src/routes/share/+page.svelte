@@ -1,7 +1,7 @@
-<!-- src/routes/share/+page.svelte -->
+<!-- src/routes/debug/share/+page.svelte -->
 <script lang="ts">
   import ShareButton from '$lib/components/share/ShareButton.svelte';
-  import ShareModal from '$lib/components/share/ShareModal.svelte';
+  import ShareModal from '$lib/components/cta/share/ShareModal.svelte';
   import { newsStore } from '$lib/stores/newsStore';
   import { supabase } from '$lib/supabaseClient';
   
@@ -31,15 +31,15 @@
     submissionsError = '';
     
     try {
-      const { data, error } = await supabase
-        .from('submissions')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-        
-      if (error) throw error;
+      const response = await fetch('/api/submissions?limit=10');
       
-      recentSubmissions = data || [];
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to load submissions');
+      }
+      
+      const data = await response.json();
+      recentSubmissions = data.submissions || [];
     } catch (err) {
       console.error('Error loading submissions:', err);
       submissionsError = err instanceof Error ? err.message : 'Failed to load submissions';
