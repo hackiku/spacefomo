@@ -1,7 +1,9 @@
 <!-- src/lib/layout/Hero.svelte -->
 <script lang="ts">
-	import ShareButton from '$lib/components/cta/ShareButton.svelte';
-	import ShareModal from '../features/news/share/ShareModal.svelte';
+	// import ShareButton from '$lib/components/cta/ShareButton.svelte';
+	// import ShareModal from '../features/news/share/ShareModal.svelte';
+	import ShareButton from '$lib/components/share/ShareButton.svelte';
+	import ShareModal from '$lib/components/share/ShareModal.svelte';
 
 	let showShareModal = $state(false);
   

@@ -15,7 +15,6 @@
 	>
 		There's no place <br/> like space
 	</h1>
-
   
   <h2 class="text-2xl sm:text-3xl font-medium text-zinc-300">
   </h2>
