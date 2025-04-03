@@ -1,7 +1,7 @@
 <!-- src/lib/features/news/card/SmallCard.svelte -->
 <script lang="ts">
   import { ArrowUpRight } from 'phosphor-svelte';
-  import type { NewsItem } from '$lib/stores/newsStore';
+  import type { NewsItem } from '$lib/types/news';
   import { useNews } from '$lib/hooks';
   
   let { article } = $props<{ 

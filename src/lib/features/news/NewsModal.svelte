@@ -1,6 +1,6 @@
 <!-- src/lib/features/news/NewsModal.svelte -->
 <script lang="ts">
-  import type { NewsItem } from '$lib/stores/newsStore';
+  import type { NewsItem } from '$lib/types/news';
   import { useNews } from '$lib/hooks';
   import BigCard from './card/BigCard.svelte';
   

@@ -9,7 +9,7 @@
     columnCount: ColumnCount;
   }>();
   
-  // Use the hook
+  // Use the hook to get access to the news data
   const { items, activeItem, isLoading, error } = useNews();
 </script>
 
