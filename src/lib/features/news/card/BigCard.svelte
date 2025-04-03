@@ -1,8 +1,9 @@
 <!-- src/lib/features/news/card/BigCard.svelte -->
 <script lang="ts">
   import type { NewsItem } from '$lib/stores/newsStore';
-  import { Copy, Info } from 'phosphor-svelte';
-  import Summary from './Summary.svelte';
+  import { Copy, Info, CaretDown } from 'phosphor-svelte';
+  import ViralTitle from './ViralTitle.svelte';
+  import Source from './Source.svelte';
   import DevJson from './DevJson.svelte';
   
   let { article } = $props<{ article: NewsItem }>();
@@ -26,21 +27,16 @@
   <!-- Main Content -->
   <div class="flex-1 rounded-2xl bg-zinc-900 p-8">
     <div class="space-y-8">
-      <!-- Header -->
-      <Summary title={article.title} viralTitle={article.viral_title} />
+      <!-- Viral Title - The AI-generated catchy title -->
+      <ViralTitle title={article.viral_title || article.title} />
 
-      <!-- Metadata -->
-      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-zinc-500">
-        {#if article.source}
-          <span>{article.source}</span>
-          <span class="text-zinc-700">•</span>
-        {/if}
-        {#if article.read_time}
-          <span>{article.read_time} min read</span>
-          <span class="text-zinc-700">•</span>
-        {/if}
-        <span>Published {formatDate(article.publication_date)}</span>
-      </div>
+      <!-- Source info - original title, source, read time -->
+      <Source 
+        originalTitle={article.title} 
+        source={article.source} 
+        readTime={article.read_time} 
+        publicationDate={article.publication_date}
+      />
 
       <!-- Tags -->
       {#if article.tags?.length}
@@ -89,11 +85,12 @@
         <div class="flex items-center gap-4">
           <button
             type="button"
-            class="rounded-full p-2 hover:bg-zinc-800 transition-colors"
-					  aria-label="Show JSON data"
+            class="flex items-center gap-1.5 rounded-lg p-2 hover:bg-zinc-800 transition-colors"
             onclick={() => showJson = !showJson}
+            aria-label={showJson ? "Hide details" : "Show details"}
           >
-            <Info class="h-5 w-5 text-zinc-400" />
+            <CaretDown class={`h-5 w-5 text-zinc-400 transition-transform ${showJson ? 'rotate-180' : ''}`} />
+            <span class="text-sm text-zinc-500">{showJson ? 'Hide Data' : 'Show Data'}</span>
           </button>
           
           <div class="flex items-center gap-2">
@@ -114,7 +111,7 @@
             type="button"
             class="rounded-full p-2 hover:bg-zinc-800 transition-colors"
             onclick={copyUrl}
-					  aria-label="Copy article URL"
+            aria-label="Copy article URL"
           >
             <Copy class="h-5 w-5 text-zinc-400" />
           </button>
