@@ -2,8 +2,22 @@
 import { supabase } from '../supabase/client';
 import type { NewsItem } from '$lib/types/news';
 
-export async function fetchNews(filters = {}) {
-	const { limit = 50, offset = 0, tags = [], weekId = null, minScore = 0 } = filters;
+interface NewsFilters {
+	limit?: number;
+	offset?: number;
+	tags?: string[];
+	weekId?: number | null;
+	minScore?: number;
+}
+
+export async function fetchNews(filters: NewsFilters = {}) {
+	const {
+		limit = 50,
+		offset = 0,
+		tags = [],
+		weekId = null,
+		minScore = 0
+	} = filters;
 
 	let query = supabase
 		.from('news')
@@ -20,7 +34,7 @@ export async function fetchNews(filters = {}) {
 	}
 
 	if (tags.length > 0) {
-		// For arrays in Postgres, we need to use the contains operator
+		// For arrays in Postgres
 		query = query.contains('tags', tags);
 	}
 
@@ -30,7 +44,9 @@ export async function fetchNews(filters = {}) {
 		throw new Error(`Error fetching news: ${error.message}`);
 	}
 
-	return { items: data || [] };
+	return {
+		items: data || []
+	};
 }
 
 export async function fetchNewsById(id: number) {

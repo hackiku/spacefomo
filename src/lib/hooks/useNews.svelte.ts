@@ -23,30 +23,28 @@ export function useNews(initialData: NewsItem[] = []) {
 
 	// Load news data
 	async function loadNews() {
-		// Create local variables inside the function scope
-		let localIsLoading = true;
-		let localError = null;
-		let localItems = [];
+		// Set loading state first
+		isLoading = true;
+		error = null;
 
 		try {
 			const result = await fetchNews(filters);
 
 			// Process dates for proper display
-			localItems = result.items.map(item => ({
+			const processedItems = result.items.map(item => ({
 				...item,
-				created_at: item.created_at,
-				publication_date: item.publication_date
+				created_at: new Date(item.created_at),
+				publication_date: item.publication_date ? new Date(item.publication_date) : null
 			}));
+
+			// Update items after processing
+			items = processedItems;
 		} catch (e) {
 			console.error('Error loading news:', e);
-			localError = e instanceof Error ? e.message : 'Unknown error loading news';
+			error = e instanceof Error ? e.message : 'Unknown error loading news';
 		} finally {
-			// Now update all state variables at once
+			// Always update loading state when done
 			isLoading = false;
-			error = localError;
-			if (!localError) {
-				items = localItems;
-			}
 		}
 	}
 
@@ -57,7 +55,9 @@ export function useNews(initialData: NewsItem[] = []) {
 
 	// Update filters and reload data
 	function setFilters(newFilters: Partial<typeof filters>) {
+		// Create a new object to ensure reactivity
 		filters = { ...filters, ...newFilters };
+		// Load news with the updated filters
 		loadNews();
 	}
 

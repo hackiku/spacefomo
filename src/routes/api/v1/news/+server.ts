@@ -1,42 +1,32 @@
 // src/routes/api/v1/news/+server.ts
-import { error, json } from '@sveltejs/kit';
-import { fetchNews } from '$lib/services/news/newsService';
+import { json } from '@sveltejs/kit';
+import { getNewsItems } from '$lib/services/api/newsApiService';
 
 export async function GET({ url }) {
-	const limit = parseInt(url.searchParams.get('limit') || '50');
+	const limit = parseInt(url.searchParams.get('limit') || '20');
 	const offset = parseInt(url.searchParams.get('offset') || '0');
+	const weekId = url.searchParams.get('weekId') ? parseInt(url.searchParams.get('weekId')!) : null;
+	const minScore = parseInt(url.searchParams.get('minScore') || '0');
 	const tags = url.searchParams.get('tags')?.split(',') || [];
-	const weekId = url.searchParams.get('week_id')
-		? parseInt(url.searchParams.get('week_id')!)
-		: null;
-	const minScore = parseInt(url.searchParams.get('min_score') || '0');
+	const sortBy = url.searchParams.get('sortBy') || 'fomo_score';
+	const sortDir = url.searchParams.get('sortDir') || 'desc';
 
 	try {
-		const result = await fetchNews({
+		const response = await getNewsItems({
 			limit,
 			offset,
-			tags,
 			weekId,
-			minScore
+			minScore,
+			tags,
+			sortBy,
+			sortDir
 		});
 
-		return json({
-			data: result.items,
-			meta: {
-				total: result.total,
-				limit,
-				offset,
-				next: offset + limit < result.total
-					? `/api/v1/news?limit=${limit}&offset=${offset + limit}${tags.length ? '&tags=' + tags.join(',') : ''
-					}${weekId ? '&week_id=' + weekId : ''}${minScore ? '&min_score=' + minScore : ''
-					}`
-					: null
-			}
-		});
-	} catch (e) {
-		console.error('API error:', e);
-		throw error(500, {
-			message: e instanceof Error ? e.message : 'Unknown error fetching news'
-		});
+		return json(response);
+	} catch (error) {
+		return json(
+			{ error: error instanceof Error ? error.message : 'Unknown error' },
+			{ status: 500 }
+		);
 	}
 }

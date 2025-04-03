@@ -9,7 +9,7 @@
     columnCount: ColumnCount;
   }>();
   
-  // Use the hook instead of directly accessing the store
+  // Use the hook
   const { items, activeItem, isLoading, error } = useNews();
 </script>
 
@@ -24,7 +24,7 @@
     </div>
   {:else if items.length > 0}
     {#if columnCount === 1}
-      <!-- Single column layout: cards get natural width with side margins -->
+      <!-- Single column layout -->
       <div class="space-y-6">
         {#each items as article (article.id)}
           <div class="mx-auto">
@@ -33,7 +33,7 @@
         {/each}
       </div>
     {:else}
-      <!-- Two-column grid for larger screens -->
+      <!-- Two-column grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {#each items as article (article.id)}
           <SmallCard article={article} />
