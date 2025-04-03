@@ -4,10 +4,10 @@
     originalTitle: string;
     source: string | null;
     readTime: number | null;
-    publicationDate: string | Date | null;
+    publicationDate: Date | null;
   }>();
 
-  const formatDate = (date: string | Date | null) => {
+  const formatDate = (date: Date | null) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
       month: 'long',

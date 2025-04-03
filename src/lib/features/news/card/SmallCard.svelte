@@ -3,13 +3,16 @@
   import { ArrowUpRight } from 'phosphor-svelte';
   import type { NewsItem } from '$lib/types/news';
   import { useNews } from '$lib/hooks';
+	// import { newsStore } from '$lib/stores/newsStore';
   
+
   let { article } = $props<{ 
     article: NewsItem;
   }>();
 
   // Get the setActiveItem function from our hook
   const { setActiveItem } = useNews();
+
 
   const formatDate = (date: Date | null) => {
     if (!date) return '';

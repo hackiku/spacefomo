@@ -1,7 +1,7 @@
 <!-- src/lib/features/news/card/BigCard.svelte -->
 <script lang="ts">
-  import type { NewsItem } from '$lib/stores/newsStore';
-  import { Copy, Info, CaretDown } from 'phosphor-svelte';
+  import type { NewsItem } from '$lib/types/news';
+  import { Copy, CaretDown } from 'phosphor-svelte';
   import ViralTitle from './ViralTitle.svelte';
   import Source from './Source.svelte';
   import DevJson from './DevJson.svelte';
@@ -28,7 +28,7 @@
   <div class="flex-1 rounded-2xl bg-zinc-900 p-8">
     <div class="space-y-8">
       <!-- Viral Title - The AI-generated catchy title -->
-      <ViralTitle title={article.viral_title || article.title} />
+      <ViralTitle title={article.title} viralTitle={article.viral_title} />
 
       <!-- Source info - original title, source, read time -->
       <Source 
@@ -51,14 +51,14 @@
 
       <!-- Entities Grid -->
       <div class="grid grid-cols-2 gap-4">
-        {#if article.entities?.organizations}
+        {#if article.entities?.companies}
           <div class="rounded-xl bg-zinc-800/30 p-4">
             <h3 class="text-sm font-medium text-zinc-300 mb-3">Organizations</h3>
             <div class="space-y-2">
-              {#each article.entities.organizations as org}
+              {#each article.entities.companies as org}
                 <div class="text-sm">
                   <span class="text-zinc-200">{org.name}</span>
-                  <span class="text-zinc-500"> • {org.role}</span>
+                  {#if org.role}<span class="text-zinc-500"> • {org.role}</span>{/if}
                 </div>
               {/each}
             </div>
@@ -72,7 +72,7 @@
               {#each article.entities.people as person}
                 <div class="text-sm">
                   <span class="text-zinc-200">{person.name}</span>
-                  <span class="text-zinc-500"> • {person.role}</span>
+                  {#if person.role}<span class="text-zinc-500"> • {person.role}</span>{/if}
                 </div>
               {/each}
             </div>
