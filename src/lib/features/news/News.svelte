@@ -1,6 +1,6 @@
 <!-- src/lib/features/news/News.svelte -->
 <script lang="ts">
-  import { newsStore } from '$lib/stores/newsStore';
+  import { useNews } from '$lib/hooks';
   import SmallCard from './card/SmallCard.svelte';
   import NewsModal from './NewsModal.svelte';
   import type { ColumnCount } from '$lib/types/layout';
@@ -9,13 +9,20 @@
     columnCount: ColumnCount;
   }>();
   
-  const store = $derived($newsStore);
-  const items = $derived(store?.items || []);
-  const activeArticle = $derived(items.find(a => a.id === store?.activeItemId));
+  // Use the hook instead of directly accessing the store
+  const { items, activeItem, isLoading, error } = useNews();
 </script>
 
 <div class="w-full space-y-6">
-  {#if items.length > 0}
+  {#if isLoading}
+    <div class="p-8 text-center border border-zinc-800 rounded-xl bg-zinc-900/50">
+      <p class="text-zinc-400">Loading news articles...</p>
+    </div>
+  {:else if error}
+    <div class="p-8 text-center border border-zinc-800 rounded-xl bg-zinc-900/50">
+      <p class="text-red-400">Error loading news: {error}</p>
+    </div>
+  {:else if items.length > 0}
     {#if columnCount === 1}
       <!-- Single column layout: cards get natural width with side margins -->
       <div class="space-y-6">
@@ -40,6 +47,6 @@
   {/if}
 </div>
 
-{#if activeArticle}
-  <NewsModal article={activeArticle} />
+{#if activeItem}
+  <NewsModal article={activeItem} />
 {/if}

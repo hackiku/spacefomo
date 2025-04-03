@@ -2,11 +2,14 @@
 <script lang="ts">
   import { ArrowUpRight } from 'phosphor-svelte';
   import type { NewsItem } from '$lib/stores/newsStore';
-  import { newsStore } from '$lib/stores/newsStore';
+  import { useNews } from '$lib/hooks';
   
   let { article } = $props<{ 
     article: NewsItem;
   }>();
+
+  // Get the setActiveItem function from our hook
+  const { setActiveItem } = useNews();
 
   const formatDate = (date: Date | null) => {
     if (!date) return '';
@@ -20,7 +23,7 @@
 <button 
   type="button"
   class="group w-full text-left hover:-translate-y-0.5 transition-transform"
-  onclick={() => newsStore.setActiveItem(article.id)}
+  onclick={() => setActiveItem(article.id)}
   aria-label={`Open article: ${article.title}`}
 >
   <div class="p-4 rounded-2xl border border-zinc-800/50 
@@ -31,16 +34,10 @@
       <div class="space-y-2">
         <div class="flex justify-between items-start gap-4">
           <h2 class="text-lg font-medium text-zinc-100 line-clamp-2">
-            {article.title}
+            {article.viral_title || article.title}
           </h2>
           <ArrowUpRight class="h-5 w-5 text-zinc-600 group-hover:text-zinc-400 transition-colors flex-shrink-0" />
         </div>
-        
-        {#if article.viral_title}
-          <p class="text-sm text-zinc-400 line-clamp-2">
-            {article.viral_title}
-          </p>
-        {/if}
       </div>
 
       <div class="flex flex-wrap items-center justify-between">

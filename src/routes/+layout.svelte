@@ -1,8 +1,8 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
 	import '../app.css';
-	import Nav from '$lib/layout/Nav.svelte';
-	import Footer from '$lib/layout/Footer.svelte';
+	import Nav from '$lib/components/layout/Nav.svelte';
+	import Footer from '$lib/components/layout/Footer.svelte';
 	import { fomoStore } from '$lib/stores/fomoStore';
 	import { newsStore } from '$lib/stores/newsStore';
 

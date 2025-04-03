@@ -1,13 +1,16 @@
 <!-- src/lib/features/news/NewsModal.svelte -->
 <script lang="ts">
   import type { NewsItem } from '$lib/stores/newsStore';
-  import { newsStore } from '$lib/stores/newsStore';
+  import { useNews } from '$lib/hooks';
   import BigCard from './card/BigCard.svelte';
   
   let { article } = $props<{ article: NewsItem }>();
   
+  // Get the setActiveItem function from our hook
+  const { setActiveItem } = useNews();
+  
   function handleClose() {
-    newsStore.setActiveItem(null);
+    setActiveItem(null);
   }
 
   // Handle escape key
@@ -27,9 +30,9 @@
     type="button"
     class="fixed inset-0 bg-black/80 backdrop-blur-sm"
     onclick={handleClose}
-		aria-label="Close modal"
+    aria-label="Close modal"
   >
-	</button>
+  </button>
 
   <div class="relative w-full max-w-7xl pt-8">
     <BigCard {article} />
