@@ -13,14 +13,7 @@
     navigator.clipboard.writeText(article.url);
   }
 
-  const formatDate = (date: Date | null) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
+
 </script>
 
 <div class="relative flex gap-4">

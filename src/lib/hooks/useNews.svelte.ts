@@ -1,5 +1,5 @@
 // src/lib/hooks/useNews.svelte.ts
-import { fetchNews, fetchNewsById } from '$lib/services/news/newsService';
+import { fetchNews } from '$lib/services/news/newsService';
 import { getNewsContext } from '$lib/context/newsContext.svelte';
 import type { NewsItem } from '$lib/types/news';
 
@@ -57,14 +57,20 @@ export function useNews() {
 		}
 	});
 
+	// Enhanced setActiveItem with logging
+	function setActiveItemWithLogging(id: number | null) {
+		console.log('useNews setActiveItem called with ID:', id);
+		setActiveItem(id);
+	}
+
 	// Return the API
 	return {
 		items,
-		activeItem,
+		activeItem,  // Just pass through the context's activeItem
 		isLoading,
 		error,
 		filters,
-		setActiveItem,
+		setActiveItem: setActiveItemWithLogging,
 		setFilters,
 		refresh: loadNews
 	};

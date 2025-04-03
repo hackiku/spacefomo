@@ -1,5 +1,4 @@
-// src/lib/context/newsContext.ts
-
+// src/lib/context/newsContext.svelte.ts
 import { getContext } from 'svelte';
 import type { NewsItem } from '$lib/types/news';
 
@@ -10,13 +9,11 @@ export function createNewsContext(initialData: NewsItem[] = []) {
 	let isLoading = $state(false);
 	let error = $state<string | null>(null);
 
-	// Derived values
-	const activeItem = $derived(
-		items.find(item => item.id === activeItemId)
-	);
+	console.log('Creating news context with items:', initialData.length);
 
 	// Methods
 	function setItems(newItems: NewsItem[]) {
+		console.log('Setting news items:', newItems.length);
 		items = newItems.map(item => ({
 			...item,
 			created_at: item.created_at instanceof Date ? item.created_at : new Date(item.created_at),
@@ -27,7 +24,13 @@ export function createNewsContext(initialData: NewsItem[] = []) {
 	}
 
 	function setActiveItem(id: number | null) {
+		console.log('Context setActiveItem called with ID:', id);
 		activeItemId = id;
+	}
+
+	function getActiveItem() {
+		console.log('getActiveItem called, looking for ID:', activeItemId);
+		return items.find(item => item.id === activeItemId) || null;
 	}
 
 	function setLoading(loading: boolean) {
@@ -46,7 +49,8 @@ export function createNewsContext(initialData: NewsItem[] = []) {
 	return {
 		// State
 		items,
-		activeItem,
+		activeItemId,
+		getActiveItem,  // Method instead of derived value
 		isLoading,
 		error,
 
@@ -60,5 +64,7 @@ export function createNewsContext(initialData: NewsItem[] = []) {
 
 // Helper to get the news context
 export function getNewsContext() {
-	return getContext<ReturnType<typeof createNewsContext>>('news');
+	const context = getContext<ReturnType<typeof createNewsContext>>('news');
+	console.log('getNewsContext called, context exists:', !!context);
+	return context;
 }

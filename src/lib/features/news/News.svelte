@@ -10,7 +10,14 @@
   }>();
   
   // Use the hook to get access to the news data
-  const { items, activeItem, isLoading, error } = useNews();
+  const { items, activeItem, isLoading, error, setActiveItem } = useNews();
+  
+  // Add a debugging $effect
+  $effect(() => {
+    if (activeItem) {
+      console.log('News activeItem changed:', activeItem);
+    }
+  });
 </script>
 
 <div class="w-full space-y-6">
@@ -47,6 +54,25 @@
   {/if}
 </div>
 
-{#if activeItem}
+
+<!-- {#if activeItem}
+  <div class="hidden">{console.log('About to render NewsModal with:', activeItem)}</div>
   <NewsModal article={activeItem} />
+{/if} -->
+
+
+{#if activeItem}
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+    <div class="bg-zinc-900 p-8 rounded-2xl max-w-3xl">
+      <h2 class="text-xl text-white">Test Modal</h2>
+      <p>Article ID: {activeItem.id}</p>
+      <p>Title: {activeItem.title}</p>
+      <button 
+        onclick={() => setActiveItem(null)}
+        class="mt-4 px-4 py-2 bg-zinc-800 text-white rounded-lg"
+      >
+        Close
+      </button>
+    </div>
+  </div>
 {/if}

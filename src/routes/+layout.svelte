@@ -9,6 +9,8 @@
 
   let { data, children } = $props();
 
+  console.log('Layout data news items:', data.news?.length || 0);
+
   // Create contexts instead of using global stores
   const newsContext = createNewsContext(data.news || []);
   const fomoContext = createFomoContext(data.weeks || []);
