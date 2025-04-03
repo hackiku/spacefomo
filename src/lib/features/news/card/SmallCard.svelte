@@ -2,19 +2,11 @@
 <script lang="ts">
   import { ArrowUpRight } from 'phosphor-svelte';
   import type { NewsItem } from '$lib/types/news';
-  import { useNews } from '$lib/hooks';
   
-  let { article } = $props<{ 
+  let { article, onSelect } = $props<{ 
     article: NewsItem;
+    onSelect: () => void;
   }>();
-
-  // Get the setActiveItem function from our hook
-  const { setActiveItem } = useNews();
-
-  function handleClick() {
-    console.log('SmallCard clicked, article ID:', article.id);
-    setActiveItem(article.id);
-  }
 
   const formatDate = (date: Date | null) => {
     if (!date) return '';
@@ -28,13 +20,14 @@
 <button 
   type="button"
   class="group w-full text-left hover:-translate-y-0.5 transition-transform"
-  onclick={handleClick}
+  onclick={onSelect}
   aria-label={`Open article: ${article.title}`}
 >
   <div class="p-4 rounded-2xl border border-zinc-800/50 
               bg-zinc-900/50 backdrop-blur-sm 
               group-hover:border-zinc-700/50 group-hover:bg-zinc-900/70
               transition-all duration-200">
+  
     <div class="flex flex-col gap-3">
       <div class="space-y-2">
         <div class="flex justify-between items-start gap-4">

@@ -2,23 +2,42 @@
 <script lang="ts">
   import { useNews } from '$lib/hooks';
   import SmallCard from './card/SmallCard.svelte';
-  import NewsModal from './NewsModal.svelte';
+  import BigCard from './card/BigCard.svelte';
   import type { ColumnCount } from '$lib/types/layout';
+  import type { NewsItem } from '$lib/types/news';
   
   let { columnCount } = $props<{
     columnCount: ColumnCount;
   }>();
   
-  // Use the hook to get access to the news data
-  const { items, activeItem, isLoading, error, setActiveItem } = useNews();
+  // Use the hook just for data fetching
+  const { items, isLoading, error } = useNews();
   
-  // Add a debugging $effect
-  $effect(() => {
-    if (activeItem) {
-      console.log('News activeItem changed:', activeItem);
+  // Local modal state
+  let modalOpen = $state(false);
+  let currentArticle = $state<NewsItem | null>(null);
+  
+  // Modal control functions
+  function openModal(article: NewsItem) {
+    console.log('Opening modal for article:', article.id);
+    currentArticle = article;
+    modalOpen = true;
+  }
+  
+  function closeModal() {
+    console.log('Closing modal');
+    modalOpen = false;
+  }
+  
+  // Handle escape key
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape' && modalOpen) {
+      closeModal();
     }
-  });
+  }
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <div class="w-full space-y-6">
   {#if isLoading}
@@ -35,7 +54,10 @@
       <div class="space-y-6">
         {#each items as article (article.id)}
           <div class="mx-auto">
-            <SmallCard article={article} />
+            <SmallCard 
+              article={article} 
+              onSelect={() => openModal(article)}
+            />
           </div>
         {/each}
       </div>
@@ -43,7 +65,10 @@
       <!-- Two-column grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {#each items as article (article.id)}
-          <SmallCard article={article} />
+          <SmallCard 
+            article={article} 
+            onSelect={() => openModal(article)}
+          />
         {/each}
       </div>
     {/if}
@@ -54,25 +79,23 @@
   {/if}
 </div>
 
+<!-- Modal with BigCard -->
+{#if modalOpen && currentArticle}
+  <div 
+    role="dialog"
+    aria-modal="true"
+    class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4"
+  >
+    <button
+      type="button"
+      class="fixed inset-0 bg-black/80 backdrop-blur-sm"
+      onclick={closeModal}
+      aria-label="Close modal"
+    >
+    </button>
 
-<!-- {#if activeItem}
-  <div class="hidden">{console.log('About to render NewsModal with:', activeItem)}</div>
-  <NewsModal article={activeItem} />
-{/if} -->
-
-
-{#if activeItem}
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-    <div class="bg-zinc-900 p-8 rounded-2xl max-w-3xl">
-      <h2 class="text-xl text-white">Test Modal</h2>
-      <p>Article ID: {activeItem.id}</p>
-      <p>Title: {activeItem.title}</p>
-      <button 
-        onclick={() => setActiveItem(null)}
-        class="mt-4 px-4 py-2 bg-zinc-800 text-white rounded-lg"
-      >
-        Close
-      </button>
+    <div class="relative w-full max-w-7xl pt-8">
+      <BigCard article={currentArticle} />
     </div>
   </div>
 {/if}
