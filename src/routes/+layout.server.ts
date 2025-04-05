@@ -11,7 +11,7 @@ export async function load() {
 				.order('week_number', { ascending: false }),
 			supabase
 				.from('news')
-				.select('*')
+				.select('*, seo')  // Explicitly select SEO data
 				.order('fomo_score', { ascending: false })
 				.limit(50)
 		]);
