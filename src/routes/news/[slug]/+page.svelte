@@ -1,4 +1,4 @@
-<!-- src/routes/news/[id]/+page.svelte -->
+<!-- src/routes/news/[slug]/+page.svelte -->
 <script lang="ts">
     import { browser } from '$app/environment';
     

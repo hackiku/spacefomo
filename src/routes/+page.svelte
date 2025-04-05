@@ -1,6 +1,6 @@
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
-  import Hero from '$lib/layout/Hero.svelte';
+  import Hero from '$lib/components/layout/Hero.svelte';
   import NewsFeed from '$lib/layout/NewsFeed.svelte';
   // import Timeline from '$lib/features/fomo/Timeline.svelte';
 	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';

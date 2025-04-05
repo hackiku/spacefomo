@@ -38,7 +38,7 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					class="text-zinc-400 transition-all hover:scale-110 hover:text-zinc-200"
-				>API
+				>APIss
 				</a>
 				<button
 					class="text-zinc-400 transition-colors hover:text-zinc-200"

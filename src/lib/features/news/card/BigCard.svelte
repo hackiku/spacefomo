@@ -13,7 +13,6 @@
     navigator.clipboard.writeText(article.url);
   }
 
-
 </script>
 
 <div class="relative flex gap-4">

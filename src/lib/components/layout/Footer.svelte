@@ -14,7 +14,7 @@
           <Logo size="md"/>
         </div>
         <p class="text-zinc-400 text-sm mb-6">
-          Space news distilled to 100 words with FOMO score.
+          Can't-miss space news 100 words a pop
         </p>
 
       </div>
