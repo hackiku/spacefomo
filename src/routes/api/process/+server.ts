@@ -3,7 +3,7 @@ import { json } from '@sveltejs/kit';
 // Change this path from:
 // import { extractContent } from '$lib/server/ai/tasks/extractContent';
 // To:
-import { extractContent } from '$lib/services/ai/tasks/extractContent';
+import { extractContent } from '$lib/server/ai/tasks/extractContent';
 
 export async function POST({ request }) {
 	const { url } = await request.json();
