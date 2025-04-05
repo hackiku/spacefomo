@@ -38,7 +38,13 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					class="text-zinc-400 transition-all hover:scale-110 hover:text-zinc-200"
-				>APIss
+				>API
+				</a>
+			<div class="flex items-center gap-6">
+								<a
+					href="/news"
+					class="text-zinc-400 transition-all hover:scale-110 hover:text-zinc-200"
+				>news
 				</a>
 				<button
 					class="text-zinc-400 transition-colors hover:text-zinc-200"

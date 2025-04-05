@@ -12,9 +12,9 @@
     {viralTitle || title}
   </h2>
   
-  {#if viralTitle && viralTitle !== title}
+  <!-- {#if viralTitle && viralTitle !== title}
     <p class="text-lg text-zinc-400 leading-relaxed">
       {title}
     </p>
-  {/if}
+  {/if} -->
 </div>
