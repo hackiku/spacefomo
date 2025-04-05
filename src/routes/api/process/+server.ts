@@ -1,6 +1,9 @@
-// src/routes/api/process/extract/+server.ts
+// src/routes/api/process/+server.ts
 import { json } from '@sveltejs/kit';
-import { extractContent } from '$lib/server/ai/tasks/extractContent';
+// Change this path from:
+// import { extractContent } from '$lib/server/ai/tasks/extractContent';
+// To:
+import { extractContent } from '$lib/services/ai/tasks/extractContent';
 
 export async function POST({ request }) {
 	const { url } = await request.json();
