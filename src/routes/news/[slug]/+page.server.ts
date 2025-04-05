@@ -6,7 +6,7 @@ export async function load({ params }) {
 	const { slug } = params;
 
 	const { data, error: supabaseError } = await supabase
-		.from('space_news')
+		.from('news')
 		.select('*')
 		.eq('slug', slug)
 		.single();

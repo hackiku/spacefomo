@@ -4,7 +4,7 @@ import { supabase } from '$lib/services/supabase/client';
 export async function load() {
 	try {
 		const { data, error } = await supabase
-			.from('space_news')
+			.from('news')
 			.select('id, title, viral_title, slug, fomo_score, source, publication_date, tags')
 			.order('created_at', { ascending: false });
 
