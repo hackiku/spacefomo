@@ -8,6 +8,9 @@
 	import Source from '$lib/features/news/card/Source.svelte';
 	import DevJson from '$lib/features/news/card/DevJson.svelte';
 	
+  import SourceContainer from '$lib/features/news/source/SourceContainer.svelte';
+
+
 	// Import local components
 	import SlugSidebar from './SlugSidebar.svelte';
 	
@@ -22,6 +25,21 @@
 			// Analytics tracking would go here
 		}
 	});
+
+
+	  const sourcesData = [
+    {
+      id: 1,
+      name: 'Space.com',
+      title: article.title,
+      url: article.url,
+      publicationDate: article.publication_date,
+      readTime: article.read_time
+    },
+    // Add additional sources if available
+  ];
+
+
 </script>
 
 <div class="max-w-5xl mx-auto px-4 py-12">
@@ -39,12 +57,15 @@
 			<!-- Title -->
 			<ViralTitle title={article.title} viralTitle={article.viral_title} />
 			
+			<SourceContainer sources={sourcesData} />
+
 			<!-- Source info -->
 			<Source 
 				originalTitle={article.title} 
 				source={article.source} 
 				readTime={article.read_time} 
 				publicationDate={article.publication_date}
+				url={article.url}
 			/>
 			
 			<!-- Summary Section -->
