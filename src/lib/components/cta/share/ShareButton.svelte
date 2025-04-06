@@ -1,4 +1,4 @@
-<!-- src/lib/components/share/ShareButton.svelte -->
+<!-- src/lib/components/cta/share/ShareButton.svelte -->
 <script lang="ts">
   import { Share, PlusCircle } from 'phosphor-svelte';
   
@@ -30,18 +30,24 @@
     md: 'w-5 h-5',
     lg: 'w-6 h-6'
   };
+
+  // Handle both click and touch events
+  function handleInteraction() {
+    onClick();
+  }
 </script>
 
 {#if variant === 'primary'}
   <!-- Primary button with gradient background -->
   <button
     type="button"
-    onclick={onClick}
+    onclick={handleInteraction}
+    ontouchstart={handleInteraction}
     class="{buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2 rounded-full 
            bg-gradient-to-r from-violet-500 to-fuchsia-500 
-           font-medium text-white
+           font-medium text-white cursor-pointer
            transition-all hover:from-violet-600 hover:to-fuchsia-600
-           hover:shadow-lg hover:shadow-violet-500/25"
+           hover:shadow-lg hover:shadow-violet-500/25 active:scale-95"
   >
     <PlusCircle weight="bold" class={iconClasses[size]} />
     <span>Share News</span>
@@ -50,10 +56,11 @@
   <!-- Default button with border -->
   <button
     type="button"
-    onclick={onClick}
+    onclick={handleInteraction}
+    ontouchstart={handleInteraction}
     class="{buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2 rounded-full 
-           border border-zinc-700 bg-zinc-800/50 text-zinc-200
-           transition-all hover:bg-zinc-800 hover:text-white"
+           border border-zinc-700 bg-zinc-800/50 text-zinc-200 cursor-pointer
+           transition-all hover:bg-zinc-800 hover:text-white active:scale-95"
   >
     <Share weight="bold" class={iconClasses[size]} />
     <span>Share News</span>
@@ -62,11 +69,12 @@
   <!-- Icon-only button -->
   <button
     type="button"
-    onclick={onClick}
-    class="inline-flex items-center justify-center rounded-full 
+    onclick={handleInteraction}
+    ontouchstart={handleInteraction}
+    class="inline-flex items-center justify-center rounded-full cursor-pointer
            {size === 'sm' ? 'w-8 h-8' : size === 'md' ? 'w-10 h-10' : 'w-12 h-12'} 
            bg-zinc-800 hover:bg-zinc-700 text-zinc-200
-           transition-all hover:text-white"
+           transition-all hover:text-white active:scale-95"
     aria-label="Share News"
   >
     <Share weight="bold" class={iconClasses[size]} />

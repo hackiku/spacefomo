@@ -1,4 +1,4 @@
-<!-- src/lib/components/cta/share/StatusMessage.svelte -->
+<!-- src/lib/components/share/StatusMessage.svelte -->
 <script lang="ts">
     import { fade } from 'svelte/transition';
     

@@ -1,4 +1,4 @@
-// src/lib/context/fomoContext.svelte.ts
+// src/lib/context/timeContext.svelte.ts
 import { getContext } from 'svelte';
 
 export type FomoWeek = {

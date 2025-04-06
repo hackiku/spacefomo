@@ -1,8 +1,8 @@
 <!-- src/lib/layout/HeroWithShare.svelte -->
 <script lang="ts">
 	import { PlusCircle, Share } from 'phosphor-svelte';
-	import ShareModal from '$lib/components/share/ShareModal.svelte';
-	import ShareButton from '$lib/components/share/ShareButton.svelte';
+	import ShareModal from '$lib/components/cta/share/ShareModal.svelte';
+	import ShareButton from '$lib/components/cta/share/ShareButton.svelte';
 
 	let showShareModal = $state(false);
   
