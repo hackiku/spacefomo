@@ -1,6 +1,6 @@
 <!-- src/routes/debug/share/+page.svelte -->
 <script lang="ts">
-  import ShareButton from '$lib/components/share/ShareButton.svelte';
+  import ShareButton from '$lib/components/cta/share/ShareButton.svelte';
   import ShareModal from '$lib/components/cta/share/ShareModal.svelte';
   import { newsStore } from '$lib/stores/newsStore';
   import { supabase } from '$lib/supabaseClient';
