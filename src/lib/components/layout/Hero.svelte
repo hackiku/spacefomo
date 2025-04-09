@@ -15,7 +15,7 @@
 	<!-- Main Heading -->
 	<h1
 		class="mb-6 text-4xl text-white
-                   font-bold sm:text-5xl lg:text-6xl"
+                   font-thin sm:text-5xl lg:text-6xl"
 	>
 		There's no place <br/> like space
 	</h1>
@@ -53,7 +53,7 @@
 <div
 	class="absolute -top-24 -right-24 h-96 w-96 rounded-full
                 bg-gradient-to-br from-violet-500/30 to-fuchsia-500/30
-                opacity-50 blur-3xl"
+                opacity-20 blur-3xl"
 ></div>
 
 <!-- Share Modal -->

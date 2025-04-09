@@ -23,7 +23,7 @@
   onclick={onSelect}
   aria-label={`Open article: ${article.title}`}
 >
-  <div class="p-4 rounded-2xl border border-zinc-800/50 
+  <div class="p-4 md:p-5 rounded-xl border border-zinc-700/70 
               bg-zinc-900/50 backdrop-blur-sm 
               group-hover:border-zinc-700/50 group-hover:bg-zinc-900/70
               transition-all duration-200">
