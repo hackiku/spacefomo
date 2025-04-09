@@ -1,6 +1,7 @@
 // src/routes/api/submit/+server.ts
 import { json, error } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
+// import { supabase } from '$lib/supabaseClient';
+import { supabase } from '$lib/server/supabase/client';
 
 export async function POST({ request }) {
 	try {

@@ -1,5 +1,5 @@
 // src/lib/services/api/newsApiService.ts
-import { supabase } from '../supabase/client';
+import { supabase } from '$lib/server/supabase/client';
 import type { NewsApiParams, NewsApiResponse } from '$lib/types/api';
 
 export async function getNewsItems(params: NewsApiParams): Promise<NewsApiResponse> {
