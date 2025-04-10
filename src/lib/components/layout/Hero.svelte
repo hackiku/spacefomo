@@ -11,7 +11,8 @@
 	}
 </script>
 
-<div class="container mx-auto text-center px-6 sm:px-12 md:px-32 lg:px-44 xl:px-72 relative">
+<!-- <div class="container mx-auto __text-center px-6 sm:px-12 md:px-32 lg:px-44 xl:px-72 relative"> -->
+<div class="container mx-auto __text-center px-6 sm:px-12 md:px-24 lg:px-32 xl:px-72 relative">
 	<!-- Main Heading -->
 	<h1
 		class="mb-6 text-4xl text-white
@@ -21,16 +22,16 @@
 	</h1>
 
 	<!-- Share Button -->
-	<div class="mb-12 flex justify-center">
+	<div class="mb-12 flex justify-start">
 		<ShareButton onClick={handleShareClick}/>
 
 	</div>
   
 	<!-- 100 words tagline with arrow -->
-	<div class="absolute -bottom-36 right-6 md:right-20 lg:right-16 hidden md:flex items-end">
+	<div class="absolute -bottom-36 right-6 md:right-20 lg:left-16 hidden md:flex items-end">
 		<div class="text-left rotate-6">
 			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-xl lg:text-2xl font-semibold inline-block">
-				Hot space news<br/> ~100 words a pop
+				Can't-miss space news<br/> ~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
 				<!-- Arrow SVG pointing down-left -->

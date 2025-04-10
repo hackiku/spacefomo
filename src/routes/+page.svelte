@@ -25,7 +25,7 @@
   <!-- D3 Sphere visualization -->
 	<section class="-z-10">
 		<D3Sphere 
-    	wireframeColor="rgba(168, 139, 250, 0.25)"
+    	wireframeColor="rgba(168, 139, 250, 0.55)"
     	rotationSpeed={0.002}
 		/>
 	</section>

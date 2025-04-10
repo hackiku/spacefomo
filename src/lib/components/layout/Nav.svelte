@@ -4,6 +4,9 @@
 	import Logo from '$lib/components/branding/Logo.svelte';
 	import AboutDrawer from '$lib/components/contact/AboutDrawer.svelte';
 
+	import { dev } from '$app/environment'
+
+
 	let showAbout = $state(false);
 	let lastScrollY = $state(0);
 	let isHidden = $state(false);
@@ -34,7 +37,7 @@
 			<!-- Actions -->
 			<div class="flex items-center gap-6">
 								<a
-					href="https://rapidapi.com/search?sortBy=ByRelevance"
+					href={dev ? "http://localhost:5173/api/v1/news" : "/"}
 					target="_blank"
 					rel="noopener noreferrer"
 					class="text-zinc-400 transition-all hover:scale-110 hover:text-zinc-200"
