@@ -16,8 +16,8 @@ export async function fetchNewsFromSupabaseFunction(params = {}) {
 
 		// Get the Supabase URL from your environment or config
 		// Make sure this environment variable is set correctly
-		// const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-		const supabaseUrl = "http://127.0.0.1:54321";
+		const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+		// const supabaseUrl = "http://127.0.0.1:54321";
 		if (!supabaseUrl) {
 			throw new Error('PUBLIC_SUPABASE_URL environment variable is not set');
 		}
