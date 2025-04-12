@@ -40,6 +40,7 @@
 </script>
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-32">
+	
   <div class="flex flex-col md:flex-row gap-6">
     <!-- Sidebar with toggle -->
     <div class="md:sticky md:top-16 md:h-[calc(100vh-5rem)] flex-shrink-0 mb-8 md:mb-0 

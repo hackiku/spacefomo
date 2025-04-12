@@ -1,9 +1,7 @@
 <!-- src/lib/components/cta/share/ShareButton.svelte -->
 <script lang="ts">
   import { Share, PlusCircle } from 'phosphor-svelte';
-  import { Button } from 'bits-ui';
-  import cn from "clsx";
-
+  
   let { 
     variant = 'default', 
     size = 'md',
@@ -14,7 +12,7 @@
     onClick: () => void 
   }>();
 
-  // Size classes
+  // Size classes mapping
   const sizeClasses = {
     sm: 'text-sm',
     md: 'text-base',
@@ -32,19 +30,19 @@
     md: 'w-5 h-5',
     lg: 'w-6 h-6'
   };
-  
-  // Icon-only sizes
-  const iconSizes = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10',
-    lg: 'w-12 h-12'
-  };
+
+  // Handle both click and touch events
+  function handleInteraction() {
+    onClick();
+  }
 </script>
 
 {#if variant === 'primary'}
   <!-- Primary button with gradient background -->
-  <Button.Root
-    onclick={onClick}
+  <button
+    type="button"
+    onclick={handleInteraction}
+    ontouchstart={handleInteraction}
     class="{buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2 rounded-full 
            bg-gradient-to-r from-violet-500 to-fuchsia-500 
            font-medium text-white cursor-pointer
@@ -53,28 +51,32 @@
   >
     <PlusCircle weight="bold" class={iconClasses[size]} />
     <span>Share News</span>
-  </Button.Root>
+  </button>
 {:else if variant === 'default'}
   <!-- Default button with border -->
-  <Button.Root
-    onclick={onClick}
+  <button
+    type="button"
+    onclick={handleInteraction}
+    ontouchstart={handleInteraction}
     class="{buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2 rounded-full 
            border border-zinc-700 bg-zinc-800/50 text-zinc-200 cursor-pointer
            transition-all hover:bg-zinc-800 hover:text-white active:scale-95"
   >
     <Share weight="bold" class={iconClasses[size]} />
     <span>Share News</span>
-  </Button.Root>
+  </button>
 {:else}
   <!-- Icon-only button -->
-  <Button.Root
-    onclick={onClick}
+  <button
+    type="button"
+    onclick={handleInteraction}
+    ontouchstart={handleInteraction}
     class="inline-flex items-center justify-center rounded-full cursor-pointer
-           {iconSizes[size]}
+           {size === 'sm' ? 'w-8 h-8' : size === 'md' ? 'w-10 h-10' : 'w-12 h-12'} 
            bg-zinc-800 hover:bg-zinc-700 text-zinc-200
            transition-all hover:text-white active:scale-95"
     aria-label="Share News"
   >
     <Share weight="bold" class={iconClasses[size]} />
-  </Button.Root>
+  </button>
 {/if}

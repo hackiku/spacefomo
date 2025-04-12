@@ -1,71 +1,74 @@
 <!-- src/lib/features/fomo/FomoSlider.svelte -->
 <script lang="ts">
-    let { score } = $props<{
+    import { Slider } from 'bits-ui';
+    
+    let { 
+        score = $bindable(50),
+        onUpvote,
+        onDownvote 
+    } = $props<{
         score: number;
+        onUpvote?: () => void;
+        onDownvote?: () => void;
     }>();
-
-    function updateScore(e: MouseEvent) {
-        const slider = e.currentTarget as HTMLDivElement;
-        const rect = slider.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const percentage = Math.round((x / rect.width) * 100);
-        score = Math.max(0, Math.min(100, percentage));
-    }
-
-    // For dragging functionality
-    let isDragging = $state(false);
-
-    function handleMouseDown() {
-        isDragging = true;
-    }
-
-    function handleMouseUp() {
-        isDragging = false;
-    }
-
-    function handleMouseMove(e: MouseEvent) {
-        if (isDragging) {
-            updateScore(e);
-        }
-    }
 </script>
 
-<svelte:window 
-    onmouseup={handleMouseUp}
-    onmousemove={handleMouseMove}
-/>
-
 <div class="space-y-2">
-    <!-- Track and Thumb -->
-    <div 
-        class="relative h-4 rounded-full bg-zinc-800/50 backdrop-blur-sm cursor-pointer"
-        onclick={updateScore}
-        onmousedown={handleMouseDown}
+    <Slider.Root 
+        type="single"
+        min={0}
+        max={100}
+        step={1}
+        bind:value={score}
+        class="relative flex w-full touch-none select-none items-center"
     >
-        <!-- Progress Bar -->
-        <div 
-            class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500
-                   transition-all duration-200"
-            style="width: {score}%"
-        >
-            <!-- Knob with Score -->
-            <div 
-                class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2
-                       w-12 h-12 rounded-full bg-white shadow-lg
-                       flex items-center justify-center
-                       text-lg font-bold cursor-grab active:cursor-grabbing
-                       bg-gradient-to-br from-violet-500 to-fuchsia-500
-                       text-white"
-            >
-                {score}
+        {#snippet children()}
+            <!-- Track -->
+            <div class="relative h-4 rounded-full bg-zinc-800/50 backdrop-blur-sm cursor-pointer w-full">
+                <!-- Range/Progress Bar -->
+                <Slider.Range 
+                    class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500
+                          transition-all duration-200"
+                />
+                
+                <!-- Thumb with Score -->
+                <Slider.Thumb 
+                    index={0}
+                    class="absolute top-1/2 -translate-y-1/2
+                          w-12 h-12 rounded-full bg-white shadow-lg
+                          flex items-center justify-center
+                          text-lg font-bold cursor-grab active:cursor-grabbing
+                          bg-gradient-to-br from-violet-500 to-fuchsia-500
+                          text-white"
+                >
+                    {score}
+                </Slider.Thumb>
             </div>
+        {/snippet}
+    </Slider.Root>
+    
+    <!-- Optional: Quick adjust buttons -->
+    {#if onUpvote || onDownvote}
+        <div class="flex justify-end gap-2 pt-1">
+            {#if onDownvote}
+                <button 
+                    type="button"
+                    onclick={onDownvote}
+                    class="px-2 py-1 text-xs rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                >
+                    Less FOMO
+                </button>
+            {/if}
+            
+            {#if onUpvote}
+                <button 
+                    type="button"
+                    onclick={onUpvote}
+                    class="px-2 py-1 text-xs rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                >
+                    More FOMO
+                </button>
+            {/if}
         </div>
-    </div>
+    {/if}
 </div>
-
-<style>
-    /* Optional: Add smooth transition for the score text */
-    .score-transition {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-</style>
