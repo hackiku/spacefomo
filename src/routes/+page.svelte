@@ -1,8 +1,11 @@
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
   import Hero from '$lib/components/layout/Hero.svelte';
-  import NewsFeed from '$lib/components/layout/NewsFeed.svelte';
-  import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
+  // import NewsFeed from '$lib/components/layout/NewsFeed.svelte';
+  import NewsFeed from '$lib/features/news/NewsFeed.svelte';
+  // import NewsApp from '$lib/features/news/NewsApp.svelte';
+  
+	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
   import D3Sphere from '$lib/features/dataviz/D3Sphere.svelte';
   // import type { PageData } from './$types';
   // import type { LayoutLoad } from './$types';

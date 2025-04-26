@@ -7,7 +7,7 @@
 
   // Layout state using $state rune for reactivity
   let sidebarMode = $state<SidebarMode>('default');
-  let columnCount = $state<ColumnCount>(1);
+  let columnCount = $state<ColumnCount>(2);
   let sidebarOpen = $state(true);
 
   // Effect to handle sidebarMode changes
