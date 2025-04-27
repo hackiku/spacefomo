@@ -3,6 +3,7 @@
   import NewsGrid from './layout/NewsGrid.svelte';
   // import TabsTimeline from '$lib/features/fomo/timeline/TabsTimeline.svelte';
   import Sidebar from './layout/Sidebar.svelte';
+	// import MainLayout from './layout/MainLayout.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
 
   // Layout state using $state rune for reactivity
@@ -38,6 +39,10 @@
     sidebarOpen = !sidebarOpen;
   }
 </script>
+
+<!-- <div class="h-screen w-screen">
+	<MainLayout />
+</div> -->
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-32">
 	
