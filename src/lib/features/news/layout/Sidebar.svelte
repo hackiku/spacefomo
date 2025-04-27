@@ -1,6 +1,6 @@
 <!-- src/lib/features/news/layout/Sidebar.svelte -->
 <script lang="ts">
-  // import Controls from '../controls/Controls.svelte'; 
+  import LayoutControls from '../controls/LayoutControls.svelte'; 
   import FilterControls from '../controls/FilterControls.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
   import { CaretDown, CaretUp } from 'phosphor-svelte';
@@ -43,13 +43,13 @@
 
 <div class="flex flex-col gap-6 py-4 w-full">
   <!-- Controls Section -->
-  <!-- <Controls 
+  <LayoutControls 
     {sidebarMode}
     {columnCount}
     {compact}
     onSidebarModeChange={onSidebarModeChange}
     onColumnCountChange={onColumnCountChange}
-  /> -->
+  />
 
   {#if !compact}
     <!-- Full filter section -->

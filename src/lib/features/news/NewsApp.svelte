@@ -1,6 +1,7 @@
 <!-- src/lib/features/news/layout/NewsApp.svelte -->
 <script lang="ts">
   import NewsGrid from './layout/NewsGrid.svelte';
+  // import TabsTimeline from '$lib/features/fomo/timeline/TabsTimeline.svelte';
   import Sidebar from './layout/Sidebar.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
 
@@ -79,6 +80,6 @@
 </div>
 
 <!-- Fixed timeline at bottom -->
-<div class="sticky right-0 -bottom-1 left-0 z-50">
-  <!-- <TabsTimeline /> -->
-</div>
+<!-- <div class="sticky right-0 -bottom-1 left-0 z-50">
+  <TabsTimeline />
+</div> -->

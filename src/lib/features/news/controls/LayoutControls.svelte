@@ -1,4 +1,4 @@
-<!-- src/lib/features/sidebar/controls/Controls.svelte -->
+<!-- src/lib/features/news/controls/LayoutControls.svelte -->
 <script lang="ts">
   import { ArrowsInLineHorizontal, Columns, Table, Rows, SquaresFour } from 'phosphor-svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
