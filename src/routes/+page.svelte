@@ -2,8 +2,8 @@
 <script lang="ts">
   import Hero from '$lib/components/layout/Hero.svelte';
   // import NewsFeed from '$lib/components/layout/NewsFeed.svelte';
-  import NewsFeed from '$lib/features/news/NewsFeed.svelte';
-  // import NewsApp from '$lib/features/news/NewsApp.svelte';
+  // import NewsFeed from '$lib/features/news/NewsFeed.svelte';
+  import NewsApp from '$lib/features/news/NewsApp.svelte';
   
 	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
   import D3Sphere from '$lib/features/dataviz/D3Sphere.svelte';
@@ -22,7 +22,7 @@
   
   <section class="relative">
 		<div class="pointer-events-none absolute top-0 left-0 -z-10 h-56 w-full __bg-gradient-to-b from-black/40 to-transparent"></div>
-    <NewsFeed />
+    <NewsApp />
   </section>
   
   <!-- D3 Sphere visualization -->
