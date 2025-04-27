@@ -90,19 +90,26 @@ export async function extractArticleData(url: string, apiKey?: string) {
 				content.match(/{[\s\S]*}/);
 
 			const jsonString = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content;
-			const extractedData = JSON.parse(jsonString.trim());
+			let extractedData = JSON.parse(jsonString.trim());
+
+			// Normalize the data structure - Perplexity might be using a nested structure
+			// with fields like basic_article_info, content_fields, etc.
+			const normalizedData = normalizeDataStructure(extractedData);
 
 			// Validate required fields
-			if (!extractedData.title) {
+			if (!normalizedData.title) {
 				console.warn('Warning: Extracted data missing title');
-				extractedData.title = 'Untitled Article';
+				normalizedData.title = 'Untitled Article';
 			}
 
-			// Generate a URL slug from the title
-			const slug = generateSlug(extractedData.viral_title || extractedData.title);
-			extractedData.slug = slug;
+			// Generate a URL slug from the title with a timestamp to avoid duplicates
+			const timestamp = new Date().getTime().toString().slice(-4);
+			const titleForSlug = normalizedData.viral_title || normalizedData.title;
+			normalizedData.slug = `${generateSlug(titleForSlug)}-${timestamp}`;
 
-			return extractedData;
+			console.log(`Generated slug: ${normalizedData.slug}`);
+
+			return normalizedData;
 		} catch (error) {
 			console.error('Error parsing extracted data JSON:', error);
 			console.error('Raw content:', content);
@@ -114,6 +121,73 @@ export async function extractArticleData(url: string, apiKey?: string) {
 	}
 }
 
+// Helper function to normalize the data structure returned by Perplexity
+function normalizeDataStructure(data: any): any {
+	// Create a normalized object with all our expected fields
+	const normalized: any = {
+		title: '',
+		source: '',
+		publication_date: '',
+		read_time: 0,
+		entities: {},
+		context: {},
+		viral_title: '',
+		summary: '',
+		tags: [],
+		impact_score: 70, // Default value
+		slug: ''
+	};
+
+	// Check if data is already in our expected format
+	if (data.title && typeof data.title === 'string') {
+		// Data is already in the format we expect
+		return data;
+	}
+
+	// Handle nested structure from Perplexity
+	if (data.basic_article_info) {
+		normalized.title = data.basic_article_info.title || '';
+		normalized.source = data.basic_article_info.source || '';
+		normalized.publication_date = data.basic_article_info.publication_date || '';
+		normalized.read_time = data.basic_article_info.read_time || 0;
+	}
+
+	if (data.entities) {
+		normalized.entities = data.entities;
+	}
+
+	if (data.context) {
+		normalized.context = data.context;
+	}
+
+	if (data.content_fields) {
+		normalized.viral_title = data.content_fields.viral_title || '';
+		normalized.summary = data.content_fields.summary || '';
+		normalized.tags = data.content_fields.tags || [];
+	}
+
+	// If title is still empty but we have title in other places, use those
+	if (!normalized.title) {
+		normalized.title = data.title || normalized.viral_title || 'Untitled Article';
+	}
+
+	// If tags isn't an array, make it one
+	if (!Array.isArray(normalized.tags)) {
+		normalized.tags = normalized.tags ? [normalized.tags] : [];
+	}
+
+	// Ensure we have at least some tags
+	if (normalized.tags.length === 0 && normalized.title) {
+		const words = normalized.title.split(' ');
+		normalized.tags = words.filter(word => word.length > 3).slice(0, 5);
+	}
+
+	// Log the normalized structure
+	console.log('Normalized data structure:', JSON.stringify(normalized, null, 2));
+
+	return normalized;
+}
+
 // Generate a slug from a title
 function generateSlug(title: string): string {
 	return title
@@ -122,5 +196,5 @@ function generateSlug(title: string): string {
 		.replace(/\s+/g, '-') // Replace spaces with hyphens
 		.replace(/-+/g, '-') // Replace multiple hyphens with a single one
 		.replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
-		.substring(0, 80); // Limit length
+		.substring(0, 70); // Limit length (shorter to accommodate timestamp)
 }
