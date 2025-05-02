@@ -23,11 +23,13 @@
 	</h1>
 
 	<!-- Share Button -->
-	<div class="mb-12 flex justify-start">
+	<div class="mb-6 flex justify-start">
 		<ShareButton onClick={handleShareClick}/>
 
 	</div>
-  
+
+	<EmailForm />
+	
 	<!-- 100 words tagline with arrow -->
 	<div class="absolute -bottom-36 right-6 md:right-12 lg:right-20 xl:right-24 __hidden md:flex items-end">
 		<div class="text-left rotate-6">
