@@ -28,13 +28,12 @@
 	</div>
   
 	<!-- 100 words tagline with arrow -->
-	<div class="absolute -bottom-36 right-6 md:right-20 lg:left-16 hidden md:flex items-end">
+	<!-- <div class="absolute -bottom-36 right-6 md:right-20 lg:left-16 hidden md:flex items-end">
 		<div class="text-left rotate-6">
 			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-xl lg:text-2xl font-semibold inline-block">
 				Can't-miss space news<br/> ~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
-				<!-- Arrow SVG pointing down-left -->
 				<svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M75 5 C40 5, 20 5, 5 55" stroke="url(#arrow-gradient)" stroke-width="3" stroke-linecap="round"/>
 					<path d="M15 45 L5 55 L20 55" stroke="url(#arrow-gradient)" stroke-width="3" transform="rotate(-48 6 57)" stroke-linecap="round" stroke-linejoin="round"/>
@@ -47,7 +46,7 @@
 				</svg>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </div>
 
 <!-- Gradient Orb -->

@@ -48,7 +48,7 @@
   <link rel="canonical" href="https://spacefomo.com" />
 </svelte:head>
 
-<div class="min-h-screen">
+<div class="min-h-screen overflow-x-hidden">
   <Nav />
   <main>
     {@render children()}
