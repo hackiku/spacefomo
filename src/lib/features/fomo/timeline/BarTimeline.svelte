@@ -59,7 +59,7 @@
 </script>
 
 <div 
-  class="h-full flex-1 overflow-x-auto no-scrollbar relative" 
+  class="h-full flex-1 overflow-x-auto no-scrollbar relative opacity-30 hover:opacity-100" 
   bind:this={container}
 >
   <div class="flex px-4 py-1 min-w-max h-full">

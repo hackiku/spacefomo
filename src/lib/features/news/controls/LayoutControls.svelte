@@ -31,9 +31,9 @@
 <div class="space-y-6 w-full">
   <!-- Sidebar layout controls -->
   <div class="space-y-2">
-    {#if !compact}
+    <!-- {#if !compact}
       <p class="text-xs text-zinc-500">Layout</p>
-    {/if}
+    {/if} -->
     <div class="{compact ? 'flex flex-col gap-2' : 'flex gap-2'}">
       {#each sidebarOptions as option}
         {@const active = option.value === sidebarMode}
@@ -60,9 +60,9 @@
 
   <!-- Column layout controls -->
   <div class="space-y-2">
-    {#if !compact}
+    <!-- {#if !compact}
       <p class="text-xs text-zinc-500">Columns</p>
-    {/if}
+    {/if} -->
     <div class="{compact ? 'flex flex-col gap-2' : 'flex gap-2'}">
       {#each columnOptions as option}
         {@const active = option.value === columnCount}

@@ -12,7 +12,7 @@
   } = $props();
 
   // State for sidebar visibility
-  let isExpanded = $state(false);
+  let isExpanded = $state(true);
   
   // Toggle sidebar visibility
   function toggleSidebar() {
@@ -23,7 +23,7 @@
 <!-- Single container that expands -->
 <div 
   class="fixed left-4 top-24 sm:top-20 z-40
-         bg-zinc-900/95 backdrop-blur-sm border border-zinc-700/50 rounded-lg shadow-lg
+         __bg-zinc-900/95 __backdrop-blur-sm border border-zinc-700/50 rounded-lg shadow-lg
          overflow-hidden transition-all duration-300 ease-out
          {isExpanded ? 'w-64 max-h-[80vh]' : 'w-11 h-11'}"
 >

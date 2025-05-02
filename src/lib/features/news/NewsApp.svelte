@@ -17,11 +17,11 @@
   // Get container classes based on layout mode
   const getContainerClasses = $derived(() => {
     if (sidebarMode === 'thin') {
-      return 'max-w-3xl'; // Narrower content
+      return 'max-w-lg'; // Narrower content
     } else if (sidebarMode === 'wide') {
-      return 'max-w-5xl'; // Wider content
+      return 'max-w-3xl'; // Wider content
     } else {
-      return 'max-w-4xl'; // Default width
+      return 'max-w-2xl'; // Default width
     }
   });
 </script>
@@ -40,7 +40,7 @@
   <SidebarToggle bind:sidebarMode bind:columnCount />
   
   <!-- FomoApp stays at the bottom within the NewsApp container -->
-  <div class="absolute bottom-0 left-0 right-0 z-40 h-14">
+  <div class="fixed -bottom-1 left-0 right-0 z-40 h-14">
     <FomoApp />
   </div>
 </div>

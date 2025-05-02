@@ -1,43 +1,138 @@
 <!-- src/lib/features/fomo/calendar/CalendarButton.svelte -->
 <script lang="ts">
-  // Calendar button component - will be replaced with bits-ui calendar later
+  import { DateRangePicker } from "bits-ui";
+  import { CalendarBlank, CaretLeft, CaretRight, X } from 'phosphor-svelte';
+  import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
+  import type { DateRange } from "bits-ui";
   
-  // For now, just a placeholder that opens/closes a fake calendar
+  // Create today's date to use as placeholder
+  const todayDate = today(getLocalTimeZone());
+  
+  // State for date range
+  let dateRange = $state<DateRange | null>(null);
   let isOpen = $state(false);
   
-  function toggleCalendar() {
-    isOpen = !isOpen;
+  // Format date for display
+  function formatDate(date: CalendarDate | null): string {
+    if (!date) return "Select date";
+    
+    return `${date.month}/${date.day}`;
+  }
+  
+  // Display text for button
+  const displayText = $derived(() => {
+    if (!dateRange || !dateRange.start) return "All time";
+    
+    // If start equals end or no end, show single date
+    if (dateRange.end && dateRange.start.compare(dateRange.end) === 0) {
+      return formatDate(dateRange.start);
+    } else if (!dateRange.end) {
+      return formatDate(dateRange.start);
+    }
+    
+    // Show range
+    return `${formatDate(dateRange.start)} - ${formatDate(dateRange.end)}`;
+  });
+  
+  // Clear selection
+  function clearDate() {
+    dateRange = null;
   }
 </script>
 
-<div class="relative">
+<div class="relative z-50">
+  <!-- Custom trigger button to replace DateRangePicker.Trigger -->
   <button 
-    type="button"
-    class="w-10 h-10 rounded-full bg-zinc-800/80 border border-zinc-700/50 flex items-center justify-center text-zinc-300 hover:bg-zinc-700/80 transition-colors"
-    onclick={toggleCalendar}
-    aria-label="Open calendar"
+    class="h-10 bg-zinc-800/80 border border-zinc-700/50 rounded-full
+           flex items-center px-3 text-zinc-300 hover:bg-zinc-700/80 
+           transition-colors group"
+    onclick={() => isOpen = !isOpen}
   >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-      <line x1="16" y1="2" x2="16" y2="6"></line>
-      <line x1="8" y1="2" x2="8" y2="6"></line>
-      <line x1="3" y1="10" x2="21" y2="10"></line>
-    </svg>
+    <CalendarBlank class="h-4 w-4 mr-1.5 text-zinc-400 group-hover:text-zinc-300" />
+    <span class="text-xs whitespace-nowrap overflow-hidden text-ellipsis max-w-28">
+      {displayText}
+    </span>
+    
+    {#if dateRange}
+      <button
+        onclick={(e) => {
+          e.stopPropagation(); 
+          clearDate();
+        }}
+        class="ml-1.5 h-5 w-5 rounded-full bg-zinc-700/70 flex items-center justify-center
+               text-zinc-400 hover:text-zinc-300 hover:bg-zinc-700"
+      >
+        <X size={12} />
+      </button>
+    {/if}
   </button>
   
+  <!-- Date picker popover -->
   {#if isOpen}
-    <div class="absolute bottom-12 left-0 w-64 bg-zinc-800/90 border border-zinc-700/50 rounded-lg p-2 backdrop-blur-sm shadow-lg">
-      <div class="text-center text-zinc-300 text-sm mb-2">Calendar placeholder</div>
-      <!-- Placeholder calendar grid -->
-      <div class="grid grid-cols-7 gap-1 text-center">
-        {#each ["M", "T", "W", "T", "F", "S", "S"] as day}
-          <div class="text-xs text-zinc-500">{day}</div>
-        {/each}
-        {#each Array(28) as _, i}
-          <button class="w-8 h-8 rounded-full text-xs hover:bg-zinc-700 text-zinc-300">
-            {i + 1}
-          </button>
-        {/each}
+    <div 
+      class="absolute bottom-12 left-0 z-50 bg-zinc-800/95 border border-zinc-700/50 
+             rounded-lg shadow-lg p-3 backdrop-blur-sm"
+    >
+      <!-- Calendar header -->
+      <div class="flex items-center justify-between mb-3">
+        <button class="h-8 w-8 rounded-full flex items-center justify-center
+                       bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700"
+        >
+          <CaretLeft size={16} />
+        </button>
+        
+        <div class="text-sm font-medium text-zinc-300">
+          May 2025
+        </div>
+        
+        <button class="h-8 w-8 rounded-full flex items-center justify-center
+                       bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700"
+        >
+          <CaretRight size={16} />
+        </button>
+      </div>
+      
+      <!-- Calendar grid -->
+      <div class="mb-2">
+        <div class="grid grid-cols-7 gap-1 mb-1">
+          {#each ["M", "T", "W", "T", "F", "S", "S"] as day}
+            <div class="text-center text-xs text-zinc-500">{day}</div>
+          {/each}
+        </div>
+        
+        <div class="grid grid-cols-7 gap-1">
+          {#each Array(35) as _, i}
+            {@const day = (i - 3 + 1)}
+            {@const isCurrentMonth = day > 0 && day <= 31}
+            {@const isToday = day === 2} <!-- Assuming today is the 2nd -->
+            
+            <button 
+              class="w-8 h-8 flex items-center justify-center rounded-full text-xs
+                     {isCurrentMonth ? 'text-zinc-300' : 'text-zinc-600'} 
+                     {isToday ? 'bg-zinc-700/50 border border-zinc-600' : 'hover:bg-zinc-700/50'}"
+              disabled={!isCurrentMonth}
+            >
+              {isCurrentMonth ? day : ''}
+            </button>
+          {/each}
+        </div>
+      </div>
+      
+      <!-- Actions -->
+      <div class="flex justify-between pt-2 border-t border-zinc-700/50">
+        <button
+          onclick={clearDate}
+          class="text-xs text-zinc-400 hover:text-zinc-300"
+        >
+          Clear
+        </button>
+        
+        <button
+          onclick={() => isOpen = false}
+          class="bg-violet-600/90 hover:bg-violet-600 text-white text-xs px-3 py-1.5 rounded transition-colors"
+        >
+          Apply
+        </button>
       </div>
     </div>
   {/if}
