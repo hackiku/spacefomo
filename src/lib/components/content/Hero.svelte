@@ -13,23 +13,18 @@
 </script>
 
 <!-- <div class="container mx-auto __text-center px-6 sm:px-12 md:px-32 lg:px-44 xl:px-72 relative"> -->
-<div class="container mx-auto __text-center px-6 sm:px-12 md:px-24 lg:px-32 xl:px-72 relative">
+<div class="container space-y-6 mx-auto __text-center px-6 sm:px-12 md:px-24 lg:px-32 xl:px-72 relative">
 	<!-- Main Heading -->
 	<h1
-		class="mb-6 text-4xl text-white
+		class="text-4xl text-white
                    font-thin sm:text-5xl lg:text-6xl"
 	>
 		There's no place <br/> like space
 	</h1>
 
-	<!-- Share Button -->
-	<div class="mb-6 flex justify-start">
-		<ShareButton onClick={handleShareClick}/>
-
-	</div>
-
+	<ShareButton onClick={handleShareClick}/>
 	<EmailForm />
-	
+
 	<!-- 100 words tagline with arrow -->
 	<div class="absolute -bottom-36 right-6 md:right-12 lg:right-20 xl:right-24 __hidden md:flex items-end">
 		<div class="text-left rotate-6">
