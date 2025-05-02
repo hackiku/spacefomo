@@ -157,7 +157,7 @@
     </NavigationMenu.List>
     
     <!-- Viewport for dynamic content -->
-    <div class="perspective-[2000px] absolute left-0 top-full flex justify-center">
+    <div class="perspective-[2000px] absolute right-0 top-full flex justify-center">
       <NavigationMenu.Viewport
         class="bg-zinc-900 relative mt-2 h-[var(--bits-navigation-menu-viewport-height)] 
               w-[var(--bits-navigation-menu-viewport-width)] origin-[top_center] overflow-hidden 

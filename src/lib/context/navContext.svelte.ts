@@ -2,69 +2,68 @@
 import { getContext } from 'svelte';
 
 export function createNavContext() {
-	// Core state
-	let showAbout = $state(false);
+	// Mobile menu state
 	let isMobileMenuOpen = $state(false);
+
+	// About drawer state
+	let showAbout = $state(false);
+
+	// Navigation visibility state
 	let lastScrollY = $state(0);
 	let isHidden = $state(false);
 
-	// Methods
-	function toggleAbout() {
-		showAbout = !showAbout;
-		// Close mobile menu when opening about
-		if (showAbout && isMobileMenuOpen) {
-			isMobileMenuOpen = false;
-		}
-	}
-
-	function openAbout() {
-		showAbout = true;
-		// Close mobile menu when opening about
-		if (isMobileMenuOpen) {
-			isMobileMenuOpen = false;
-		}
-	}
-
-	function closeAbout() {
-		showAbout = false;
-	}
-
+	// Toggle mobile menu
 	function toggleMobileMenu() {
 		isMobileMenuOpen = !isMobileMenuOpen;
-		// Close about drawer when opening mobile menu
+		// Close about drawer if open
 		if (isMobileMenuOpen && showAbout) {
 			showAbout = false;
 		}
 	}
 
-	function closeMobileMenu() {
-		isMobileMenuOpen = false;
+	// Toggle about drawer
+	function toggleAbout() {
+		showAbout = !showAbout;
+		// Close mobile menu if open
+		if (showAbout && isMobileMenuOpen) {
+			isMobileMenuOpen = false;
+		}
 	}
 
+	// Open about drawer
+	function openAbout() {
+		showAbout = true;
+		if (isMobileMenuOpen) {
+			isMobileMenuOpen = false;
+		}
+	}
+
+	// Close about drawer
+	function closeAbout() {
+		showAbout = false;
+	}
+
+	// Update scroll position and manage visibility
 	function updateScrollPosition(currentScrollY: number) {
+		// Hide nav when scrolling down, show when scrolling up
 		isHidden = currentScrollY > lastScrollY && currentScrollY > 50;
 		lastScrollY = currentScrollY;
 	}
 
 	return {
-		// State
-		showAbout,
 		isMobileMenuOpen,
-		lastScrollY,
+		showAbout,
 		isHidden,
-
-		// Methods
+		toggleMobileMenu,
 		toggleAbout,
 		openAbout,
 		closeAbout,
-		toggleMobileMenu,
-		closeMobileMenu,
 		updateScrollPosition
 	};
 }
 
-// Helper to get the nav context
-export function getNavContext() {
+// Helper to get the navigation context
+export function useNav() {
 	const context = getContext<ReturnType<typeof createNavContext>>('nav');
 
 	if (!context) {
@@ -72,9 +71,4 @@ export function getNavContext() {
 	}
 
 	return context;
-}
-
-// Helper to create a hook for nav data
-export function useNav() {
-	return getNavContext();
 }
