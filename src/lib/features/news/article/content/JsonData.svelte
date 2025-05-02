@@ -1,4 +1,4 @@
-<!-- src/lib/features/news/card/DevJson.svelte -->
+<!-- src/lib/features/news/card/JsonData.svelte -->
 <script lang="ts">
   import { X, Copy } from 'phosphor-svelte';
 

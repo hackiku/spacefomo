@@ -1,4 +1,4 @@
-<!-- src/lib/features/news/article/title/ViralTitle.svelte -->
+<!-- src/lib/features/news/article/content/ViralTitle.svelte -->
 <script lang="ts">
   let { title, viralTitle } = $props<{
     title: string;

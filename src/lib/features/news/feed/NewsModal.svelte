@@ -1,6 +1,6 @@
 <!-- src/lib/features/news/feed/NewsModal.svelte -->
 <script lang="ts">
-  import { X } from 'phosphor-svelte';
+  import { Dialog } from "bits-ui";
   import type { NewsItem } from '$lib/types/news';
   import BigCard from '../article/BigCard.svelte';
   
@@ -9,46 +9,28 @@
     isOpen: boolean;
     onClose: () => void;
   }>();
-  
-  // Handle escape key for closing modal
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && isOpen) {
-      onClose();
-    }
-  }
 </script>
 
-<svelte:window onkeydown={handleKeydown} />
-
-{#if isOpen && article}
-  <div 
-    role="dialog"
-    aria-modal="true"
-    class="fixed inset-2  z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-6 md:p-8"
-  >
-    <!-- Backdrop -->
-    <div 
-      class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
-      onclick={onClose}
-      aria-hidden="true"
-    ></div>
-
+<Dialog.Root bind:open={isOpen}>
+  <Dialog.Portal>
+    <!-- Backdrop overlay -->
+    <Dialog.Overlay 
+      class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+    />
+    
     <!-- Modal content -->
-    <div class="relative w-full max-w-3xl mx-auto">
-      <!-- Close button -->
-      <button
-        type="button"
-        class="absolute -top-12 right-0 p-2 rounded-full bg-zinc-800/70 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 transition-colors z-10"
-        onclick={onClose}
-        aria-label="Close modal"
-      >
-        <X class="h-5 w-5" />
-      </button>
-
-      <!-- Card -->
-      <div class="transform transition-all">
-        <BigCard {article} />
-      </div>
-    </div>
-  </div>
-{/if}
+    <Dialog.Content
+      class="fixed inset-4 sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 
+             z-50 w-full sm:w-[calc(100%-4rem)] sm:max-w-4xl mx-auto
+             data-[state=open]:animate-in data-[state=closed]:animate-out 
+             data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 
+             data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 
+             outline-none"
+      onEscapeKeydown={onClose}
+    >
+      {#if article}
+        <BigCard {article} onClose={onClose} />
+      {/if}
+    </Dialog.Content>
+  </Dialog.Portal>
+</Dialog.Root>

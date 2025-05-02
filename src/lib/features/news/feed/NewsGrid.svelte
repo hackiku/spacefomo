@@ -10,22 +10,20 @@
     columnCount: ColumnCount;
   }>();
   
-  // Use the hook just for data fetching
+  // Use the hook for data fetching
   const { items, isLoading, error } = useNews();
   
-  // Local modal state
+  // Modal state
   let modalOpen = $state(false);
   let currentArticle = $state<NewsItem | null>(null);
   
   // Modal control functions
   function openModal(article: NewsItem) {
-    console.log('Opening modal for article:', article.id);
     currentArticle = article;
     modalOpen = true;
   }
   
   function closeModal() {
-    console.log('Closing modal');
     modalOpen = false;
   }
 </script>
@@ -33,7 +31,10 @@
 <div class="w-full space-y-6">
   {#if isLoading}
     <div class="p-8 text-center border border-zinc-800/50 rounded-xl bg-zinc-900/50 backdrop-blur-sm">
-      <p class="text-zinc-400">Loading news articles...</p>
+      <div class="flex justify-center items-center">
+        <div class="animate-spin h-6 w-6 border-t-2 border-l-2 border-violet-500 rounded-full mr-3"></div>
+        <p class="text-zinc-400">Loading news articles...</p>
+      </div>
     </div>
   {:else if error}
     <div class="p-8 text-center border border-red-800/50 bg-red-900/20 backdrop-blur-sm rounded-xl">
@@ -69,7 +70,7 @@
     </div>
   {/if}
   
-  <!-- Modal -->
+  <!-- Modal using bits-ui Dialog -->
   <NewsModal 
     article={currentArticle} 
     isOpen={modalOpen} 

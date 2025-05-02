@@ -2,7 +2,7 @@
 <script lang="ts">
   import { ArrowUpRight } from 'phosphor-svelte';
   import type { NewsItem } from '$lib/types/news';
-  import SmallTags from './tags/SmallTags.svelte';
+  import SmallTags from './data/SmallTags.svelte';
   
   let { article, onSelect } = $props<{ 
     article: NewsItem;

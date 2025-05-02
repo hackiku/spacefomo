@@ -3,6 +3,7 @@
   import '../app.css';
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
+	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
   import { createNewsContext } from '$lib/context/newsContext.svelte';
   import { createFomoContext } from '$lib/context/fomoContext.svelte';
   import { setContext } from 'svelte';
@@ -47,6 +48,8 @@
   <!-- Canonical URL for home page -->
   <link rel="canonical" href="https://spacefomo.com" />
 </svelte:head>
+
+<ViewportSize />
 
 <div class="min-h-screen overflow-x-hidden">
   <Nav />
