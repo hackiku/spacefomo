@@ -1,4 +1,4 @@
-<!-- src/lib/components/cta/contact/AboutDrawer.svelte -->
+<!-- src/lib/components/cta/content/AboutDrawer.svelte -->
 <script lang="ts">
   import { fly } from 'svelte/transition';
   import About from './About.svelte';

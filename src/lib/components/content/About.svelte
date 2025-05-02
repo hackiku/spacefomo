@@ -1,7 +1,7 @@
-<!-- src/lib/components/contact/About.svelte -->
+<!-- src/lib/components/content/About.svelte -->
 <script lang="ts">
 	import { Copy, LinkedinLogo } from 'phosphor-svelte';
-	import EmailForm from '../email/EmailForm.svelte';
+	import EmailForm from '../cta/email/EmailForm.svelte';
 
 	let copySuccess = $state(false);
 	const email = 'ivan@spacefomo.com';

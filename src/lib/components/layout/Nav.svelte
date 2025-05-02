@@ -1,8 +1,8 @@
 <!-- src/lib/layout/Nav.svelte -->
 <script lang="ts">
 	import { Info, X } from 'phosphor-svelte';
-	import Logo from '$lib/components/branding/Logo.svelte';
-	import AboutDrawer from '$lib/components/contact/AboutDrawer.svelte';
+	import SpacefomoLogo from '$lib/components/ui/SpacefomoLogo.svelte';
+	import AboutDrawer from '$lib/components/content/AboutDrawer.svelte';
 
 	import { dev } from '$app/environment'
 
@@ -31,7 +31,7 @@
 		<div class="flex h-16 items-center justify-between px-4">
 			<!-- Logo -->
 			<a href="/" class="flex items-center">
-				<Logo size="md" />
+				<SpacefomoLogo size="md" />
 			</a>
 
 			<!-- Actions -->

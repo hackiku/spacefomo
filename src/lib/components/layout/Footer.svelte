@@ -1,8 +1,8 @@
 <!-- src/lib/components/Footer.svelte -->
 <script lang="ts">
   import { GithubLogo, LinkedinLogo, Envelope, XLogo, TiktokLogo, InstagramLogo } from 'phosphor-svelte';
-  import EmailForm from '$lib/components/email/EmailForm.svelte';
-  import Logo from '$lib/components/branding/Logo.svelte';
+  import EmailForm from '$lib/components/cta/email/EmailForm.svelte';
+  import SpacefomoLogo from '$lib/components/ui/SpacefomoLogo.svelte';
 </script>
 
 <footer class="border-t border-stone-800 bg-zinc-900/50 backdrop-blur-sm">
@@ -11,7 +11,7 @@
       <!-- Logo and Description -->
       <div class="md:col-span-2">
         <div class="flex items-center mb-4">
-          <Logo size="md"/>
+          <SpacefomoLogo size="md"/>
         </div>
         <p class="text-zinc-400 text-sm mb-6">
           Can't-miss space news 100 words a pop

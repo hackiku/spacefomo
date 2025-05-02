@@ -1,4 +1,4 @@
-<!-- src/lib/components/cta/EmailForm.svelte -->
+<!-- src/lib/components/cta/email/EmailForm.svelte -->
 <script lang="ts">
   import { Rocket, LockLaminated, Envelope } from 'phosphor-svelte';
   import { fly } from 'svelte/transition';
