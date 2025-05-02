@@ -6,7 +6,7 @@
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
 
   // State for layout configuration
-  let sidebarMode = $state<SidebarMode>('default');
+  let sidebarMode = $state<SidebarMode>('thin');
   let columnCount = $state<ColumnCount>(1);
   
   // Track when sidebar mode or column count changes

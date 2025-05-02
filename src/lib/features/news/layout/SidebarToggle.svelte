@@ -7,12 +7,12 @@
 
   // Props for sidebar configuration
   let { 
-    sidebarMode = $bindable<SidebarMode>('default'),
-    columnCount = $bindable<ColumnCount>(2)
+    sidebarMode = $bindable<SidebarMode>(),
+    columnCount = $bindable<ColumnCount>()
   } = $props();
 
   // State for sidebar visibility
-  let isExpanded = $state(true);
+  let isExpanded = $state(false);
   
   // Toggle sidebar visibility
   function toggleSidebar() {

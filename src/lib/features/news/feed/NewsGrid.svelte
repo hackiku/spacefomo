@@ -1,8 +1,8 @@
-<!-- src/lib/features/news/NewsGrid.svelte -->
+<!-- src/lib/features/news/feed/NewsGrid.svelte -->
 <script lang="ts">
   import { useNews } from '$lib/hooks';
   import SmallCard from '../article/SmallCard.svelte';
-  import BigCard from '../article/BigCard.svelte';
+  import NewsModal from './NewsModal.svelte';
   import type { ColumnCount } from '$lib/types/layout';
   import type { NewsItem } from '$lib/types/news';
   
@@ -28,24 +28,15 @@
     console.log('Closing modal');
     modalOpen = false;
   }
-  
-  // Handle escape key
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && modalOpen) {
-      closeModal();
-    }
-  }
 </script>
-
-<svelte:window on:keydown={handleKeydown} />
 
 <div class="w-full space-y-6">
   {#if isLoading}
-    <div class="p-8 text-center border border-zinc-800 rounded-xl bg-zinc-900/50">
+    <div class="p-8 text-center border border-zinc-800/50 rounded-xl bg-zinc-900/50 backdrop-blur-sm">
       <p class="text-zinc-400">Loading news articles...</p>
     </div>
   {:else if error}
-    <div class="p-8 text-center border border-zinc-800 rounded-xl bg-zinc-900/50">
+    <div class="p-8 text-center border border-red-800/50 bg-red-900/20 backdrop-blur-sm rounded-xl">
       <p class="text-red-400">Error loading news: {error}</p>
     </div>
   {:else if items.length > 0}
@@ -73,29 +64,15 @@
       </div>
     {/if}
   {:else}
-    <div class="p-8 text-center border border-zinc-800 rounded-xl bg-zinc-900/50">
+    <div class="p-8 text-center border border-zinc-800/50 rounded-xl bg-zinc-900/50 backdrop-blur-sm">
       <p class="text-zinc-400">No news articles available</p>
     </div>
   {/if}
+  
+  <!-- Modal -->
+  <NewsModal 
+    article={currentArticle} 
+    isOpen={modalOpen} 
+    onClose={closeModal} 
+  />
 </div>
-
-<!-- Modal with BigCard -->
-{#if modalOpen && currentArticle}
-  <div 
-    role="dialog"
-    aria-modal="true"
-    class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4"
-  >
-    <button
-      type="button"
-      class="fixed inset-0 bg-black/80 backdrop-blur-sm"
-      onclick={closeModal}
-      aria-label="Close modal"
-    >
-    </button>
-
-    <div class="relative w-full max-w-7xl pt-8">
-      <BigCard article={currentArticle} />
-    </div>
-  </div>
-{/if}
