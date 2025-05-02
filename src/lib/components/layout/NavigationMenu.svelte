@@ -33,13 +33,13 @@
   
   // News section links
   const newsLinks = [
-    {
-      title: "Latest News",
-      href: "/news",
-      description: "Browse the most recent space industry updates"
-    },
-    {
-      title: "Weekly FOMO",
+		{
+			title: "Latest News",
+			href: "/news",
+			description: "Browse the most recent space industry updates"
+		},
+		{
+			title: "Weekly FOMO",
       href: "/news/weekly",
       description: "See which news made the biggest impact this week"
     },

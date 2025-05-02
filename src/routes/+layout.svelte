@@ -58,19 +58,6 @@
   <!-- Canonical URL for home page -->
   <link rel="canonical" href="https://spacefomo.com" />
   
-  <!-- CSS variables for the navigation menu -->
-  <style>
-    :root {
-      --bits-navigation-menu-viewport-width: 800px;
-      --bits-navigation-menu-viewport-height: auto;
-    }
-
-    @media (min-width: 640px) {
-      :root {
-        --bits-navigation-menu-viewport-width: 600px;
-      }
-    }
-  </style>
 
 </svelte:head>
 

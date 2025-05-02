@@ -1,26 +1,77 @@
 @import 'tailwindcss';
+/* @import "tw-animate-css"; */
 @import '@fontsource/fira-mono';
 
 :root {
-	--font-body:
-		Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+	/* Font system */
+	--font-body: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
 		'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
-	--color-bg-0: rgb(30, 27, 27);
+
+	/* Base theme */
+	--radius: 0.6rem;
+	--radius-sm: 0.2rem;
+	--radius-md: 0.4rem;
+	--radius-lg: 0.6rem;
+	--radius-xl: 1rem;
+
+	/* Background styles - keeping your gradient background */
 	--color-bg-1: hsl(286, 20%, 13%);
 	--color-bg-2: hsl(223, 93%, 5%);
 
-	--theme-primary: #8b5cf6;
-	--theme-primary-hover: #7c3aed;
-	--theme-secondary: #ec4899;
-	--theme-muted: #3f3f46;
-	--theme-background: #18181b;
+	/* Dark theme colors (default) */
+	--background: #18181b;
+	--foreground: #f4f4f5;
+	--card: #27272a;
+	--card-foreground: #f4f4f5;
+	--popover: #27272a;
+	--popover-foreground: #f4f4f5;
 
-	--color-primary: #8b5cf6;
-	--color-primary-dim: #6d28d9;
+	/* Brand colors */
+	--primary: #8b5cf6;
+	--primary-foreground: #ffffff;
+	--secondary: #ec4899;
+	--secondary-foreground: #ffffff;
 
-	font-family: var(--font-body);
+	/* UI colors */
+	--muted: #3f3f46;
+	--muted-foreground: #a1a1aa;
+	--accent: #6d28d9;
+	--accent-foreground: #ffffff;
+	--destructive: #ef4444;
+	--destructive-foreground: #ffffff;
+	--success: #10b981;
+	--success-foreground: #ffffff;
+
+	/* Border, input & ring colors */
+	--border: #27272a;
+	--input: #3f3f46;
+	--ring: #8b5cf6;
+
+	/* Space theme special colors */
+	--space-dark: #0f0f12;
+	--space-gradient-start: #8b5cf6;
+	--space-gradient-end: #ec4899;
+
+	/* Navigation menu configuration */
+	--bits-navigation-menu-viewport-width: 500px;
+	--bits-navigation-menu-viewport-height: auto;
+
+	/* Set dark mode by default */
 	color-scheme: dark;
+	font-family: var(--font-body);
+}
+
+@media (min-width: 640px) {
+	:root {
+		--bits-navigation-menu-viewport-width: 600px;
+	}
+}
+
+@media (min-width: 1024px) {
+	:root {
+		--bits-navigation-menu-viewport-width: 800px;
+	}
 }
 
 body {
@@ -31,14 +82,26 @@ body {
 	background-size: 100vw 100vh;
 	background-image:
 		radial-gradient(50% 50% at 50% 50%, rgba(30, 7, 7, 0.75) 0%, rgba(255, 255, 255, 0) 100%),
-		linear-gradient(130deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 40%);
+		linear-gradient(130deg, var(--background) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 40%);
+	color: var(--foreground);
 }
 
+/* Tailwind utilities for theme variables */
+/* @layer base {
+	* {
+		border-color: var(--border);
+	}
 
-/* Smooth scrollbar styling */
+	body {
+		@apply bg-background text-foreground;
+	}
+} */
+
+
+/* Scrollbar styling */
 * {
 	scrollbar-width: thin;
-	scrollbar-color: var(--color-primary-dim) transparent;
+	scrollbar-color: var(--accent) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -51,10 +114,22 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: var(--color-primary-dim);
+	background-color: var(--accent);
 	border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background-color: var(--color-primary);
+	background-color: var(--primary);
+}
+
+/* Special utility classes for space theme */
+.bg-space-gradient {
+	background: linear-gradient(to right, var(--space-gradient-start), var(--space-gradient-end));
+}
+
+.text-space-gradient {
+	background: linear-gradient(to right, var(--space-gradient-start), var(--space-gradient-end));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 }
