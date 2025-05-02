@@ -1,139 +1,130 @@
 <!-- src/lib/features/fomo/calendar/CalendarButton.svelte -->
 <script lang="ts">
   import { DateRangePicker } from "bits-ui";
-  import { CalendarBlank, CaretLeft, CaretRight, X } from 'phosphor-svelte';
-  import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
-  import type { DateRange } from "bits-ui";
+  import { CalendarBlank, CaretLeft, CaretRight } from 'phosphor-svelte';
+  import { today, getLocalTimeZone } from "@internationalized/date";
   
-  // Create today's date to use as placeholder
-  const todayDate = today(getLocalTimeZone());
+  // Initialize with today's date
+  let placeholder = $state(today(getLocalTimeZone()));
   
-  // State for date range
-  let dateRange = $state<DateRange | null>(null);
-  let isOpen = $state(false);
+  // DateRange value - undefined by default
+  let value = $state(undefined);
   
-  // Format date for display
-  function formatDate(date: CalendarDate | null): string {
-    if (!date) return "Select date";
-    
-    return `${date.month}/${date.day}`;
-  }
-  
-  // Display text for button
-  const displayText = $derived(() => {
-    if (!dateRange || !dateRange.start) return "All time";
-    
-    // If start equals end or no end, show single date
-    if (dateRange.end && dateRange.start.compare(dateRange.end) === 0) {
-      return formatDate(dateRange.start);
-    } else if (!dateRange.end) {
-      return formatDate(dateRange.start);
-    }
-    
-    // Show range
-    return `${formatDate(dateRange.start)} - ${formatDate(dateRange.end)}`;
-  });
-  
-  // Clear selection
-  function clearDate() {
-    dateRange = null;
-  }
+  // Open state
+  let open = $state(false);
 </script>
 
-<div class="relative z-50">
-  <!-- Custom trigger button to replace DateRangePicker.Trigger -->
-  <button 
-    class="h-10 bg-zinc-800/80 border border-zinc-700/50 rounded-full
-           flex items-center px-3 text-zinc-300 hover:bg-zinc-700/80 
-           transition-colors group"
-    onclick={() => isOpen = !isOpen}
+<div class="relative">
+  <DateRangePicker.Root
+    bind:value
+    bind:placeholder
+    bind:open
+    weekdayFormat="short"
+    fixedWeeks={true}
+    class="flex w-full max-w-[340px] flex-col gap-1.5"
   >
-    <CalendarBlank class="h-4 w-4 mr-1.5 text-zinc-400 group-hover:text-zinc-300" />
-    <span class="text-xs whitespace-nowrap overflow-hidden text-ellipsis max-w-28">
-      {displayText}
-    </span>
     
-    {#if dateRange}
-      <button
-        onclick={(e) => {
-          e.stopPropagation(); 
-          clearDate();
-        }}
-        class="ml-1.5 h-5 w-5 rounded-full bg-zinc-700/70 flex items-center justify-center
-               text-zinc-400 hover:text-zinc-300 hover:bg-zinc-700"
+    <!-- Input container -->
+    <div class="flex w-full items-center border border-zinc-700/50 bg-zinc-800/80 rounded-full px-3 py-2">
+      {#each ["start", "end"] as type}
+        <DateRangePicker.Input {type}>
+          {#snippet children({ segments })}
+            {#each segments as { part, value }}
+              <div class="inline-block select-none">
+                {#if part === "literal"}
+                  <DateRangePicker.Segment
+                    {part}
+                    class="text-zinc-500 p-1"
+                  >
+                    {value}
+                  </DateRangePicker.Segment>
+                {:else}
+                  <DateRangePicker.Segment
+                    {part}
+                    class="rounded px-1 py-1 text-zinc-300 hover:bg-zinc-700/50 focus:bg-zinc-700/50 aria-[valuetext=Empty]:text-zinc-500"
+                  >
+                    {value}
+                  </DateRangePicker.Segment>
+                {/if}
+              </div>
+            {/each}
+          {/snippet}
+        </DateRangePicker.Input>
+        
+        {#if type === "start"}
+          <div aria-hidden="true" class="text-zinc-500 px-1">–</div>
+        {/if}
+      {/each}
+      
+      <!-- Trigger button -->
+      <DateRangePicker.Trigger
+        class="ml-auto inline-flex h-6 w-6 items-center justify-center text-zinc-400 hover:text-zinc-300"
       >
-        <X size={12} />
-      </button>
-    {/if}
-  </button>
-  
-  <!-- Date picker popover -->
-  {#if isOpen}
-    <div 
-      class="absolute bottom-12 left-0 z-50 bg-zinc-800/95 border border-zinc-700/50 
-             rounded-lg shadow-lg p-3 backdrop-blur-sm"
-    >
-      <!-- Calendar header -->
-      <div class="flex items-center justify-between mb-3">
-        <button class="h-8 w-8 rounded-full flex items-center justify-center
-                       bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700"
-        >
-          <CaretLeft size={16} />
-        </button>
-        
-        <div class="text-sm font-medium text-zinc-300">
-          May 2025
-        </div>
-        
-        <button class="h-8 w-8 rounded-full flex items-center justify-center
-                       bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700"
-        >
-          <CaretRight size={16} />
-        </button>
-      </div>
-      
-      <!-- Calendar grid -->
-      <div class="mb-2">
-        <div class="grid grid-cols-7 gap-1 mb-1">
-          {#each ["M", "T", "W", "T", "F", "S", "S"] as day}
-            <div class="text-center text-xs text-zinc-500">{day}</div>
-          {/each}
-        </div>
-        
-        <div class="grid grid-cols-7 gap-1">
-          {#each Array(35) as _, i}
-            {@const day = (i - 3 + 1)}
-            {@const isCurrentMonth = day > 0 && day <= 31}
-            {@const isToday = day === 2} <!-- Assuming today is the 2nd -->
-            
-            <button 
-              class="w-8 h-8 flex items-center justify-center rounded-full text-xs
-                     {isCurrentMonth ? 'text-zinc-300' : 'text-zinc-600'} 
-                     {isToday ? 'bg-zinc-700/50 border border-zinc-600' : 'hover:bg-zinc-700/50'}"
-              disabled={!isCurrentMonth}
-            >
-              {isCurrentMonth ? day : ''}
-            </button>
-          {/each}
-        </div>
-      </div>
-      
-      <!-- Actions -->
-      <div class="flex justify-between pt-2 border-t border-zinc-700/50">
-        <button
-          onclick={clearDate}
-          class="text-xs text-zinc-400 hover:text-zinc-300"
-        >
-          Clear
-        </button>
-        
-        <button
-          onclick={() => isOpen = false}
-          class="bg-violet-600/90 hover:bg-violet-600 text-white text-xs px-3 py-1.5 rounded transition-colors"
-        >
-          Apply
-        </button>
-      </div>
+        <CalendarBlank class="h-4 w-4" />
+      </DateRangePicker.Trigger>
     </div>
-  {/if}
+    
+    <!-- Content and calendar -->
+    <DateRangePicker.Content 
+      sideOffset={6} 
+      class="z-50 bg-zinc-800/95 border border-zinc-700/50 rounded-lg shadow-lg p-4 backdrop-blur-sm"
+    >
+      <DateRangePicker.Calendar class="rounded-lg border-zinc-700/50">
+        {#snippet children({ months, weekdays })}
+          <DateRangePicker.Header class="flex items-center justify-between mb-4">
+            <DateRangePicker.PrevButton class="rounded-full p-2 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300">
+              <CaretLeft size={16} />
+            </DateRangePicker.PrevButton>
+            <DateRangePicker.Heading class="text-sm font-medium text-zinc-300" />
+            <DateRangePicker.NextButton class="rounded-full p-2 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300">
+              <CaretRight size={16} />
+            </DateRangePicker.NextButton>
+          </DateRangePicker.Header>
+          
+          <div class="space-y-4">
+            {#each months as month}
+              <DateRangePicker.Grid class="w-full select-none">
+                <DateRangePicker.GridHead>
+                  <DateRangePicker.GridRow class="flex justify-between mb-2">
+                    {#each weekdays as day}
+                      <DateRangePicker.HeadCell class="w-8 text-center text-xs text-zinc-500">
+                        <div>{day.slice(0, 1)}</div>
+                      </DateRangePicker.HeadCell>
+                    {/each}
+                  </DateRangePicker.GridRow>
+                </DateRangePicker.GridHead>
+                
+                <DateRangePicker.GridBody>
+                  {#each month.weeks as weekDates}
+                    <DateRangePicker.GridRow class="flex justify-between mb-1">
+                      {#each weekDates as date}
+                        <DateRangePicker.Cell 
+                          {date} 
+                          month={month.value}
+                          class="p-0 relative"
+                        >
+                          <DateRangePicker.Day 
+                            class="flex items-center justify-center w-8 h-8 rounded-full text-xs
+                                  text-zinc-300 
+                                  data-today:bg-zinc-700/50
+                                  data-outside-month:text-zinc-600 
+                                  data-selected:bg-violet-600/90 data-selected:text-white
+                                  data-selection-start:bg-violet-600 data-selection-start:text-white
+                                  data-selection-end:bg-violet-600 data-selection-end:text-white
+                                  hover:bg-zinc-700/50"
+                          >
+                            {date.day}
+                          </DateRangePicker.Day>
+                        </DateRangePicker.Cell>
+                      {/each}
+                    </DateRangePicker.GridRow>
+                  {/each}
+                </DateRangePicker.GridBody>
+              </DateRangePicker.Grid>
+            {/each}
+          </div>
+        {/snippet}
+      </DateRangePicker.Calendar>
+    </DateRangePicker.Content>
+  </DateRangePicker.Root>
 </div>

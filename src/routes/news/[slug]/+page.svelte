@@ -4,8 +4,8 @@
   import { ArrowLeft } from 'phosphor-svelte';
   
   // Import existing components
-  import ViralTitle from '$lib/features/news/card/ViralTitle.svelte';
-  import DevJson from '$lib/features/news/card/DevJson.svelte';
+  import ViralTitle from '$lib/features/news/article/title/ViralTitle.svelte';
+  import DevJson from '$lib/features/news/article/info/DevJson.svelte';
   import SourceContainer from '$lib/features/news/article/source/SourceContainer.svelte';
   import ArticleEntities from '$lib/features/news/article/ArticleEntities.svelte';
   import ArticleTimeline from '$lib/features/news/article/ArticleTimeline.svelte';

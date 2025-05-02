@@ -1,6 +1,6 @@
 <!-- src/lib/features/news/NewsApp.svelte -->
 <script lang="ts">
-  import NewsGrid from './layout/NewsGrid.svelte';
+  import NewsGrid from './feed/NewsGrid.svelte';
   import FomoApp from '$lib/features/fomo/FomoApp.svelte';
   import SidebarToggle from './layout/SidebarToggle.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
