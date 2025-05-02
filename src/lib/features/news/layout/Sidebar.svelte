@@ -27,17 +27,14 @@
   // Handle filter changes
   function handleFomoChange(value: number) {
     fomoScore = value;
-    // You could add additional logic here (like API calls)
   }
   
   function handleTagsChange(tags: string[]) {
     selectedTags = tags;
-    // Additional logic as needed
   }
   
   function handleActiveChange(active: boolean) {
     activeOnly = active;
-    // Additional logic as needed
   }
 </script>
 
@@ -87,8 +84,15 @@
     >
       <span>Filters</span>
 
-			<!-- TODO: change to {#snippet} -->
-      <svelte:component this={showFilters ? CaretUp : CaretDown} class="w-4 h-4" />
+      {#snippet caretIcon()}
+        {#if showFilters}
+          <CaretUp class="w-4 h-4" />
+        {:else}
+          <CaretDown class="w-4 h-4" />
+        {/if}
+      {/snippet}
+      
+      {@render caretIcon()}
     </button>
     
     {#if showFilters}
@@ -106,3 +110,15 @@
     {/if}
   {/if}
 </div>
+
+<style>
+  /* Hide scrollbar but maintain functionality */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>

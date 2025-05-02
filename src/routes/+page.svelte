@@ -2,7 +2,6 @@
 <script lang="ts">
   import Hero from '$lib/components/layout/Hero.svelte';
   import NewsApp from '$lib/features/news/NewsApp.svelte';
-  // import FomoApp from '$lib/features/fomo/FomoApp.svelte';
   import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
   import D3Sphere from '$lib/features/dataviz/D3Sphere.svelte';
 </script>
@@ -14,14 +13,9 @@
     <Hero />
   </section>
   
-  <section class="relative flex-grow">
+  <!-- <section class="relative flex-grow"> -->
     <NewsApp />
-  </section>
-  
-  <!-- Fixed FOMO App at bottom -->
-	<!-- <div class="fixed bottom-0 left-0 right-0 z-50 h-16 bg-zinc-900/20 backdrop-blur-xs">
-		<FomoApp />
-	</div> -->
+  <!-- </section> -->
   
   <!-- Background D3 Sphere visualization -->
   <section class="fixed inset-0 -z-10">
