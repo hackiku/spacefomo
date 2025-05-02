@@ -4,8 +4,12 @@
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
 	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
-  import { createNewsContext } from '$lib/context/newsContext.svelte';
+	// contexts
+	import { createNewsContext } from '$lib/context/newsContext.svelte';
   import { createFomoContext } from '$lib/context/fomoContext.svelte';
+  import { createNavContext } from '$lib/context/navContext.svelte';
+	import { createCtaContext } from '$lib/context/ctaContext.svelte';
+
   import { setContext } from 'svelte';
 
   let { data, children } = $props();
@@ -15,10 +19,16 @@
   // Create contexts instead of using global stores
   const newsContext = createNewsContext(data.news || []);
   const fomoContext = createFomoContext(data.weeks || []);
+  const navContext = createNavContext();
+	const ctaContext = createCtaContext();
+
   
   // Set contexts for child components to consume
   setContext('news', newsContext);
   setContext('fomo', fomoContext);
+  setContext('nav', navContext);
+  setContext('cta', ctaContext);
+
 </script>
 
 <svelte:head>
@@ -42,14 +52,24 @@
   <meta name="twitter:title" content="SpaceFomo" />
   <meta name="twitter:description" content="Get the latest space industry news, curated and condensed for busy space enthusiasts." />
   
-  <!-- Robots and indexing -->
+  <!-- Robots and indexing --> 
   <meta name="robots" content="index, follow" />
   
   <!-- Canonical URL for home page -->
   <link rel="canonical" href="https://spacefomo.com" />
+  
+  <!-- CSS variables for the navigation menu -->
+  <style>
+    :root {
+      --bits-navigation-menu-viewport-width: 600px;
+      --bits-navigation-menu-viewport-height: auto;
+    }
+  </style>
 </svelte:head>
 
-<ViewportSize />
+<div class="hidden">
+	<ViewportSize />
+</div>
 
 <div class="min-h-screen overflow-x-hidden">
   <Nav />

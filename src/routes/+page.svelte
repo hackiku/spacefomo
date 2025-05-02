@@ -1,12 +1,12 @@
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
-  import Hero from '$lib/components/layout/Hero.svelte';
+  import Hero from '$lib/components/content/Hero.svelte';
   import NewsApp from '$lib/features/news/NewsApp.svelte';
-  import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
+  // import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
   import D3Sphere from '$lib/features/dataviz/D3Sphere.svelte';
 </script>
 
-<ViewportSize />
+<!-- <ViewportSize /> -->
 
 <div class="flex min-h-screen flex-col">
   <section class="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-24">

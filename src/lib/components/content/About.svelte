@@ -1,4 +1,4 @@
-<!-- src/lib/components/content/About.svelte -->
+<!-- src/lib/components/content/About.svelte --> 
 <script lang="ts">
 	import { Copy, LinkedinLogo } from 'phosphor-svelte';
 	import EmailForm from '../cta/email/EmailForm.svelte';
