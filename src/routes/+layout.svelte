@@ -61,7 +61,7 @@
 
 </svelte:head>
 
-<div class="hidden">
+<div class="hidden md:block">
 	<ViewportSize />
 </div>
 

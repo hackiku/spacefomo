@@ -12,7 +12,7 @@
   } = $props();
 
   // State for sidebar visibility
-  let isExpanded = $state(true);
+  let isExpanded = $state(false);
   
   // Toggle sidebar visibility
   function toggleSidebar() {

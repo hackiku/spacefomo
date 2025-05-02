@@ -32,7 +32,7 @@
       case 'bottom-left': return 'bottom-4 left-4';
       case 'top-left': return 'top-4 left-4';
       case 'bottom-right':
-      default: return 'bottom-20 right-4 sm:bottom-24 sm:right-8';
+      default: return 'bottom-20 right-4 sm:bottom-12 sm:right-8';
     }
   });
   

@@ -51,7 +51,6 @@
   ];
 </script>
 
-<h2 class="text-background">asd</h2>
 {#snippet ListItem({ title, href, description })}
   <li>
     <NavigationMenu.Link

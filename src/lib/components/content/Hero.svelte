@@ -1,8 +1,9 @@
-<!-- src/lib/layout/HeroWithShare.svelte -->
+<!-- src/lib/layout/Hero.svelte -->
 <script lang="ts">
 	import { PlusCircle, Share } from 'phosphor-svelte';
 	import ShareModal from '$lib/components/cta/share/ShareModal.svelte';
 	import ShareButton from '$lib/components/cta/share/ShareButton.svelte';
+	import EmailForm from '$lib/components/cta/email/EmailForm.svelte';
 
 	let showShareModal = $state(false);
   
@@ -28,9 +29,10 @@
 	</div>
   
 	<!-- 100 words tagline with arrow -->
-	<!-- <div class="absolute -bottom-36 right-6 md:right-20 lg:left-16 hidden md:flex items-end">
+	<div class="absolute -bottom-36 right-6 md:right-12 lg:right-20 xl:right-24 __hidden md:flex items-end">
 		<div class="text-left rotate-6">
-			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-xl lg:text-2xl font-semibold inline-block">
+			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-xl lg:text-2xl
+					font-semibold inline-block">
 				Can't-miss space news<br/> ~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
@@ -46,7 +48,7 @@
 				</svg>
 			</div>
 		</div>
-	</div> -->
+	</div>
 </div>
 
 <!-- Gradient Orb -->

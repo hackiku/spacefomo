@@ -9,7 +9,7 @@
 <!-- <ViewportSize /> -->
 
 <div class="flex min-h-screen flex-col">
-  <section class="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-24">
+  <section class="relative overflow-hidden py-30 sm:pt-36 sm:pb-30">
     <Hero />
   </section>
   

@@ -30,7 +30,7 @@
   <!-- Main content -->
   <div class="container mx-auto px-4 sm:px-6 pb-20">
     <!-- Centered content wrapper -->
-    <div class="mx-auto {getContainerClasses()} pt-6 sm:pt-8">
+    <div class="mx-auto {getContainerClasses()} ">
       <!-- Grid is content-agnostic, just displays the news -->
       <NewsGrid columnCount={columnCount} />
     </div>

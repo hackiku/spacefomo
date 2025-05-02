@@ -1,9 +1,8 @@
-<!-- src/lib/components/cta/share/ShareButton.svelte -->
+<!-- // src/lib/components/cta/share/ShareButton.svelte -->
 <script lang="ts">
   import { Share, PlusCircle } from 'phosphor-svelte';
   import { Button } from 'bits-ui';
-  import cn from "clsx";
-
+  
   let { 
     variant = 'default', 
     size = 'md',

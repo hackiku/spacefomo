@@ -32,7 +32,7 @@
 
 <div class="space-y-2 w-full">
   <!-- Layout Toggle Group -->
-  <div class="w-fit">
+  <div class="w-fit border border-zinc-700/60 rounded-md">
     <ToggleGroup.Root
       type="single"
       value={sidebarMode}
@@ -76,7 +76,7 @@
   </div>
 
   <!-- Column Toggle Group -->
-  <div class="w-fit">
+  <div class="w-fit border border-zinc-700/60 rounded-md">
     <ToggleGroup.Root
       type="single"
       value={String(columnCount)}
