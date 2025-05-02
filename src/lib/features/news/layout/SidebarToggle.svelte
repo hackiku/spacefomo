@@ -12,7 +12,7 @@
   } = $props();
 
   // State for sidebar visibility
-  let isExpanded = $state(false);
+  let isExpanded = $state(true);
   
   // Toggle sidebar visibility
   function toggleSidebar() {
@@ -22,7 +22,7 @@
 
 <!-- Single container that expands -->
 <div 
-  class="fixed left-4 top-24 sm:top-20 z-40
+  class="fixed left-4 top-20 sm:top-20 z-40
          __bg-zinc-900/95 __backdrop-blur-sm border border-zinc-700/50 rounded-lg shadow-lg
          overflow-hidden transition-all duration-300 ease-out
          {isExpanded ? 'w-64 max-h-[80vh]' : 'w-11 h-11'}"
@@ -43,7 +43,7 @@
   </Button.Root>
   
   <!-- Content is always loaded but only visible when expanded -->
-  <div class="p-4 pt-14 w-64 opacity-0 {isExpanded ? 'opacity-100' : 'pointer-events-none'} transition-opacity duration-300">
+  <div class="p-2 pt-8 w-64 opacity-0 {isExpanded ? 'opacity-100' : 'pointer-events-none'} transition-opacity duration-300">
     <Sidebar
       sidebarMode={sidebarMode}
       columnCount={columnCount}

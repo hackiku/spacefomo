@@ -1,5 +1,6 @@
 <!-- src/lib/features/news/controls/LayoutControls.svelte -->
 <script lang="ts">
+  import { ToggleGroup } from "bits-ui";
   import { ArrowsInLineHorizontal, Columns, Table, Rows, SquaresFour } from 'phosphor-svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
 
@@ -14,76 +15,96 @@
     onColumnCountChange: (count: ColumnCount) => void;
   }>();
 
-  // Sidebar mode options
-  const sidebarOptions = [
-    { value: 'thin', label: 'Compact view', icon: ArrowsInLineHorizontal },
-    { value: 'default', label: 'Default layout', icon: Columns },
-    { value: 'wide', label: 'Wide layout', icon: Table }
-  ] as const;
+  // Handle layout toggle changes
+  function handleLayoutChange(layout: string | string[]) {
+    if (typeof layout === 'string') {
+      onSidebarModeChange(layout as SidebarMode);
+    }
+  }
 
-  // Column options
-  const columnOptions = [
-    { value: 1, label: 'Single column', icon: Rows },
-    { value: 2, label: 'Two columns', icon: SquaresFour }
-  ] as const;
+  // Handle column toggle changes
+  function handleColumnChange(columns: string | string[]) {
+    if (typeof columns === 'string') {
+      onColumnCountChange(Number(columns) as ColumnCount);
+    }
+  }
 </script>
 
-<div class="space-y-6 w-full">
-  <!-- Sidebar layout controls -->
-  <div class="space-y-2">
-    <!-- {#if !compact}
-      <p class="text-xs text-zinc-500">Layout</p>
-    {/if} -->
-    <div class="{compact ? 'flex flex-col gap-2' : 'flex gap-2'}">
-      {#each sidebarOptions as option}
-        {@const active = option.value === sidebarMode}
-        <button
-          type="button"
-          class="w-10 h-10 flex items-center justify-center rounded-lg border
-                 transition-all duration-200
-                 {active 
-                   ? 'bg-zinc-800/80 border-zinc-700 text-zinc-200' 
-                   : 'border-zinc-800 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
-          onclick={() => onSidebarModeChange(option.value)}
-          aria-label={option.label}
-          aria-pressed={active}
-        >
-          <svelte:component 
-            this={option.icon}
-            weight={active ? 'regular' : 'light'}
-            class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
-          />
-        </button>
-      {/each}
-    </div>
+<div class="space-y-2 w-full">
+  <!-- Layout Toggle Group -->
+  <div class="w-fit">
+    <ToggleGroup.Root
+      type="single"
+      value={sidebarMode}
+      onValueChange={handleLayoutChange}
+      orientation="horizontal"
+      class="inline-flex rounded-md bg-zinc-800/30 p-1"
+    >
+      <ToggleGroup.Item
+        value="thin"
+        aria-label="Compact view"
+        class="data-[state=on]:bg-zinc-800 data-[state=on]:text-zinc-200 
+              inline-flex h-9 w-9 items-center justify-center rounded 
+              text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-300 focus-visible:outline-none
+              focus-visible:ring-2 focus-visible:ring-zinc-700"
+      >
+        <ArrowsInLineHorizontal class="h-5 w-5" />
+      </ToggleGroup.Item>
+      
+      <ToggleGroup.Item
+        value="default"
+        aria-label="Default layout"
+        class="data-[state=on]:bg-zinc-800 data-[state=on]:text-zinc-200 
+              inline-flex h-9 w-9 items-center justify-center rounded 
+              text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-300 focus-visible:outline-none
+              focus-visible:ring-2 focus-visible:ring-zinc-700"
+      >
+        <Columns class="h-5 w-5" />
+      </ToggleGroup.Item>
+      
+      <ToggleGroup.Item
+        value="wide"
+        aria-label="Wide layout"
+        class="data-[state=on]:bg-zinc-800 data-[state=on]:text-zinc-200 
+              inline-flex h-9 w-9 items-center justify-center rounded 
+              text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-300 focus-visible:outline-none
+              focus-visible:ring-2 focus-visible:ring-zinc-700"
+      >
+        <Table class="h-5 w-5" />
+      </ToggleGroup.Item>
+    </ToggleGroup.Root>
   </div>
 
-  <!-- Column layout controls -->
-  <div class="space-y-2">
-    <!-- {#if !compact}
-      <p class="text-xs text-zinc-500">Columns</p>
-    {/if} -->
-    <div class="{compact ? 'flex flex-col gap-2' : 'flex gap-2'}">
-      {#each columnOptions as option}
-        {@const active = option.value === columnCount}
-        <button
-          type="button"
-          class="w-10 h-10 flex items-center justify-center rounded-lg border
-                 transition-all duration-200
-                 {active 
-                   ? 'bg-zinc-800/80 border-zinc-700 text-zinc-200' 
-                   : 'border-zinc-800 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
-          onclick={() => onColumnCountChange(option.value)}
-          aria-label={option.label}
-          aria-pressed={active}
-        >
-          <svelte:component 
-            this={option.icon}
-            weight={active ? 'regular' : 'light'}
-            class="w-5 h-5 transition-colors {active ? 'text-violet-400' : ''}"
-          />
-        </button>
-      {/each}
-    </div>
+  <!-- Column Toggle Group -->
+  <div class="w-fit">
+    <ToggleGroup.Root
+      type="single"
+      value={String(columnCount)}
+      onValueChange={handleColumnChange}
+      orientation="horizontal"
+      class="inline-flex rounded-md bg-zinc-800/30 p-1"
+    >
+      <ToggleGroup.Item
+        value="1"
+        aria-label="Single column"
+        class="data-[state=on]:bg-zinc-800 data-[state=on]:text-zinc-200 
+              inline-flex h-9 w-9 items-center justify-center rounded 
+              text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-300 focus-visible:outline-none
+              focus-visible:ring-2 focus-visible:ring-zinc-700"
+      >
+        <Rows class="h-5 w-5" />
+      </ToggleGroup.Item>
+      
+      <ToggleGroup.Item
+        value="2"
+        aria-label="Two columns"
+        class="data-[state=on]:bg-zinc-800 data-[state=on]:text-zinc-200 
+              inline-flex h-9 w-9 items-center justify-center rounded 
+              text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-300 focus-visible:outline-none
+              focus-visible:ring-2 focus-visible:ring-zinc-700"
+      >
+        <SquaresFour class="h-5 w-5" />
+      </ToggleGroup.Item>
+    </ToggleGroup.Root>
   </div>
 </div>
