@@ -1,2 +1,4 @@
 // src/lib/server/email/index.ts
-export * from './resend';
+export * from './audience';
+export * from './send';
+export * from './templates';

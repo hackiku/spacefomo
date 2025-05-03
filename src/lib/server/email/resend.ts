@@ -1,66 +1,114 @@
 // src/lib/server/email/resend.ts
 import { Resend } from 'resend';
-import { RESEND_API_KEY, RESEND_AUDIENCE_ID } from '$env/static/private'; // Correct SvelteKit import
+import { RESEND_API_KEY, RESEND_AUDIENCE_ID } from '$env/static/private';
 
-// Initialize Resend client once. Handle potential missing key.
+// Initialize Resend client
 let resend: Resend | null = null;
 if (RESEND_API_KEY) {
-	resend = new Resend(RESEND_API_KEY);
+    resend = new Resend(RESEND_API_KEY);
 } else {
-	console.error('RESEND_API_KEY is not configured in .env. Resend integration will be disabled.');
+    console.error('RESEND_API_KEY is not configured in .env');
 }
 
-if (!RESEND_AUDIENCE_ID) {
-	console.error('RESEND_AUDIENCE_ID is not configured in .env. Resend integration will be disabled.');
-}
-
-/**
- * Add a subscriber to Resend audience using the Resend SDK.
- * See: https://resend.com/docs/api-reference/contacts/create-contact
- * @param email The email address to add.
- * @returns Promise<boolean> True if the contact was added or likely already exists, false on failure.
- */
+// Add a subscriber to audience
 export async function addSubscriberToResend(email: string): Promise<boolean> {
-	// Check if Resend client or Audience ID are missing
-	if (!resend || !RESEND_AUDIENCE_ID) {
-		console.error('Resend client or Audience ID not available. Cannot add subscriber.');
-		return false;
-	}
+    if (!resend || !RESEND_AUDIENCE_ID) {
+        console.error('Resend client or Audience ID not available');
+        return false;
+    }
 
-	try {
-		console.log(`Attempting to add contact ${email} to Resend audience ${RESEND_AUDIENCE_ID}...`);
+    try {
+        console.log(`Adding contact ${email} to audience ${RESEND_AUDIENCE_ID}`);
+        
+        const { data, error } = await resend.contacts.create({
+            email,
+            audienceId: RESEND_AUDIENCE_ID,
+            unsubscribed: false
+        });
 
-		const { data, error } = await resend.contacts.create({
-			email,
-			audienceId: RESEND_AUDIENCE_ID,
-			unsubscribed: false // Explicitly set subscription status
-			// Optional fields you might want to add later if you collect them:
-			// firstName: '',
-			// lastName: '',
-		});
+        if (error) {
+            // Handle duplicate error gracefully
+            if (error.name === 'validation_error' && 
+                error.message?.toLowerCase().includes('already exists')) {
+                return true;
+            }
+            console.error('Resend API error:', error);
+            return false;
+        }
 
-		if (error) {
-			// Log the specific error from Resend SDK
-			console.error('Resend API error adding contact:', error);
+        return true;
+    } catch (err) {
+        console.error('Unexpected error:', err);
+        return false;
+    }
+}
 
-			// Handle potential duplicate contact error gracefully
-			// Check if the error indicates the contact already exists.
-			// The exact error structure/message might vary, inspect the 'error' object if needed.
-			// Example check (adjust based on actual Resend error response for duplicates):
-			if (error.name === 'validation_error' && error.message?.toLowerCase().includes('already exists')) {
-				console.warn(`Contact ${email} already exists in Resend audience ${RESEND_AUDIENCE_ID}. Treating as success.`);
-				return true; // Consider existing contact as a successful operation in this context
-			}
-			// For other errors, return false
-			return false;
-		}
+// Send an email
+export async function sendEmail(to: string, subject: string, html: string, text: string): Promise<boolean> {
+    if (!resend) {
+        console.error('Resend client not available');
+        return false;
+    }
 
-		console.log(`Successfully added contact ${email} to Resend audience ${RESEND_AUDIENCE_ID}. Contact ID: ${data?.id}`);
-		return true;
+    try {
+        const { data, error } = await resend.emails.send({
+            to,
+            subject,
+            html,
+            text,
+            // No need to specify "from" - Resend will use your default sender
+        });
 
-	} catch (err) {
-		// Catch unexpected errors during the API call execution
-		console.error('Unexpected error executing add subscriber to Resend:', err);
-		return false;
-	}
+        if (error) {
+            console.error('Error sending email:', error);
+            return false;
+        }
+        
+        console.log(`Email sent successfully. ID: ${data?.id}`);
+        return true;
+    } catch (err) {
+        console.error('Unexpected error sending email:', err);
+        return false;
+    }
+}
+
+// Update subscriber status
+export async function updateSubscriberStatus(
+    email: string, 
+    unsubscribe: boolean = false
+): Promise<boolean> {
+    if (!resend || !RESEND_AUDIENCE_ID) {
+        console.error('Resend client or Audience ID not available');
+        return false;
+    }
+
+    try {
+        // Find contact
+        const { data: contacts, error: findError } = await resend.contacts.list({
+            audienceId: RESEND_AUDIENCE_ID,
+            email
+        });
+
+        if (findError || !contacts || contacts.length === 0) {
+            console.error('Error finding contact in Resend:', findError || 'Not found');
+            return false;
+        }
+
+        // Update contact
+        const { error: updateError } = await resend.contacts.update({
+            audienceId: RESEND_AUDIENCE_ID,
+            id: contacts[0].id,
+            unsubscribed: unsubscribe
+        });
+
+        if (updateError) {
+            console.error('Error updating contact:', updateError);
+            return false;
+        }
+
+        return true;
+    } catch (err) {
+        console.error('Unexpected error:', err);
+        return false;
+    }
 }
