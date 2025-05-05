@@ -62,7 +62,7 @@
 >
   {#if !success}
     <div 
-      class="flex items-stretch h-12 rounded-full border border-zinc-700/80 bg-zinc-800/30 
+      class="flex items-stretch h-14 rounded-full border border-zinc-700/80 bg-zinc-800/30 
              overflow-hidden {isFocused ? 'ring-1 ring-zinc-500 border-zinc-600' : ''}"
     >
       <div class="flex items-center justify-center pl-4 w-10">

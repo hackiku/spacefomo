@@ -17,7 +17,7 @@
 	<!-- Main Heading -->
 	<h1
 		class="text-4xl text-white
-                   font-thin sm:text-5xl lg:text-6xl"
+                   font-regular sm:text-5xl lg:text-6xl"
 	>
 		There's no place <br/> like space
 	</h1>
@@ -30,7 +30,7 @@
 		<div class="text-left rotate-6">
 			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-xl lg:text-2xl
 					font-semibold inline-block">
-				Can't-miss space news<br/> ~100 words a pop
+				Hot space news<br/> ~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
 				<svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
