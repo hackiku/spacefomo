@@ -1,33 +1,39 @@
 <!-- src/lib/features/fomo/calendar/CalendarMenu.svelte -->
+
 <script lang="ts">
   import { NavigationMenu } from "bits-ui";
-  import { 
-    DateRangePicker, 
-    type DateRange 
-  } from "bits-ui";
-  import { 
-    CalendarBlank, 
-    CaretLeft, 
-    CaretRight,
-    Clock
-  } from 'phosphor-svelte';
-  import { today, getLocalTimeZone } from "@internationalized/date";
+  import { CalendarBlank, Clock } from 'phosphor-svelte';
+  import { type DateValue } from "@internationalized/date";
   
-  // Initialize with today's date
-  let placeholder = $state(today(getLocalTimeZone()));
-  
-  // DateRange value - undefined by default
-  let value = $state<DateRange | undefined>(undefined);
+  // Import the standalone calendar component
+  import CalendarContent from "./CalendarContent.svelte";
   
   // Navigation menu state
-  let open = $state(false);
-  
-  // Set active item to 'date-picker' by default
   let activeItem = $state('date-picker');
+  
+  // Selected date ranges
+  let startDate = $state<DateValue | null>(null);
+  let endDate = $state<DateValue | null>(null);
+  
+  // Handle date selection from the calendar component
+  function handleDateSelectionChange(start: DateValue | null, end: DateValue | null) {
+    startDate = start;
+    endDate = end;
+    console.log('Selection changed:', { start, end });
+  }
   
   // Set the current navigation item
   function setActive(item: string) {
     activeItem = item;
+  }
+  
+  // Apply the date filter
+  function applyDateFilter() {
+    // Implement filtering logic here
+    console.log('Applying date filter:', { startDate, endDate });
+    
+    // Close the menu after applying (optional)
+    // Would need to bind an open state and toggle it
   }
 </script>
 
@@ -59,70 +65,9 @@
         sideOffset={12}
       >
         <div class="flex gap-4 p-4 bg-zinc-800 rounded-lg border border-zinc-700/50 shadow-xl">
-          <!-- Date range picker -->
+          <!-- Calendar component -->
           <div class="w-[280px]">
-            <DateRangePicker.Calendar
-              bind:value
-              bind:placeholder
-              weekdayFormat="short"
-              fixedWeeks={true}
-              class="w-full"
-            >
-              {#snippet children({ months, weekdays })}
-                <DateRangePicker.Header class="flex items-center justify-between mb-4">
-                  <DateRangePicker.PrevButton class="rounded-full p-2 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300">
-                    <CaretLeft size={16} />
-                  </DateRangePicker.PrevButton>
-                  <DateRangePicker.Heading class="text-sm font-medium text-zinc-300" />
-                  <DateRangePicker.NextButton class="rounded-full p-2 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300">
-                    <CaretRight size={16} />
-                  </DateRangePicker.NextButton>
-                </DateRangePicker.Header>
-                
-                <div class="space-y-4">
-                  {#each months as month}
-                    <DateRangePicker.Grid class="w-full select-none">
-                      <DateRangePicker.GridHead>
-                        <DateRangePicker.GridRow class="flex justify-between mb-2">
-                          {#each weekdays as day}
-                            <DateRangePicker.HeadCell class="w-8 text-center text-xs text-zinc-500">
-                              <div>{day.slice(0, 1)}</div>
-                            </DateRangePicker.HeadCell>
-                          {/each}
-                        </DateRangePicker.GridRow>
-                      </DateRangePicker.GridHead>
-                      
-                      <DateRangePicker.GridBody>
-                        {#each month.weeks as weekDates}
-                          <DateRangePicker.GridRow class="flex justify-between mb-1">
-                            {#each weekDates as date}
-                              <DateRangePicker.Cell 
-                                {date} 
-                                month={month.value}
-                                class="p-0 relative"
-                              >
-                                <DateRangePicker.Day 
-                                  class="flex items-center justify-center w-8 h-8 rounded-full text-xs
-                                        text-zinc-300 
-                                        data-today:bg-zinc-700/50
-                                        data-outside-month:text-zinc-600 
-                                        data-selected:bg-violet-600/90 data-selected:text-white
-                                        data-selection-start:bg-violet-600 data-selection-start:text-white
-                                        data-selection-end:bg-violet-600 data-selection-end:text-white
-                                        hover:bg-zinc-700/50"
-                                >
-                                  {date.day}
-                                </DateRangePicker.Day>
-                              </DateRangePicker.Cell>
-                            {/each}
-                          </DateRangePicker.GridRow>
-                        {/each}
-                      </DateRangePicker.GridBody>
-                    </DateRangePicker.Grid>
-                  {/each}
-                </div>
-              {/snippet}
-            </DateRangePicker.Calendar>
+            <CalendarContent onSelectionChange={handleDateSelectionChange} />
           </div>
           
           <!-- Time controls placeholder -->
@@ -132,22 +77,15 @@
               <span>Time Range</span>
             </div>
             
-            <!-- Date display feedback -->
-            {#if value?.start}
-              <div class="text-xs text-zinc-400 mb-3">
-                Selected: {formatDate(value.start instanceof Date ? value.start : new Date(value.start.toString()))}
-                {#if value.end}
-                  - {formatDate(value.end instanceof Date ? value.end : new Date(value.end.toString()))}
-                {/if}
-              </div>
-            {/if}
-            
-            <!-- Time granularity selector placeholder -->
-            <div class="space-y-3">
-              <div class="text-zinc-400 text-xs">
-                Time granularity controls will be added here
-              </div>
-            </div>
+            <!-- Apply button -->
+            <button
+              class="w-full py-2 px-4 mt-4 bg-gradient-to-r from-violet-500 to-fuchsia-500 
+                     text-white rounded text-xs font-medium
+                     transition-all hover:from-violet-600 hover:to-fuchsia-600"
+              onclick={applyDateFilter}
+            >
+              Apply Range
+            </button>
           </div>
         </div>
       </NavigationMenu.Content>
@@ -163,13 +101,3 @@
     />
   </div>
 </NavigationMenu.Root>
-
-<script context="module">
-  function formatDate(date: Date): string {
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  }
-</script>

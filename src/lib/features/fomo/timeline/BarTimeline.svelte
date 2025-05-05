@@ -29,6 +29,16 @@
     });
   }
   
+  // Format date as just the day of month
+  function formatDayOnly(date: Date): string {
+    return date.getDate().toString();
+  }
+  
+  // Format date as "Monday"
+  function formatWeekday(date: Date): string {
+    return date.toLocaleDateString('en-US', { weekday: 'short' });
+  }
+  
   // Get the SVG for the bar rect element
   function getBarColor(score: number, isSelected: boolean = false): string {
     if (isSelected) {
@@ -71,16 +81,29 @@
   // SVG measurements
   const barWidth = 2; // Slightly wider bars for better visibility
   const barGap = 1;
-  const barUnit = barWidth + barGap;
-  const totalWidth = days.length * barUnit;
+  const weekGap = 8; // Gap between weeks
+  const barsPerWeek = 7;
+  const weekWidth = (barWidth + barGap) * barsPerWeek + weekGap;
+  const totalWidth = Math.ceil(days.length / 7) * weekWidth;
   
   // The week markers positions (every 7 days)
   const weekMarkers = $derived(
-    days.filter((_, i) => i % 7 === 0).map((day, i) => ({
-      x: i * 7 * barUnit + (3.5 * barUnit),
-      date: day.date
-    }))
+    days.filter((_, i) => i % 7 === 0).map((day, weekIndex) => {
+      const x = weekIndex * weekWidth + (barsPerWeek * (barWidth + barGap)) / 2;
+      return {
+        x,
+        date: day.date,
+        weekIndex
+      };
+    })
   );
+  
+  // Get x position for a specific day
+  function getDayX(dayIndex: number): number {
+    const weekIndex = Math.floor(dayIndex / 7);
+    const dayInWeek = dayIndex % 7;
+    return weekIndex * weekWidth + dayInWeek * (barWidth + barGap);
+  }
   
   // Initialize scroll position
   $effect(() => {
@@ -169,30 +192,41 @@
       </linearGradient>
     </defs>
     
-    <!-- Week separators -->
+    <!-- Week separators and labels -->
     <g>
       {#each weekMarkers as marker, i}
         {#if i > 0} <!-- Skip the first marker -->
-          <!-- Vertical line -->
-          <line 
-            x1={marker.x} 
-            y1="0" 
-            x2={marker.x} 
-            y2="100%" 
-            stroke="rgba(255,255,255,0.1)" 
-            stroke-width="1"
+          <!-- Week separator -->
+          <rect
+            x={marker.x - weekGap/2}
+            y="0"
+            width="1"
+            height="100%"
+            fill="rgba(255,255,255,0.1)"
           />
           
-          <!-- Date label -->
-          <text 
-            x={marker.x + 2} 
-            y="85%" 
-            fill="rgba(161, 161, 170, 0.6)" 
-            font-size="10" 
-            text-anchor="start"
-          >
-            {formatDate(marker.date)}
-          </text>
+          <!-- Date label with background -->
+          <g>
+            <rect 
+              x={marker.x - 18} 
+              y="75%" 
+              width="36" 
+              height="16" 
+              rx="4" 
+              fill="rgba(39, 39, 42, 0.5)" 
+            />
+            
+            <text 
+              x={marker.x} 
+              y="82%" 
+              fill="rgba(161, 161, 170, 0.8)" 
+              font-size="10" 
+              text-anchor="middle" 
+              dominant-baseline="middle"
+            >
+              {formatDate(marker.date)}
+            </text>
+          </g>
         {/if}
       {/each}
     </g>
@@ -202,7 +236,7 @@
       {#each days as day, i}
         {@const isSelected = selectedDayIndex === i}
         {@const barHeight = Math.max(8, day.score)}
-        {@const barX = i * barUnit}
+        {@const barX = getDayX(i)}
         {@const barY = 100 - barHeight}
         
         <!-- The bar with hover group -->
@@ -230,6 +264,19 @@
             fill="transparent" 
             class="group"
           >
+            <!-- Day of week indicator (only for first day of week) -->
+            {#if i % 7 === 0}
+              <text
+                x={barX + barWidth/2}
+                y="95%"
+                fill="rgba(161, 161, 170, 0.4)"
+                font-size="7"
+                text-anchor="middle"
+              >
+                M
+              </text>
+            {/if}
+            
             <!-- Tooltip -->
             <title>{formatDate(day.date)}: FOMO {day.score}</title>
             
@@ -242,7 +289,7 @@
                 x="0"
                 y="0"
                 width="60"
-                height="28"
+                height="35"
                 rx="4"
                 fill="rgba(39, 39, 42, 0.95)"
                 stroke="rgba(63, 63, 70, 1)"
@@ -257,12 +304,12 @@
                 text-anchor="middle" 
                 dominant-baseline="middle"
               >
-                {formatDate(day.date)}
+                {formatWeekday(day.date)} {formatDayOnly(day.date)}
               </text>
               
               <text 
                 x="30" 
-                y="22" 
+                y="24" 
                 fill="rgba(228, 228, 231, 0.95)" 
                 font-size="8" 
                 text-anchor="middle" 

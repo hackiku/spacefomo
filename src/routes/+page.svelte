@@ -3,7 +3,7 @@
   import Hero from '$lib/components/content/Hero.svelte';
   import NewsApp from '$lib/features/news/NewsApp.svelte';
   // import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
-  import D3Sphere from '$lib/features/dataviz/D3Sphere.svelte';
+  // import D3Sphere from '$lib/features/dataviz/D3Sphere.svelte';
 </script>
 
 <!-- <ViewportSize /> -->
@@ -18,10 +18,10 @@
   <!-- </section> -->
   
   <!-- Background D3 Sphere visualization -->
-  <section class="fixed inset-0 -z-10">
+  <!-- <section class="fixed inset-0 -z-10">
     <D3Sphere 
       wireframeColor="rgba(168, 139, 250, 0.55)"
       rotationSpeed={0.002}
     />
-  </section>
+  </section> -->
 </div>

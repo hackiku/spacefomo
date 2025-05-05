@@ -40,7 +40,7 @@
   <SidebarToggle bind:sidebarMode bind:columnCount />
   
   <!-- FomoApp stays at the bottom within the NewsApp container -->
-  <div class="fixed -bottom-1 left-0 right-0 z-40 h-14">
+  <div class="fixed bottom-0 left-0 right-0 z-40 h-14">
     <FomoApp />
   </div>
 </div>
