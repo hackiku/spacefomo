@@ -22,7 +22,7 @@
 		There's no place <br/> like space
 	</h1>
 
-	<ShareButton onClick={handleShareClick}/>
+	<!-- <ShareButton onClick={handleShareClick}/> -->
 	<EmailForm />
 
 	<!-- 100 words tagline with arrow -->
