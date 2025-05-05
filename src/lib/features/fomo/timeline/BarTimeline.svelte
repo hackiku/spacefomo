@@ -1,8 +1,5 @@
 <!-- src/lib/features/fomo/timeline/BarTimeline.svelte -->
 <script lang="ts">
-  // Import SVG-specific helpers
-  import { onMount } from 'svelte';
-  
   // Generate fake data for 365 days (full year)
   const generateDays = () => {
     return Array.from({ length: 365 }, (_, i) => {
@@ -22,7 +19,6 @@
   let days = $state(generateDays());
   let selectedDayIndex = $state(-1);
   let container: HTMLElement;
-  let svgContainer: SVGElement;
   let isScrolling = $state(false);
   
   // Format date as "Mar 2"
@@ -73,8 +69,8 @@
   }
   
   // SVG measurements
-  const barWidth = 1;
-  const barGap = 0.5;
+  const barWidth = 2; // Slightly wider bars for better visibility
+  const barGap = 1;
   const barUnit = barWidth + barGap;
   const totalWidth = days.length * barUnit;
   
@@ -87,7 +83,7 @@
   );
   
   // Initialize scroll position
-  onMount(() => {
+  $effect(() => {
     if (container) {
       // Start at a position that shows recent data but allows scrolling both ways
       setTimeout(() => {
@@ -98,7 +94,7 @@
 </script>
 
 <div 
-  class="h-full flex-1 overflow-x-auto no-scrollbar relative transition-opacity duration-300 hover:opacity-100"
+  class="h-full w-full flex-1 overflow-x-auto no-scrollbar relative transition-opacity duration-300 hover:opacity-100"
   style="opacity: 0.5;"
   onscroll={handleScroll}
   bind:this={container}
@@ -115,8 +111,8 @@
   <svg 
     width={totalWidth} 
     height="100%" 
-    class="min-w-max"
-    bind:this={svgContainer}
+    class="min-w-max h-full"
+    preserveAspectRatio="none"
   >
     <!-- Define gradients for the bars -->
     <defs>
@@ -173,20 +169,6 @@
       </linearGradient>
     </defs>
     
-    <!-- Background group with 10% height grid lines -->
-    <g>
-      {#each [0.2, 0.4, 0.6, 0.8] as line}
-        <line 
-          x1="0" 
-          y1={`${100 - (line * 100)}%`} 
-          x2={totalWidth} 
-          y2={`${100 - (line * 100)}%`} 
-          stroke="rgba(255,255,255,0.05)" 
-          stroke-width="1"
-        />
-      {/each}
-    </g>
-    
     <!-- Week separators -->
     <g>
       {#each weekMarkers as marker, i}
@@ -234,7 +216,7 @@
             y={`${barY}%`} 
             width={barWidth} 
             height={`${barHeight}%`} 
-            rx="0.5"
+            rx="1"
             fill={getBarColor(day.score, isSelected)}
             class="transition-all duration-200"
           />
