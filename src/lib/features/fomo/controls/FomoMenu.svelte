@@ -76,7 +76,7 @@
 
 <!-- Menu container with expand/collapse animations -->
 <div 
-  class="relative z-40 "
+  class="relative z-40"
   role="navigation"
   aria-label="FOMO controls"
 >

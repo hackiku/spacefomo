@@ -35,7 +35,7 @@
       </div>
       
       <!-- Subscribe Section -->
-      <div class="md:col-span-1">
+      <div class="md:col-span-2">
         <h3 class="text-lg font-medium text-zinc-200 mb-4">Stay in orbit</h3>
         <EmailForm />
       </div>
