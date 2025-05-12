@@ -1,9 +1,10 @@
-<!-- // src/lib/components/cta/share/EnhancedShareModal.svelte -->
+<!-- src/lib/components/cta/share/ShareModal.svelte -->
 
 <script lang="ts">
   import { Dialog, Button } from 'bits-ui';
   import { X, Link, Envelope, ArrowClockwise, TwitterLogo, LinkedinLogo, Copy, Check } from 'phosphor-svelte';
   import StatusMessage from './StatusMessage.svelte';
+  import { cn } from '$lib/utils';
 
   let { onClose } = $props<{
     onClose: () => void;
@@ -17,6 +18,8 @@
   let status = $state<'idle' | 'success' | 'error'>('idle');
   let errorMessage = $state('');
   let copied = $state(false);
+  let urlFocused = $state(false);
+  let emailFocused = $state(false);
   
   // Social sharing URLs
   const getTwitterShareUrl = () => {
@@ -107,31 +110,55 @@
       loading = false;
     }
   }
+  
+  function handleUrlFocus() {
+    urlFocused = true;
+    if (errorMessage.includes('URL')) errorMessage = '';
+  }
+  
+  function handleUrlBlur() {
+    urlFocused = false;
+  }
+  
+  function handleEmailFocus() {
+    emailFocused = true;
+    if (errorMessage.includes('email')) errorMessage = '';
+  }
+  
+  function handleEmailBlur() {
+    emailFocused = false;
+  }
 </script>
 
 <Dialog.Root open={true} onOpenChange={(open) => !open && onClose()}>
   <Dialog.Portal>
-    <Dialog.Overlay class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />
+    <Dialog.Overlay class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" />
 
     <Dialog.Content
       class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 
-           fixed top-[50%] left-[50%] z-50 w-full max-w-2xl translate-x-[-50%] translate-y-[-50%]
-           overflow-hidden rounded-3xl
-           border border-white/10
-           bg-zinc-900/95 backdrop-blur-sm"
+             fixed top-[50%] left-[50%] z-50 w-full max-w-2xl translate-x-[-50%] translate-y-[-50%]
+             overflow-hidden rounded-md
+             border border-border
+             bg-card"
       onCloseAutoFocus={(e) => e.preventDefault()}
     >
       <!-- Header -->
-      <Dialog.Title class="flex items-center justify-between border-b border-white/10 p-6">
-        <h2 class="text-2xl font-medium text-zinc-100">Share Space News</h2>
+      <Dialog.Title class="flex items-center justify-between border-b border-border p-6">
+        <h2 class="text-2xl font-medium text-foreground">Share Space News</h2>
 
         <!-- Enhanced close button with ESC text -->
         <Dialog.Close
-          class="flex cursor-pointer items-center gap-2 rounded-lg bg-zinc-800 px-4 py-2
-               text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-zinc-100"
+          class="group relative flex cursor-pointer items-center gap-2 p-2
+                 bg-muted text-muted-foreground
+                 before:absolute before:inset-0
+                 before:border before:border-primary/10
+                 before:translate-x-0.5 before:translate-y-0.5
+                 before:transition-transform before:duration-300
+                 hover:before:translate-x-0 hover:before:translate-y-0
+                 hover:text-foreground"
         >
-          <span class="text-sm font-medium text-zinc-400">ESC</span>
-          <div class="h-4 w-px bg-zinc-600"></div>
+          <span class="text-sm font-medium">ESC</span>
+          <div class="h-4 w-px bg-border"></div>
           <X class="h-5 w-5" />
         </Dialog.Close>
       </Dialog.Title>
@@ -140,25 +167,31 @@
       <div class="space-y-6 p-6">
         <!-- URL Input -->
         <div class="relative">
-          <div class="flex h-14 items-stretch rounded-full border border-zinc-600">
-            <div class="flex w-10 items-center pl-4">
-              <Link weight="light" class="h-5 w-5 text-zinc-500/40" />
+          <div 
+            class={cn(
+              "flex items-stretch h-14 border bg-input overflow-hidden",
+              urlFocused ? "ring-1 ring-venus-yellow border-venus-yellow/40" : "border-border"
+            )}
+          >
+            <div class="flex items-center justify-center pl-4 w-10">
+              <Link weight="light" class="w-5 h-5 text-muted-foreground/50" />
             </div>
 
             <input
               type="url"
               bind:value={url}
               placeholder="https://..."
-              class="min-w-[120px] flex-1 rounded-lg border-0 bg-transparent
-                  px-2 text-base
-                  text-zinc-100 placeholder:text-zinc-600 focus:ring-1
-                  focus:ring-zinc-700 focus:outline-none"
+              onfocus={handleUrlFocus}
+              onblur={handleUrlBlur}
+              class="min-w-[120px] flex-1 px-2 bg-transparent text-foreground 
+                     placeholder:text-muted-foreground/50 border-0 outline-none 
+                     focus:ring-0 h-full"
               disabled={loading}
             />
           </div>
 
           {#if errorMessage && errorMessage.includes('URL')}
-            <p class="absolute -bottom-6 left-0 text-sm text-red-400">
+            <p class="absolute -bottom-6 left-0 text-sm text-destructive">
               {errorMessage}
             </p>
           {/if}
@@ -167,11 +200,10 @@
         <!-- FOMO Score Slider -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
-            <Dialog.Description class="text-sm font-medium text-zinc-400">
+            <Dialog.Description class="text-sm font-medium text-muted-foreground">
               FOMO Score (How urgent is this news?)
             </Dialog.Description>
-            <span class="text-lg font-semibold bg-clip-text text-transparent
-                       bg-gradient-to-br from-violet-400 to-fuchsia-500">
+            <span class="fomo-score">
               {fomoScore}
             </span>
           </div>
@@ -180,34 +212,40 @@
             min="0"
             max="100"
             bind:value={fomoScore}
-            class="w-full appearance-none bg-zinc-800 h-2 rounded-full accent-violet-500"
+            class="w-full appearance-none bg-muted h-2 rounded-full accent-primary"
           />
         </div>
 
         <!-- Email (Optional) -->
         <div class="relative">
-          <Dialog.Description class="block text-sm font-medium text-zinc-400 mb-2">
+          <Dialog.Description class="block text-sm font-medium text-muted-foreground mb-2">
             Notify me about this submission (optional)
           </Dialog.Description>
-          <div class="flex h-14 items-stretch rounded-full border border-zinc-600">
-            <div class="flex w-10 items-center pl-4">
-              <Envelope weight="light" class="h-5 w-5 text-zinc-500/40" />
+          <div 
+            class={cn(
+              "flex items-stretch h-14 border bg-input overflow-hidden",
+              emailFocused ? "ring-1 ring-venus-yellow border-venus-yellow/40" : "border-border"
+            )}
+          >
+            <div class="flex items-center justify-center pl-4 w-10">
+              <Envelope weight="light" class="w-5 h-5 text-muted-foreground/50" />
             </div>
 
             <input
               type="email"
               bind:value={email}
               placeholder="your@email.com"
-              class="min-w-[120px] flex-1 rounded-lg border-0 bg-transparent
-                  px-2 text-base
-                  text-zinc-100 placeholder:text-zinc-600 focus:ring-1
-                  focus:ring-zinc-700 focus:outline-none"
+              onfocus={handleEmailFocus}
+              onblur={handleEmailBlur}
+              class="min-w-[120px] flex-1 px-2 bg-transparent text-foreground 
+                     placeholder:text-muted-foreground/50 border-0 outline-none 
+                     focus:ring-0 h-full"
               disabled={loading}
             />
           </div>
 
           {#if errorMessage && errorMessage.includes('email')}
-            <p class="absolute -bottom-6 left-0 text-sm text-red-400">
+            <p class="absolute -bottom-6 left-0 text-sm text-destructive">
               {errorMessage}
             </p>
           {/if}
@@ -215,17 +253,22 @@
         
         <!-- Social Sharing Options -->
         {#if isValidUrl(url)}
-          <div class="border-t border-zinc-800 pt-5 mt-6">
-            <h3 class="text-sm font-medium text-zinc-400 mb-4">Share on social media</h3>
+          <div class="border-t border-border pt-5 mt-6">
+            <h3 class="text-sm font-medium text-muted-foreground mb-4">Share on social media</h3>
             <div class="flex flex-wrap gap-3">
               <!-- Twitter/X Share -->
               <a 
                 href={getTwitterShareUrl()}
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-2 rounded-lg 
-                      bg-zinc-800/50 border border-zinc-700/30 text-zinc-300
-                      hover:bg-zinc-700 transition-colors"
+                class="group relative flex items-center gap-2 px-4 py-2 
+                      bg-muted border border-border text-muted-foreground
+                      hover:text-foreground transition-colors
+                      before:absolute before:inset-0
+                      before:border before:border-primary/10
+                      before:translate-x-0.5 before:translate-y-0.5
+                      before:transition-transform before:duration-300
+                      hover:before:translate-x-0 hover:before:translate-y-0"
               >
                 <TwitterLogo class="h-5 w-5" />
                 <span>X</span>
@@ -236,9 +279,14 @@
                 href={getLinkedinShareUrl()}
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-2 rounded-lg 
-                      bg-zinc-800/50 border border-zinc-700/30 text-zinc-300
-                      hover:bg-zinc-700 transition-colors"
+                class="group relative flex items-center gap-2 px-4 py-2 
+                      bg-muted border border-border text-muted-foreground
+                      hover:text-foreground transition-colors
+                      before:absolute before:inset-0
+                      before:border before:border-primary/10
+                      before:translate-x-0.5 before:translate-y-0.5
+                      before:transition-transform before:duration-300
+                      hover:before:translate-x-0 hover:before:translate-y-0"
               >
                 <LinkedinLogo class="h-5 w-5" />
                 <span>LinkedIn</span>
@@ -247,13 +295,18 @@
               <!-- Copy Link Button -->
               <button
                 onclick={copyToClipboard}
-                class="flex items-center gap-2 px-4 py-2 rounded-lg 
-                      bg-zinc-800/50 border border-zinc-700/30 text-zinc-300
-                      hover:bg-zinc-700 transition-colors"
+                class="group relative flex items-center gap-2 px-4 py-2 
+                      bg-muted border border-border text-muted-foreground
+                      hover:text-foreground transition-colors
+                      before:absolute before:inset-0
+                      before:border before:border-primary/10
+                      before:translate-x-0.5 before:translate-y-0.5
+                      before:transition-transform before:duration-300
+                      hover:before:translate-x-0 hover:before:translate-y-0"
               >
                 {#if copied}
-                  <Check class="h-5 w-5 text-emerald-400" />
-                  <span class="text-emerald-400">Copied!</span>
+                  <Check class="h-5 w-5 text-primary" />
+                  <span class="text-primary">Copied!</span>
                 {:else}
                   <Copy class="h-5 w-5" />
                   <span>Copy Link</span>
@@ -267,12 +320,15 @@
         <Button.Root
           onclick={handleSubmit}
           disabled={loading || !url}
-          class="mt-8 flex w-full items-center justify-center gap-2 rounded-full
-                 bg-gradient-to-r from-violet-500 to-fuchsia-500
-                 px-6 py-3 text-white
-                 transition-all hover:from-violet-600
-                 hover:to-fuchsia-600 active:scale-95
-                 disabled:cursor-not-allowed disabled:opacity-50"
+          class="group relative mt-8 flex w-full items-center justify-center gap-2
+                 bg-primary text-primary-foreground py-3 px-6
+                 transition-all hover:bg-primary/90 active:scale-95
+                 disabled:cursor-not-allowed disabled:opacity-50
+                 before:absolute before:inset-0
+                 before:border before:border-primary/50
+                 before:translate-x-0.5 before:translate-y-0.5
+                 before:transition-transform before:duration-300
+                 hover:before:translate-x-0 hover:before:translate-y-0"
         >
           {#if loading}
             <ArrowClockwise class="h-5 w-5 animate-spin" />
@@ -285,15 +341,13 @@
         <!-- Status Messages -->
         {#if status === 'success'}
           <div class="flex items-center justify-center">
-            <p
-              class="rounded-full bg-emerald-500/10 px-4 py-2 text-center text-sm text-emerald-400"
-            >
+            <p class="bg-muted border border-primary/20 px-4 py-2 text-center text-sm text-foreground">
               News shared successfully!
             </p>
           </div>
         {:else if status === 'error' && !errorMessage.includes('URL') && !errorMessage.includes('email')}
           <div class="flex items-center justify-center">
-            <p class="rounded-full bg-red-500/10 px-4 py-2 text-center text-sm text-red-400">
+            <p class="bg-muted border border-destructive/20 px-4 py-2 text-center text-sm text-destructive">
               Failed to share news. Please try again.
             </p>
           </div>

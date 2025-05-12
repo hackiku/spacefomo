@@ -4,6 +4,9 @@
   import { getNewsContext } from '$lib/context/newsContext.svelte';
   import { parseDate, type DateValue } from "@internationalized/date";
   
+  import ShareButton from '$lib/components/cta/share/ShareButton.svelte';
+  import ShareModal from '$lib/components/cta/share/ShareModal.svelte';
+
   import CalendarButton from './calendar/CalendarButton.svelte';
   import FomoMenu from './controls/FomoMenu.svelte';
   import TimelineWrapper from './timeline/TimelineWrapper.svelte';
@@ -17,6 +20,7 @@
   // App state
   let isExpanded = $state(false);
   let isMenuOpen = $state(false);
+  let isShareModalOpen = $state(false);
   let startDate = $state<Date | null>(null);
   let endDate = $state<Date | null>(null);
   let visualizationType = $state<'bar' | 'line' | 'heatmap'>('bar');
@@ -30,6 +34,15 @@
   // Toggle menu
   function toggleMenu() {
     isMenuOpen = !isMenuOpen;
+  }
+  
+  // Open/close share modal
+  function openShareModal() {
+    isShareModalOpen = true;
+  }
+  
+  function closeShareModal() {
+    isShareModalOpen = false;
   }
   
   // Handle date range change
@@ -137,21 +150,27 @@
         </div>
       </div>
       
-      <!-- Right section with expand/collapse button -->
-      <button
-        type="button"
-        class="inline-flex items-center justify-center p-2 rounded-full 
-               bg-primary/10 hover:bg-primary/20 text-muted-foreground hover:text-foreground
-               transition-colors"
-        onclick={toggleExpanded}
-        aria-label={isExpanded ? "Collapse FOMO timeline" : "Expand FOMO timeline"}
-      >
-        {#if isExpanded}
-          <ArrowsInSimple class="w-5 h-5" />
-        {:else}
-          <ArrowsOutSimple class="w-5 h-5" />
-        {/if}
-      </button>
+      <!-- Right section with buttons -->
+      <div class="flex items-center gap-2">
+        <!-- Share Button -->
+        <ShareButton variant="icon" size="sm" onClick={openShareModal} />
+        
+        <!-- Expand/collapse button -->
+        <button
+          type="button"
+          class="inline-flex items-center justify-center p-2 rounded-full 
+                 bg-primary/10 hover:bg-primary/20 text-muted-foreground hover:text-foreground
+                 transition-colors"
+          onclick={toggleExpanded}
+          aria-label={isExpanded ? "Collapse FOMO timeline" : "Expand FOMO timeline"}
+        >
+          {#if isExpanded}
+            <ArrowsInSimple class="w-5 h-5" />
+          {:else}
+            <ArrowsOutSimple class="w-5 h-5" />
+          {/if}
+        </button>
+      </div>
     </div>
     
     <!-- Timeline (expanded when isExpanded is true) -->
@@ -172,3 +191,8 @@
     </TimelineWrapper>
   </div>
 </div>
+
+<!-- Share Modal (conditionally rendered when open) -->
+{#if isShareModalOpen}
+  <ShareModal onClose={closeShareModal} />
+{/if}

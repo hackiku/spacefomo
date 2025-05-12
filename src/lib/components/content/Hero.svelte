@@ -16,7 +16,7 @@
 <div class="container space-y-6 mx-auto __text-center px-6 sm:px-12 md:px-24 lg:px-32 xl:px-72 relative">
 	<!-- Main Heading -->
 	<h1
-		class="text-4xl text-white
+		class="text-4xl text-foreground
                    font-regular sm:text-5xl lg:text-6xl"
 	>
 		There's no place <br/> like space

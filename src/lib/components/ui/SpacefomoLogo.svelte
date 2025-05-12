@@ -13,7 +13,7 @@
 </script>
 
 <div class="flex items-center gap-3">
-	<img src="logo.svg" alt="Spacefomo logo" class="h-6"/>  
+	<img src="./logo.svg" alt="Spacefomo logo" class="h-6"/>  
   <!-- <span class="font-medium bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500"> -->
   <span class="font-medium bg-clip-text text-white">
     Spacefomo

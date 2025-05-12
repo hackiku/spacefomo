@@ -33,13 +33,13 @@
   
   // News section links
   const newsLinks = [
-		{
-			title: "Latest News",
-			href: "/news",
-			description: "Browse the most recent space industry updates"
-		},
-		{
-			title: "Weekly FOMO",
+    {
+      title: "Latest News",
+      href: "/news",
+      description: "Browse the most recent space industry updates"
+    },
+    {
+      title: "Weekly FOMO",
       href: "/news/weekly",
       description: "See which news made the biggest impact this week"
     },
@@ -68,7 +68,7 @@
 
 <div class="flex items-center gap-6">
   <!-- Navigation Menu Component -->
-  <NavigationMenu.Root class="relative z-10 flex">
+  <NavigationMenu.Root class="relative __z-50 flex">
     <NavigationMenu.List
       class="group flex list-none items-center justify-center"
     >
@@ -131,7 +131,7 @@
         </NavigationMenu.Trigger>
         <NavigationMenu.Content
           class="absolute left-0 top-0 data-[motion=from-start]:animate-in data-[motion=from-end]:animate-in
-                data-[motion=to-start]:animate-out data-[motion=to-end]:animate-out data-[motion=from-start]:fade-in
+                data-[motion-to-start]:animate-out data-[motion=to-end]:animate-out data-[motion=from-start]:fade-in
                 data-[motion=from-end]:fade-in data-[motion=to-start]:fade-out data-[motion=to-end]:fade-out
                 data-[motion=from-start]:slide-in-from-left-5 data-[motion=from-end]:slide-in-from-right-5
                 data-[motion=to-start]:slide-out-to-left-5 data-[motion=to-end]:slide-out-to-right-5"
@@ -157,7 +157,7 @@
     </NavigationMenu.List>
     
     <!-- Viewport for dynamic content -->
-    <div class="perspective-[2000px] absolute right-0 top-full flex justify-center">
+    <div class="perspective-[2000px] absolute right-0 top-full flex justify-center z-50">
       <NavigationMenu.Viewport
         class="bg-zinc-900 relative mt-2 h-[var(--bits-navigation-menu-viewport-height)] 
               w-[var(--bits-navigation-menu-viewport-width)] origin-[top_center] overflow-hidden 

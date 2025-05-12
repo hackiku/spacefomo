@@ -1,6 +1,4 @@
 <!-- src/lib/features/news/article/PageArticle.svelte -->
-
-<!-- src/lib/features/news/article/PageArticle.svelte -->
 <script lang="ts">
   import { ArrowLeft, Copy } from 'phosphor-svelte';
   import type { NewsItem } from '$lib/types/news';
@@ -32,7 +30,16 @@
 <div class="max-w-5xl mx-auto">
   <!-- Back button -->
   <div class="mb-8">
-    <a href={backPath} class="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-200 transition-colors">
+    <a 
+      href={backPath} 
+      class="group relative inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors
+             before:absolute before:inset-0
+             before:border before:border-primary/0
+             before:translate-x-0.5 before:translate-y-0.5
+             before:transition-transform before:duration-300
+             hover:before:border-primary/10
+             hover:before:translate-x-0 hover:before:translate-y-0"
+    >
       <ArrowLeft class="w-5 h-5" />
       <span>Back to news</span>
     </a>
@@ -42,8 +49,7 @@
     <!-- Header with Title -->
     <div class="relative">
       <!-- FOMO score (shown on mobile only, sidebar has it on desktop) -->
-      <div class="absolute top-0 right-0 lg:hidden text-2xl font-semibold bg-clip-text text-transparent
-                   bg-gradient-to-br from-violet-400 to-fuchsia-500">
+      <div class="absolute top-0 right-0 lg:hidden fomo-score text-2xl font-semibold">
         {article.fomo_score || 0}
       </div>
       
@@ -71,10 +77,17 @@
     <EntityTabs entities={article.entities} context={article.context} />
     
     <!-- Raw Data Toggle Button -->
-    <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+    <div class="flex items-center justify-between pt-4 border-t border-border">
       <Button.Root
-        class="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 transition-colors"
-        on:click={() => showJson = !showJson}
+        class="group relative flex items-center gap-2 px-3 py-2 text-sm
+               bg-muted border border-border text-muted-foreground
+               hover:bg-muted hover:text-foreground transition-colors
+               before:absolute before:inset-0
+               before:border before:border-primary/10
+               before:translate-x-0.5 before:translate-y-0.5
+               before:transition-transform before:duration-300
+               hover:before:translate-x-0 hover:before:translate-y-0"
+        onclick={() => showJson = !showJson}
       >
         <span>{showJson ? 'Hide Raw Data' : 'Show Raw Data'}</span>
       </Button.Root>
@@ -82,10 +95,15 @@
       <!-- Action buttons on same row (mobile only) -->
       <div class="flex lg:hidden items-center gap-3">
         <Button.Root
-          class="flex items-center justify-center h-10 w-10 rounded-full
-                 bg-zinc-800/50 border border-zinc-700/30 text-zinc-400
-                 hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
-          on:click={copyUrl}
+          class="group relative flex items-center justify-center h-10 w-10
+                 bg-muted border border-border text-muted-foreground
+                 hover:text-foreground transition-colors
+                 before:absolute before:inset-0
+                 before:border before:border-primary/10
+                 before:translate-x-0.5 before:translate-y-0.5
+                 before:transition-transform before:duration-300
+                 hover:before:translate-x-0 hover:before:translate-y-0"
+          onclick={copyUrl}
           aria-label="Copy article URL"
         >
           <Copy class="h-5 w-5" />
@@ -93,9 +111,14 @@
         
         <Button.Root
           href={article.url}
-          class="flex items-center gap-2 px-4 py-2 rounded-lg 
-                 bg-zinc-800/50 border border-zinc-700/30 text-zinc-200
-                 hover:bg-zinc-700 transition-colors"
+          class="group relative flex items-center gap-2 px-4 py-2
+                 bg-muted border border-border text-foreground
+                 hover:bg-muted/80 transition-colors
+                 before:absolute before:inset-0
+                 before:border before:border-primary/10
+                 before:translate-x-0.5 before:translate-y-0.5
+                 before:transition-transform before:duration-300
+                 hover:before:translate-x-0 hover:before:translate-y-0"
         >
           <span>Open Original</span>
         </Button.Root>

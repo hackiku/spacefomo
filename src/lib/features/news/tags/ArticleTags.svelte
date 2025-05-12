@@ -13,21 +13,21 @@
 	const hasMoreTags = $derived(tags.length > displayLimit);
 </script>
 
-<div class="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-4 backdrop-blur-sm">
+<div class="rounded-default border border-border bg-card p-4 backdrop-blur-sm">
 	<div class="mb-3 flex items-center gap-2">
-		<Tag class="h-4 w-4 text-zinc-500" />
-		<span class="text-xs text-zinc-500 uppercase tracking-wider">Topics</span>
+		<Tag class="h-4 w-4 text-muted-foreground" />
+		<span class="text-xs text-muted-foreground uppercase tracking-wider">Topics</span>
 	</div>
 	
 	<div class="flex flex-wrap gap-2">
 		{#each displayTags as tag}
-			<span class="rounded-full border border-zinc-700 bg-zinc-800/80 px-3 py-1 text-sm text-zinc-300">
+			<span class="rounded-full border border-border bg-muted px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
 				{tag}
 			</span>
 		{/each}
 		
 		{#if hasMoreTags}
-			<span class="rounded-full border border-zinc-700 bg-zinc-800/80 px-3 py-1 text-sm text-zinc-400">
+			<span class="rounded-full border border-border bg-muted px-3 py-1 text-sm text-muted-foreground">
 				+{tags.length - displayLimit} more
 			</span>
 		{/if}

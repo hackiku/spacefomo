@@ -1,4 +1,4 @@
-<!-- // src/lib/components/cta/share/ShareButton.svelte -->
+<!-- src/lib/components/cta/share/ShareButton.svelte -->
 <script lang="ts">
   import { Share, PlusCircle } from 'phosphor-svelte';
   import { Button } from 'bits-ui';
@@ -41,14 +41,17 @@
 </script>
 
 {#if variant === 'primary'}
-  <!-- Primary button with gradient background -->
+  <!-- Primary button with space gradient background -->
   <Button.Root
     onclick={onClick}
-    class="{buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2 rounded-full 
-           bg-gradient-to-r from-violet-500 to-fuchsia-500 
-           font-medium text-white cursor-pointer
-           transition-all hover:from-violet-600 hover:to-fuchsia-600
-           hover:shadow-lg hover:shadow-violet-500/25 active:scale-95"
+    class="group relative {buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2 
+           bg-primary text-primary-foreground font-medium
+           transition-all hover:bg-primary/90 active:scale-95
+           before:absolute before:inset-0
+           before:border before:border-primary/50
+           before:translate-x-0.5 before:translate-y-0.5
+           before:transition-transform before:duration-300
+           hover:before:translate-x-0 hover:before:translate-y-0"
   >
     <PlusCircle weight="bold" class={iconClasses[size]} />
     <span>Share News</span>
@@ -57,9 +60,14 @@
   <!-- Default button with border -->
   <Button.Root
     onclick={onClick}
-    class="{buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2 rounded-full 
-           border border-zinc-700 bg-zinc-800/50 text-zinc-200 cursor-pointer
-           transition-all hover:bg-zinc-800 hover:text-white active:scale-95"
+    class="group relative {buttonClasses[size]} {sizeClasses[size]} inline-flex items-center gap-2
+           bg-muted border border-border text-muted-foreground
+           hover:text-foreground transition-colors active:scale-95
+           before:absolute before:inset-0
+           before:border before:border-primary/10
+           before:translate-x-0.5 before:translate-y-0.5
+           before:transition-transform before:duration-300
+           hover:before:translate-x-0 hover:before:translate-y-0"
   >
     <Share weight="bold" class={iconClasses[size]} />
     <span>Share News</span>
@@ -68,10 +76,15 @@
   <!-- Icon-only button -->
   <Button.Root
     onclick={onClick}
-    class="inline-flex items-center justify-center rounded-full cursor-pointer
+    class="group relative inline-flex items-center justify-center cursor-pointer
            {iconSizes[size]}
-           bg-zinc-800 hover:bg-zinc-700 text-zinc-200
-           transition-all hover:text-white active:scale-95"
+           bg-muted border border-border text-muted-foreground
+           hover:text-foreground transition-colors active:scale-95
+           before:absolute before:inset-0
+           before:border before:border-primary/10
+           before:translate-x-0.5 before:translate-y-0.5
+           before:transition-transform before:duration-300
+           hover:before:translate-x-0 hover:before:translate-y-0"
     aria-label="Share News"
   >
     <Share weight="bold" class={iconClasses[size]} />

@@ -30,15 +30,15 @@
 
 <svelte:window onclick={handleClickOutside} />
 
-<header class="h-full w-full z-50">
-	<div class="h-full flex items-center justify-between px-3 md:px-6">
+<header class="h-full w-full">
+	<div class="h-20 flex items-center justify-between">
 		<!-- Logo -->
 		<a href="/" class="flex items-center">
 			<SpacefomoLogo size="md" />
 		</a>
 
 		<!-- Desktop Navigation -->
-		<div class="hidden md:block z-50">
+		<div class="hidden md:block z-50 h-auto sabsolute __top-12 __right-5">
 			<NavigationMenu />
 		</div>
 
