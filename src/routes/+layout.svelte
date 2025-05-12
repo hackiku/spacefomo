@@ -1,7 +1,6 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
   import '../app.css';
-	import { cn } from '$lib/utils'
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
   import FomoApp from '$lib/features/fomo/FomoApp.svelte';
@@ -90,41 +89,51 @@
   <ViewportSize />
 </div>
 
-<!-- Main container -->
-<div class="relative min-h-screen flex flex-col bg-background overflow-x-hidden">
-  <!-- Bezel system wrapper -->
-  <div class="sticky flex-1 flex flex-col">
+<!-- Two-layer approach: Background scrollable content + HUD-like overlay -->
+<div class="relative min-h-screen __bg-background">
+  
+  <!-- Scrollable content area - normal document flow -->
+  <main class="min-h-screen bg-card">
+    <!-- Main content -->
+    {@render children()}
+	</main>
+  
+  <!-- HUD-like overlay with bezels - fixed on top -->
+  <div class="fixed inset-0 pointer-events-none flex flex-col">
     <!-- Top bezel - collapses on scroll down -->
     <div 
-      class="sticky top-0 z-40 w-full transition-all duration-300"
+      class="w-full bg-background pointer-events-auto transition-all duration-300 z-40"
       class:h-3={isTopCollapsed}
+      class:h-16={!isTopCollapsed}
     >
       <Nav />
     </div>
     
-    <!-- Content with side bezels -->
-    <div class="flex-1 flex">
+    <!-- Middle section with side bezels -->
+    <div class="flex-1 flex ">
       <!-- Left bezel -->
-      <div class="w-3 shrink-0"></div>
+      <div class="bg-background w-4 shrink-0"></div>
       
-      <!-- Center content -->
-      <main class="flex-1 rounded-2xl bg-card my-3 overflow-hidden">
-        {@render children()}
-      </main>
+      <!-- Center "window" - just a visual frame -->
+      <div class="flex-1 p-3 flex">
+        <!-- This creates the rounded frame effect -->
+        <div class="w-full border border-border/20 rounded-2xl"></div>
+      </div>
       
       <!-- Right bezel -->
-      <div class="w-0 shrink-0"></div>
+      <div class="w-3 shrink-0"></div>
     </div>
     
-    <!-- Bottom bezel - contains FomoApp -->
+    <!-- Bottom bezel with FomoApp -->
     <div 
-      class="sticky bottom-0 z-40 w-full transition-all duration-300"
+      class="w-full pointer-events-auto transition-all duration-300 z-40"
       class:h-3={isBottomCollapsed}
+      class:h-16={!isBottomCollapsed}
     >
       <FomoApp />
     </div>
   </div>
-  
-  <!-- Footer (outside the bezel system) -->
-  <Footer />
+
+	<Footer />
+
 </div>
