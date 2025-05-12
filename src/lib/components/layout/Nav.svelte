@@ -44,7 +44,15 @@
 
 		<!-- Mobile Menu Button -->
 		<button
-			class="inline-flex items-center justify-center text-muted-foreground hover:text-foreground md:hidden"
+			class="group relative inline-flex items-center justify-center p-2
+                  text-muted-foreground hover:text-primary transition-colors md:hidden
+                  before:absolute before:inset-0
+                  before:border before:border-primary/0
+                  before:translate-x-0.5 before:translate-y-0.5
+                  before:transition-transform before:duration-300
+                  hover:before:border-primary/10
+                  hover:before:translate-x-0 hover:before:translate-y-0
+                  cursor-pointer active:scale-95"
 			onclick={toggleMobileMenu}
 			aria-label="Toggle menu"
 		>
@@ -59,30 +67,34 @@
 	<!-- Mobile Menu Panel -->
 	{#if isMobileMenuOpen}
 		<div 
-			class="mobile-menu absolute left-0 right-0 z-50 origin-top transform bg-background pb-4 shadow-md transition"
-			transition:fly={{ y: -20, duration: 200 }}
+			class="mobile-menu absolute left-0 right-0 z-50 bg-card border-t border-b border-border shadow-md"
+			transition:fly={{ y: -5, duration: 200 }}
 		>
-			<div class="px-4 pt-2 pb-3 space-y-1">
+			<div class="px-4 py-3 space-y-1">
 				<a 
 					href="/api/v1/news" 
-					class="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-primary/10"
+					class="group relative block px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground
+                         border-l-2 border-transparent hover:border-primary/40 transition-colors cursor-pointer"
 				>
 					API
 				</a>
 				<a 
 					href="/news" 
-					class="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-primary/10"
+					class="group relative block px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground
+                         border-l-2 border-transparent hover:border-primary/40 transition-colors cursor-pointer"
 				>
 					News
 				</a>
 				<a 
 					href="/admin" 
-					class="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-primary/10"
+					class="group relative block px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground
+                         border-l-2 border-transparent hover:border-primary/40 transition-colors cursor-pointer"
 				>
 					Admin
 				</a>
 				<button 
-					class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-primary/10"
+					class="group relative w-full text-left px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground
+                         border-l-2 border-transparent hover:border-primary/40 transition-colors cursor-pointer"
 					onclick={openAbout}
 				>
 					About
@@ -93,4 +105,6 @@
 </header>
 
 <!-- About Drawer (shared between mobile and desktop) -->
-<AboutDrawer isOpen={showAbout} onClose={closeAbout} />
+{#if showAbout}
+  <AboutDrawer isOpen={true} onClose={closeAbout} />
+{/if}

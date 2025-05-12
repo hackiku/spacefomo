@@ -1,6 +1,7 @@
 <!-- src/lib/features/news/article/content/ViralTitle.svelte -->
 <script lang="ts">
-  import { Button } from "bits-ui";
+  // Remove the Button import that's causing problems
+  // import { Button } from "bits-ui";
   
   let { title, viralTitle } = $props<{
     title: string;
@@ -17,9 +18,10 @@
     {viralTitle || title}
   </h2>
   
-  <!-- Original title toggle -->
+  <!-- Original title toggle - Using regular button instead of Button.Root -->
   {#if viralTitle && viralTitle !== title}
-    <Button.Root 
+    <button 
+      type="button"
       onclick={() => showOriginal = !showOriginal}
       class="group relative text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5
              before:absolute before:inset-0
@@ -33,7 +35,7 @@
         <path fill="currentColor" d="m213.7 101.7l-80 80a8.2 8.2 0 0 1-11.4 0l-80-80a8.4 8.4 0 0 1-2.3-5.7a8 8 0 0 1 8-8a8.2 8.2 0 0 1 5.7 2.3l74.3 74.4l74.3-74.3a8.1 8.1 0 0 1 11.4 11.3Z"/>
       </svg>
       <span>{showOriginal ? 'Hide original title' : 'Show original title'}</span>
-    </Button.Root>
+    </button>
     
     <!-- Original title -->
     {#if showOriginal}

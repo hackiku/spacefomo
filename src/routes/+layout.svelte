@@ -123,14 +123,15 @@
 
 <div class="relative min-h-screen border-12s _border-background">
 	
-	<div class="z-50 fixed left smin-w-1 md:w-3 bg-background h-screen"></div>
-	<div class="z-50 fixed top-0 smin-w-1 md:h-3 bg-background w-screen"></div>
+	<div class="z-50 fixed left-0 min-w-2 md:w-3 bg-background h-screen"></div>
+	<div class="z-50 fixed right-0 min-w-2 md:w-3 bg-background h-screen"></div>
+	<div class="z-50 fixed top-0 __min-w-2 md:h-3 bg-background w-screen"></div>
 	<div class="z-50 fixed bottom-0 h-5 md:h-3 bg-background w-screen"></div>
 
 	<!-- Top navigation - fixed at top, slides up when scrolling down -->
 	<div 
 		class={cn(
-			"fixed top-0 left-0 right-0 z-50 bg-background border-b border-border/20",
+			"fixed top-0 left-0 right-0 z-50 bg-background",
 			"transition-transform duration-300 ease-in-out",
 			isTopHidden ? "-translate-y-full" : "translate-y-0"
 		)}
@@ -155,7 +156,7 @@
 	<!-- Bottom FOMO App - fixed at bottom, slides down when scrolling up -->
 	<div 
 		class={cn(
-			"fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border/20",
+			"fixed bottom-0 left-0 right-0 z-50 bg-background",
 			"transition-transform duration-300 ease-in-out",
 			(isBottomHidden || isNearFooter) ? "translate-y-full" : "translate-y-0"
 		)}

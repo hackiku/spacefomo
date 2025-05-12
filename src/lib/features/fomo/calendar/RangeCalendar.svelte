@@ -36,7 +36,7 @@
 </script>
 
 <RangeCalendar.Root
-  class="rounded-default border border-border bg-card/30 shadow-lg p-4"
+  class="rounded-default border border-border bg-card/30 shadow-sm p-4"
   weekdayFormat="short"
   fixedWeeks={true}
   bind:value
@@ -44,19 +44,19 @@
   onValueChange={handleValueChange}
 >
   {#snippet children({ months, weekdays })}
-    <RangeCalendar.Header class="flex items-center justify-between mb-4">
+    <RangeCalendar.Header class="flex items-center justify-between mb-6">
       <RangeCalendar.PrevButton
-        class="p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+        class="p-2 text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
       >
-        <CaretLeft class="h-4 w-4" />
+        <CaretLeft class="h-5 w-5" />
       </RangeCalendar.PrevButton>
       
-      <RangeCalendar.Heading class="text-sm font-medium text-foreground" />
+      <RangeCalendar.Heading class="text-base font-medium text-foreground" />
       
       <RangeCalendar.NextButton
-        class="p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+        class="p-2 text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
       >
-        <CaretRight class="h-4 w-4" />
+        <CaretRight class="h-5 w-5" />
       </RangeCalendar.NextButton>
     </RangeCalendar.Header>
     
@@ -66,10 +66,10 @@
           class="w-full select-none"
         >
           <RangeCalendar.GridHead>
-            <RangeCalendar.GridRow class="flex justify-between mb-2">
+            <RangeCalendar.GridRow class="flex justify-between mb-4">
               {#each weekdays as day}
                 <RangeCalendar.HeadCell
-                  class="w-8 text-center text-xs text-muted-foreground"
+                  class="w-9 text-center text-sm text-muted-foreground font-medium"
                 >
                   <div>{day.slice(0, 1)}</div>
                 </RangeCalendar.HeadCell>
@@ -79,7 +79,7 @@
           
           <RangeCalendar.GridBody>
             {#each month.weeks as weekDates}
-              <RangeCalendar.GridRow class="flex justify-between mb-1">
+              <RangeCalendar.GridRow class="flex justify-between mb-2">
                 {#each weekDates as date}
                   <RangeCalendar.Cell
                     {date}
@@ -87,10 +87,10 @@
                     class="p-0 relative"
                   >
                     <RangeCalendar.Day
-                      class="flex items-center justify-center w-8 h-8 text-xs
-                             text-foreground 
-                             data-[today]:bg-muted
-                             data-[outside-month]:text-muted-foreground/50 
+                      class="flex items-center justify-center w-9 h-9 text-base
+                             text-foreground font-medium
+                             data-[today]:border data-[today]:border-primary/30 data-[today]:bg-muted/40
+                             data-[outside-month]:text-muted-foreground/40 
                              data-[selected]:bg-primary data-[selected]:text-primary-foreground
                              data-[selection-start]:bg-primary data-[selection-start]:text-primary-foreground
                              data-[selection-end]:bg-primary data-[selection-end]:text-primary-foreground

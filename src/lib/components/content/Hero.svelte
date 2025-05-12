@@ -12,24 +12,29 @@
 	}
 </script>
 
-<!-- <div class="container mx-auto __text-center px-6 sm:px-12 md:px-32 lg:px-44 xl:px-72 relative"> -->
-<div class="container space-y-6 mx-auto __text-center px-6 sm:px-12 md:px-24 lg:px-32 xl:px-72 relative">
-	<!-- Main Heading -->
-	<h1
-		class="text-4xl text-foreground
-                   font-regular sm:text-5xl lg:text-6xl"
-	>
-		There's no place <br/> like space
-	</h1>
+<div class="container mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 relative">
+	<!-- Left-aligned content container -->
+	<div class="max-w-xl md:max-w-2xl space-y-8 md:ml-0">
+		<!-- Main Heading - more left-aligned -->
+		<h1 class="text-4xl text-foreground font-light sm:text-5xl lg:text-6xl leading-tight">
+			There's no place <br class="sm:hidden"/> like space
+		</h1>
 
-	<!-- <ShareButton onClick={handleShareClick}/> -->
-	<EmailForm />
+		<!-- Email signup form -->
+		<div class="max-w-sm">
+			<EmailForm />
+		</div>
+		
+		<!-- Share button option -->
+		<div class="hidden">
+			<ShareButton onClick={handleShareClick}/>
+		</div>
+	</div>
 
-	<!-- 100 words tagline with arrow -->
-	<div class="absolute -bottom-36 right-6 md:right-12 lg:right-20 xl:right-24 __hidden md:flex items-end">
+	<!-- Tagline with arrow - positioned for desktop view -->
+	<div class="hidden md:block absolute right-10 lg:right-36 bottom-0 transform translate-y-20">
 		<div class="text-left rotate-6">
-			<span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500 text-xl md:text-xl lg:text-2xl
-					font-semibold inline-block">
+			<span class="text-space-gradient text-xl md:text-xl lg:text-2xl font-semibold inline-block">
 				Hot space news<br/> ~100 words a pop
 			</span>
 			<div class="h-16 mt-2">
@@ -38,20 +43,25 @@
 					<path d="M15 45 L5 55 L20 55" stroke="url(#arrow-gradient)" stroke-width="3" transform="rotate(-48 6 57)" stroke-linecap="round" stroke-linejoin="round"/>
 					<defs>
 						<linearGradient id="arrow-gradient" x1="75" y1="5" x2="5" y2="55" gradientUnits="userSpaceOnUse">
-							<stop stop-color="#A78BFA"/>
-							<stop offset="1" stop-color="#E879F9"/>
+							<stop stop-color="var(--venus-yellow)"/>
+							<stop offset="1" stop-color="var(--venus-orange)"/>
 						</linearGradient>
 					</defs>
 				</svg>
 			</div>
 		</div>
 	</div>
+
+	<!-- Future graphic placeholder -->
+	<!-- <div class="hidden lg:block absolute top-0 right-0 bottom-0 w-1/3">
+		Future graphic will go here
+	</div> -->
 </div>
 
-<!-- Gradient Orb -->
+<!-- Gradient Orb - using theme colors -->
 <div
 	class="absolute -top-24 -right-24 h-96 w-96 rounded-full
-                bg-gradient-to-br from-violet-500/30 to-fuchsia-500/30
+                bg-gradient-to-br from-primary/30 to-secondary/30
                 opacity-20 blur-3xl"
 ></div>
 

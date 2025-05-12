@@ -54,12 +54,19 @@
 {#snippet ListItem({ title, href, description })}
   <li>
     <NavigationMenu.Link
-      class="hover:bg-zinc-800/50 hover:text-zinc-200 focus:bg-zinc-800/50 focus:text-zinc-200 block select-none 
-             space-y-1 rounded-md p-3 leading-none no-underline transition-colors"
+      class="group relative block select-none space-y-1 p-3 hover:bg-muted border border-transparent
+             hover:border-border text-foreground no-underline transition-colors
+             before:absolute before:inset-0
+             before:border before:border-primary/0
+             before:translate-x-0.5 before:translate-y-0.5
+             before:transition-transform before:duration-300
+             hover:before:border-primary/10
+             hover:before:translate-x-0 hover:before:translate-y-0
+             cursor-pointer"
       {href}
     >
       <div class="text-sm font-medium leading-none">{title}</div>
-      <p class="text-zinc-400 line-clamp-2 text-sm leading-snug">
+      <p class="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
         {description}
       </p>
     </NavigationMenu.Link>
@@ -75,14 +82,23 @@
       <!-- API Section -->
       <NavigationMenu.Item value="api">
         <NavigationMenu.Trigger
-          class="group inline-flex h-8 w-max items-center justify-center px-3 py-2 
-                text-zinc-400 transition-all hover:scale-110 hover:text-zinc-200
-                data-[state=open]:text-zinc-200"
+          class="group relative inline-flex h-10 items-center justify-center px-4 py-2 
+                text-muted-foreground transition-all hover:text-foreground
+                data-[state=open]:text-primary
+                before:absolute before:inset-0
+                before:border before:border-primary/0
+                before:translate-x-0.5 before:translate-y-0.5
+                before:transition-transform before:duration-300
+                hover:before:border-primary/10
+                hover:before:translate-x-0 hover:before:translate-y-0
+                data-[state=open]:before:border-primary/20
+                data-[state=open]:before:translate-x-0 data-[state=open]:before:translate-y-0
+                cursor-pointer active:scale-95"
         >
-          API
+          <span class="text-base">API</span>
           <CaretDown
-            class="relative top-[1px] ml-1 h-3 w-3 transition-transform duration-200 
-                  group-data-[state=open]:rotate-180"
+            class="relative top-[1px] ml-1.5 h-3.5 w-3.5 transition-transform duration-200 
+                  group-data-[state=open]:rotate-180 text-muted-foreground/70 group-data-[state=open]:text-primary/70"
             aria-hidden="true"
           />
         </NavigationMenu.Trigger>
@@ -94,16 +110,24 @@
                 data-[motion=to-start]:slide-out-to-left-5 data-[motion=to-end]:slide-out-to-right-5"
         >
           <ul
-            class="m-0 grid list-none gap-x-2.5 p-3 sm:w-[600px] sm:grid-flow-col sm:grid-rows-3"
+            class="m-0 grid list-none gap-3 p-4 sm:w-[600px] sm:grid-flow-col sm:grid-rows-3"
           >
             <li class="row-span-3 mb-2 sm:mb-0">
               <NavigationMenu.Link
                 href={dev ? "http://localhost:5173/api/v1/news" : "/api/v1/news"}
-                class="flex h-full w-full select-none flex-col justify-end rounded-md
-                      bg-zinc-800/50 p-6 no-underline hover:bg-zinc-800 focus:shadow-md"
+                class="group relative flex h-full w-full select-none flex-col justify-end
+                      bg-card border border-border p-6 no-underline 
+                      hover:bg-muted transition-colors
+                      before:absolute before:inset-0
+                      before:border before:border-primary/0
+                      before:translate-x-0.5 before:translate-y-0.5
+                      before:transition-transform before:duration-300
+                      hover:before:border-primary/10
+                      hover:before:translate-x-0 hover:before:translate-y-0
+                      cursor-pointer"
               >
-                <div class="mb-2 mt-4 text-lg font-medium text-zinc-200">API Access</div>
-                <p class="text-zinc-400 text-sm leading-tight">
+                <div class="mb-2 mt-4 text-lg font-medium text-foreground">API Access</div>
+                <p class="text-muted-foreground text-sm leading-relaxed">
                   Get structured space news data for your applications and integrations
                 </p>
               </NavigationMenu.Link>
@@ -118,14 +142,23 @@
       <!-- News Section -->
       <NavigationMenu.Item value="news">
         <NavigationMenu.Trigger
-          class="group inline-flex h-8 w-max items-center justify-center px-3 py-2 
-                text-zinc-400 transition-all hover:scale-110 hover:text-zinc-200
-                data-[state=open]:text-zinc-200"
+          class="group relative inline-flex h-10 items-center justify-center px-4 py-2 
+                text-muted-foreground transition-all hover:text-foreground
+                data-[state=open]:text-primary
+                before:absolute before:inset-0
+                before:border before:border-primary/0
+                before:translate-x-0.5 before:translate-y-0.5
+                before:transition-transform before:duration-300
+                hover:before:border-primary/10
+                hover:before:translate-x-0 hover:before:translate-y-0
+                data-[state=open]:before:border-primary/20
+                data-[state=open]:before:translate-x-0 data-[state=open]:before:translate-y-0
+                cursor-pointer active:scale-95"
         >
-          News
+          <span class="text-base">News</span>
           <CaretDown
-            class="relative top-[1px] ml-1 h-3 w-3 transition-transform duration-200 
-                  group-data-[state=open]:rotate-180"
+            class="relative top-[1px] ml-1.5 h-3.5 w-3.5 transition-transform duration-200 
+                  group-data-[state=open]:rotate-180 text-muted-foreground/70 group-data-[state=open]:text-primary/70"
             aria-hidden="true"
           />
         </NavigationMenu.Trigger>
@@ -147,11 +180,18 @@
       <!-- About Link (Opens Drawer Instead of Navigation) -->
       <NavigationMenu.Item>
         <button
-          class="inline-flex h-8 w-max items-center justify-center px-3 py-2 
-                text-zinc-400 transition-all hover:scale-110 hover:text-zinc-200"
-          onclick={nav.toggleAbout}
+          class="group relative inline-flex h-10 items-center justify-center px-4 py-2 
+                text-muted-foreground transition-all hover:text-foreground
+                before:absolute before:inset-0
+                before:border before:border-primary/0
+                before:translate-x-0.5 before:translate-y-0.5
+                before:transition-transform before:duration-300
+                hover:before:border-primary/10
+                hover:before:translate-x-0 hover:before:translate-y-0
+                cursor-pointer active:scale-95"
+          onclick={nav.openAbout}
         >
-          About
+          <span class="text-base">About</span>
         </button>
       </NavigationMenu.Item>
     </NavigationMenu.List>
@@ -159,9 +199,9 @@
     <!-- Viewport for dynamic content -->
     <div class="perspective-[2000px] absolute right-0 top-full flex justify-center z-50">
       <NavigationMenu.Viewport
-        class="bg-zinc-900 relative mt-2 h-[var(--bits-navigation-menu-viewport-height)] 
+        class="relative mt-2 h-[var(--bits-navigation-menu-viewport-height)] 
               w-[var(--bits-navigation-menu-viewport-width)] origin-[top_center] overflow-hidden 
-              rounded-md border border-zinc-800 shadow-lg data-[state=open]:animate-in
+              bg-card border border-border shadow-md data-[state=open]:animate-in
               data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0
               data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
       />
