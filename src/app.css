@@ -85,15 +85,19 @@
 		@apply border-border;
 	}
 
+	html {
+		overflow-y: overlay;
+	}
+	
 	body {
 		@apply bg-background text-foreground;
-		min-height: 100vh;
-		margin: 0;
-		background-attachment: fixed;
-		background-size: 100vw 100vh;
-		background-image:
+		/* min-height: 100vh; */
+		/* margin: 0; */
+		/* background-attachment: fixed; */
+		/* background-size: 100vw 100vh; */
+		/* background-image:
 			radial-gradient(50% 50% at 50% 50%, rgba(158, 70, 36, 0.1) 0%, rgba(0, 0, 0, 0) 100%),
-			linear-gradient(150deg, var(--venus-space) 0%, #17151F 100%);
+			linear-gradient(150deg, var(--venus-space) 0%, #17151F 100%); */
 		font-family: var(--font-sans);
 	}
 }
@@ -121,7 +125,7 @@
 /* Scrollbar styling */
 * {
 	scrollbar-width: thin;
-	scrollbar-color: var(--venus-orange) transparent;
+	scrollbar-color: var(--muted) transparent;
 }
 
 ::-webkit-scrollbar {

@@ -98,24 +98,21 @@
 </script>
 
 <div 
-  class="__fixed __bottom-0 __left-0 right-0 z-50 transition-all duration-300"
+  class="transition-all duration-300 px-4 md:px-8 lg:px-12 xl:px-16 bg-background/80 backdrop-blur-sm"
   class:h-14={!isExpanded}
   class:h-64={isExpanded}
 >
   <!-- Main container -->
-  <div class="flex flex-col h-full ">
+  <div class="flex flex-col h-full">
     <!-- Control bar (always visible) -->
-    <div class="flex items-center justify-between h-14 px-4">
+    <div class="flex items-center justify-between h-14">
       <!-- Left section with fomo score -->
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-1.5">
-          <ChartLine weight="bold" class="w-5 h-5 text-violet-400" />
-          <span class="text-sm font-medium text-zinc-200">
+          <ChartLine weight="bold" class="w-5 h-5 text-primary" />
+          <span class="text-sm font-medium text-foreground">
             FOMO
-            <!-- {#if fomo.currentWeek} -->
-              <!-- <span class="ml-1 text-lg font-semibold text-violet-400">{fomo.currentWeek.score}</span> -->
-              <span class="ml-1 text-lg font-semibold text-violet-400">44</span>
-            <!-- {/if} -->
+            <span class="ml-1 text-lg font-semibold text-primary">44</span>
           </span>
         </div>
         
@@ -144,7 +141,7 @@
       <button
         type="button"
         class="inline-flex items-center justify-center p-2 rounded-full 
-               bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-300
+               bg-primary/10 hover:bg-primary/20 text-muted-foreground hover:text-foreground
                transition-colors"
         onclick={toggleExpanded}
         aria-label={isExpanded ? "Collapse FOMO timeline" : "Expand FOMO timeline"}
@@ -165,11 +162,11 @@
       {:else if visualizationType === 'line'}
         <!-- D3Timeline will be implemented later -->
         <div class="w-full h-full flex items-center justify-center">
-          <p class="text-zinc-500">Line visualization coming soon</p>
+          <p class="text-muted-foreground">Line visualization coming soon</p>
         </div>
       {:else}
         <div class="w-full h-full flex items-center justify-center">
-          <p class="text-zinc-500">Heatmap visualization coming soon</p>
+          <p class="text-muted-foreground">Heatmap visualization coming soon</p>
         </div>
       {/if}
     </TimelineWrapper>

@@ -1,10 +1,12 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
   import '../app.css';
+	import { cn } from '$lib/utils'
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
   import FomoApp from '$lib/features/fomo/FomoApp.svelte';
   import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
+  import { browser } from '$app/environment';
   
   // Contexts
   import { createNewsContext } from '$lib/context/newsContext.svelte';
@@ -28,8 +30,33 @@
   setContext('nav', navContext);
   setContext('cta', ctaContext);
   
-  // Constants
-  const FOMO_HEIGHT = "3.5rem";
+  // Scroll handling for bezel collapse
+  let lastScrollY = $state(0);
+  let isTopCollapsed = $state(false);
+  let isBottomCollapsed = $state(false);
+  
+  // Effect for scroll detection
+  $effect(() => {
+    if (!browser) return;
+    
+    function handleScroll() {
+      if (window.scrollY > 100 && window.scrollY > lastScrollY) {
+        // Scrolling down - collapse top
+        isTopCollapsed = true;
+        isBottomCollapsed = false;
+      } else if (window.scrollY < lastScrollY) {
+        // Scrolling up - collapse bottom
+        isTopCollapsed = false;
+        isBottomCollapsed = true;
+      }
+      
+      // Update last scroll position
+      lastScrollY = window.scrollY;
+    }
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
 </script>
 
 <svelte:head>
@@ -63,29 +90,41 @@
   <ViewportSize />
 </div>
 
-<!-- Main layout -->
-<div class="relative min-h-screen flex flex-col bg-background overflow-hidden">
-  <!-- Navigation -->
-  <Nav />
-  
-  <!-- Main content area -->
-  <div class="flex flex-col flex-grow px-1 md:pl-3 py-4 md:py-12">
-    <!-- Central content container -->
-    <div class="w-full __max-w-6xl mx-auto">
-      <!-- Rounded content container -->
-      <div class="bg-card border border-border rounded-lg overflow-hidden __mb-14">
-        <main class="__p-4 __md:p-6">
-          {@render children()}
-        </main>
-      </div>
+<!-- Main container -->
+<div class="relative min-h-screen flex flex-col bg-background overflow-x-hidden">
+  <!-- Bezel system wrapper -->
+  <div class="sticky flex-1 flex flex-col">
+    <!-- Top bezel - collapses on scroll down -->
+    <div 
+      class="sticky top-0 z-40 w-full transition-all duration-300"
+      class:h-3={isTopCollapsed}
+    >
+      <Nav />
     </div>
-
-		<div class="absolute bottom-0 left-0 right-0 z-40 bg-background" >
-			<FomoApp />
-		</div>
-		<div class="w-full mt-auto">
-			<Footer />
-		</div>
+    
+    <!-- Content with side bezels -->
+    <div class="flex-1 flex">
+      <!-- Left bezel -->
+      <div class="w-3 shrink-0"></div>
+      
+      <!-- Center content -->
+      <main class="flex-1 rounded-2xl bg-card my-3 overflow-hidden">
+        {@render children()}
+      </main>
+      
+      <!-- Right bezel -->
+      <div class="w-0 shrink-0"></div>
+    </div>
+    
+    <!-- Bottom bezel - contains FomoApp -->
+    <div 
+      class="sticky bottom-0 z-40 w-full transition-all duration-300"
+      class:h-3={isBottomCollapsed}
+    >
+      <FomoApp />
+    </div>
   </div>
   
+  <!-- Footer (outside the bezel system) -->
+  <Footer />
 </div>
