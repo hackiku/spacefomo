@@ -95,7 +95,7 @@
 {#if isOpen}
   <div 
     class="absolute bottom-full left-0 mb-2 w-[440px] z-50
-          bg-zinc-800/95 backdrop-blur-sm border border-zinc-700/50 rounded-lg shadow-xl
+          bg-card border border-border rounded-default shadow-xl
           animate-in slide-in-from-bottom-2 duration-150"
   >
     <Tabs.Root 
@@ -103,16 +103,16 @@
       onValueChange={(val) => activeTab = val}
       class="p-4"
     >
-      <Tabs.List class="flex items-center mb-4 border-b border-zinc-700/50">
+      <Tabs.List class="flex items-center mb-4 border-b border-border">
         <Tabs.Trigger
           value="calendar"
-          class="px-4 py-2 text-sm font-medium transition-colors data-[state=active]:text-zinc-100 data-[state=inactive]:text-zinc-500 data-[state=active]:border-b-2 data-[state=active]:border-violet-500 data-[state=active]:-mb-px data-[state=inactive]:hover:text-zinc-300"
+          class="px-4 py-2 text-sm font-medium transition-colors data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:-mb-px data-[state=inactive]:hover:text-foreground"
         >
           Calendar
         </Tabs.Trigger>
         <Tabs.Trigger
           value="options"
-          class="px-4 py-2 text-sm font-medium transition-colors data-[state=active]:text-zinc-100 data-[state=inactive]:text-zinc-500 data-[state=active]:border-b-2 data-[state=active]:border-violet-500 data-[state=active]:-mb-px data-[state=inactive]:hover:text-zinc-300"
+          class="px-4 py-2 text-sm font-medium transition-colors data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:-mb-px data-[state=inactive]:hover:text-foreground"
         >
           Options
         </Tabs.Trigger>
@@ -129,14 +129,14 @@
           </div>
           
           <!-- Date range controls -->
-          <div class="w-full md:w-[120px] border-t md:border-t-0 md:border-l border-zinc-700/30 pt-4 md:pt-0 md:pl-4 flex flex-col">
-            <div class="text-zinc-300 text-xs font-medium mb-3 flex items-center">
-              <Clock class="w-4 h-4 mr-1.5 text-zinc-400" />
+          <div class="w-full md:w-[120px] border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-4 flex flex-col">
+            <div class="text-foreground text-xs font-medium mb-3 flex items-center">
+              <Clock class="w-4 h-4 mr-1.5 text-muted-foreground" />
               <span>Date Range</span>
             </div>
             
             <!-- Date display -->
-            <div class="text-xs text-zinc-400 space-y-1 mb-4">
+            <div class="text-xs text-muted-foreground space-y-1 mb-4">
               <div>Start: {formatDate(calendarValue.start)}</div>
               <div>End: {formatDate(calendarValue.end)}</div>
             </div>
@@ -145,7 +145,7 @@
             <div class="space-y-2 mb-4">
               <button 
                 type="button"
-                class="w-full py-1 px-2 text-xs bg-zinc-700/50 hover:bg-zinc-700 rounded text-zinc-300 transition-colors"
+                class="w-full py-1 px-2 text-xs bg-muted hover:bg-muted/80 rounded-default text-muted-foreground hover:text-foreground transition-colors"
                 on:click={selectLastWeek}
               >
                 Last Week
@@ -153,7 +153,7 @@
               
               <button 
                 type="button"
-                class="w-full py-1 px-2 text-xs bg-zinc-700/50 hover:bg-zinc-700 rounded text-zinc-300 transition-colors"
+                class="w-full py-1 px-2 text-xs bg-muted hover:bg-muted/80 rounded-default text-muted-foreground hover:text-foreground transition-colors"
                 on:click={selectLastMonth}
               >
                 Last Month
@@ -161,7 +161,7 @@
               
               <button 
                 type="button"
-                class="w-full py-1 px-2 text-xs bg-zinc-700/50 hover:bg-zinc-700 rounded text-zinc-300 transition-colors"
+                class="w-full py-1 px-2 text-xs bg-muted hover:bg-muted/80 rounded-default text-muted-foreground hover:text-foreground transition-colors"
                 on:click={selectAllTime}
               >
                 All Time
@@ -170,9 +170,9 @@
             
             <!-- Apply button -->
             <button
-              class="w-full py-2 px-4 mt-auto bg-gradient-to-r from-violet-500 to-fuchsia-500 
-                   text-white rounded text-xs font-medium
-                   transition-all hover:from-violet-600 hover:to-fuchsia-600"
+              class="w-full py-2 px-4 mt-auto bg-space-gradient
+                   text-primary-foreground rounded-default text-xs font-medium
+                   transition-all hover:opacity-90"
               on:click={applyDateRange}
             >
               Apply Range
@@ -185,7 +185,7 @@
         <div class="space-y-4">
           <!-- Visualization Type -->
           <div class="space-y-2">
-            <h3 class="text-sm font-medium text-zinc-300">Visualization Type</h3>
+            <h3 class="text-sm font-medium text-foreground">Visualization Type</h3>
             <VisualizationOptions 
               bind:activeView={visualizationType}
               onchange={handleVisualizationChange}
@@ -193,24 +193,24 @@
           </div>
           
           <!-- Other options can be added here -->
-          <div class="p-3 bg-zinc-800 rounded-md border border-zinc-700/30">
+          <div class="p-3 bg-muted rounded-default border border-border">
             <div class="flex items-center gap-2">
-              <ChartLine class="w-5 h-5 text-zinc-300" />
+              <ChartLine class="w-5 h-5 text-foreground" />
               <div>
-                <div class="text-sm font-medium text-zinc-200">Timeline Options</div>
-                <div class="text-xs text-zinc-400">Visualization settings</div>
+                <div class="text-sm font-medium text-foreground">Timeline Options</div>
+                <div class="text-xs text-muted-foreground">Visualization settings</div>
               </div>
             </div>
             
             <div class="mt-3 space-y-2">
-              <label class="flex items-center justify-between text-xs text-zinc-300">
+              <label class="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Show averages</span>
-                <input type="checkbox" class="accent-violet-500" />
+                <input type="checkbox" class="accent-primary" />
               </label>
               
-              <label class="flex items-center justify-between text-xs text-zinc-300">
+              <label class="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Highlight weekends</span>
-                <input type="checkbox" class="accent-violet-500" />
+                <input type="checkbox" class="accent-primary" />
               </label>
             </div>
           </div>

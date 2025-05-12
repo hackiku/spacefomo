@@ -124,10 +124,10 @@
 >
   <!-- Mask elements for fade effects - these stay fixed relative to the container -->
   <div class="absolute left-0 top-0 bottom-0 w-16 z-20 pointer-events-none"
-       style="background: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0));">
+       style="background: linear-gradient(to right, var(--background), rgba(13, 11, 20, 0));">
   </div>
   <div class="absolute right-0 top-0 bottom-0 w-16 z-20 pointer-events-none"
-       style="background: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));">
+       style="background: linear-gradient(to left, var(--background), rgba(13, 11, 20, 0));">
   </div>
   
   <!-- SVG Container -->
@@ -141,54 +141,54 @@
     <defs>
       <!-- Regular gradients with transparency -->
       <linearGradient id="gradient-high" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(217, 70, 239)" stop-opacity="0.6" />
-        <stop offset="100%" stop-color="rgb(124, 58, 237)" stop-opacity="0.6" />
+        <stop offset="0%" stop-color="var(--venus-yellow)" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="var(--venus-orange)" stop-opacity="0.6" />
       </linearGradient>
       
       <linearGradient id="gradient-medium-high" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(167, 139, 250)" stop-opacity="0.6" />
-        <stop offset="100%" stop-color="rgb(124, 58, 237)" stop-opacity="0.6" />
+        <stop offset="0%" stop-color="var(--venus-yellow)" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="var(--venus-orange)" stop-opacity="0.6" />
       </linearGradient>
       
       <linearGradient id="gradient-medium" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(96, 165, 250)" stop-opacity="0.6" />
-        <stop offset="100%" stop-color="rgb(37, 99, 235)" stop-opacity="0.6" />
+        <stop offset="0%" stop-color="var(--venus-orange)" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="var(--venus-rust)" stop-opacity="0.6" />
       </linearGradient>
       
       <linearGradient id="gradient-low" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(52, 211, 153)" stop-opacity="0.6" />
-        <stop offset="100%" stop-color="rgb(5, 150, 105)" stop-opacity="0.6" />
+        <stop offset="0%" stop-color="var(--venus-rust)" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="var(--venus-rust)" stop-opacity="0.6" />
       </linearGradient>
       
       <linearGradient id="gradient-verylow" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(161, 161, 170)" stop-opacity="0.6" />
-        <stop offset="100%" stop-color="rgb(82, 82, 91)" stop-opacity="0.6" />
+        <stop offset="0%" stop-color="var(--muted-foreground)" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="var(--muted)" stop-opacity="0.6" />
       </linearGradient>
       
       <!-- Selected gradients (full opacity) -->
       <linearGradient id="gradient-high-selected" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(217, 70, 239)" stop-opacity="1" />
-        <stop offset="100%" stop-color="rgb(124, 58, 237)" stop-opacity="1" />
+        <stop offset="0%" stop-color="var(--venus-yellow)" stop-opacity="1" />
+        <stop offset="100%" stop-color="var(--venus-orange)" stop-opacity="1" />
       </linearGradient>
       
       <linearGradient id="gradient-medium-high-selected" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(167, 139, 250)" stop-opacity="1" />
-        <stop offset="100%" stop-color="rgb(124, 58, 237)" stop-opacity="1" />
+        <stop offset="0%" stop-color="var(--venus-yellow)" stop-opacity="1" />
+        <stop offset="100%" stop-color="var(--venus-orange)" stop-opacity="1" />
       </linearGradient>
       
       <linearGradient id="gradient-medium-selected" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(96, 165, 250)" stop-opacity="1" />
-        <stop offset="100%" stop-color="rgb(37, 99, 235)" stop-opacity="1" />
+        <stop offset="0%" stop-color="var(--venus-orange)" stop-opacity="1" />
+        <stop offset="100%" stop-color="var(--venus-rust)" stop-opacity="1" />
       </linearGradient>
       
       <linearGradient id="gradient-low-selected" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(52, 211, 153)" stop-opacity="1" />
-        <stop offset="100%" stop-color="rgb(5, 150, 105)" stop-opacity="1" />
+        <stop offset="0%" stop-color="var(--venus-rust)" stop-opacity="1" />
+        <stop offset="100%" stop-color="var(--venus-rust)" stop-opacity="1" />
       </linearGradient>
       
       <linearGradient id="gradient-verylow-selected" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="rgb(161, 161, 170)" stop-opacity="1" />
-        <stop offset="100%" stop-color="rgb(82, 82, 91)" stop-opacity="1" />
+        <stop offset="0%" stop-color="var(--muted-foreground)" stop-opacity="1" />
+        <stop offset="100%" stop-color="var(--muted)" stop-opacity="1" />
       </linearGradient>
     </defs>
     
@@ -202,7 +202,7 @@
             y="0"
             width="1"
             height="100%"
-            fill="rgba(255,255,255,0.1)"
+            fill="var(--border)"
           />
           
           <!-- Date label with background -->
@@ -212,14 +212,14 @@
               y="75%" 
               width="36" 
               height="16" 
-              rx="4" 
-              fill="rgba(39, 39, 42, 0.5)" 
+              class="rounded-default" 
+              fill="var(--muted)" 
             />
             
             <text 
               x={marker.x} 
               y="82%" 
-              fill="rgba(161, 161, 170, 0.8)" 
+              fill="var(--muted-foreground)" 
               font-size="10" 
               text-anchor="middle" 
               dominant-baseline="middle"
@@ -250,7 +250,7 @@
             y={`${barY}%`} 
             width={barWidth} 
             height={`${barHeight}%`} 
-            rx="1"
+            rx="0"
             fill={getBarColor(day.score, isSelected)}
             class="transition-all duration-200"
           />
@@ -269,7 +269,7 @@
               <text
                 x={barX + barWidth/2}
                 y="95%"
-                fill="rgba(161, 161, 170, 0.4)"
+                fill="var(--muted-foreground)"
                 font-size="7"
                 text-anchor="middle"
               >
@@ -290,16 +290,16 @@
                 y="0"
                 width="60"
                 height="35"
-                rx="4"
-                fill="rgba(39, 39, 42, 0.95)"
-                stroke="rgba(63, 63, 70, 1)"
+                class="rounded-default"
+                fill="var(--card)"
+                stroke="var(--border)"
                 stroke-width="1"
               />
               
               <text 
                 x="30" 
                 y="12" 
-                fill="rgba(228, 228, 231, 0.95)" 
+                fill="var(--foreground)" 
                 font-size="8" 
                 text-anchor="middle" 
                 dominant-baseline="middle"
@@ -310,7 +310,7 @@
               <text 
                 x="30" 
                 y="24" 
-                fill="rgba(228, 228, 231, 0.95)" 
+                fill="var(--foreground)" 
                 font-size="8" 
                 text-anchor="middle" 
                 dominant-baseline="middle"

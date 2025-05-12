@@ -66,19 +66,19 @@
         <button 
           type="button"
           onclick={prevMonth}
-          class="rounded-full p-2 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300"
+          class="p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           <CaretLeft size={16} />
         </button>
         
-        <div class="text-sm font-medium text-zinc-300">
+        <div class="text-sm font-medium text-foreground">
           {month.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
         </div>
         
         <button 
           type="button"
           onclick={nextMonth}
-          class="rounded-full p-2 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300"
+          class="p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           <CaretRight size={16} />
         </button>
@@ -89,23 +89,23 @@
       <button
         type="button"
         disabled={isDisabled || isOutsideMonth}
-        class="flex items-center justify-center w-8 h-8 rounded-full text-xs
-              text-zinc-300 
-              {isToday ? 'bg-zinc-700/50' : ''}
-              {isOutsideMonth ? 'text-zinc-600' : ''}
-              {isSelected ? 'bg-violet-600/90 text-white' : ''}
-              {isRangeStart ? 'bg-violet-600 text-white' : ''}
-              {isRangeEnd ? 'bg-violet-600 text-white' : ''}
-              {isInRange ? 'bg-violet-600/30' : ''}
-              {isFocused ? 'ring-2 ring-violet-500/50' : ''}
-              hover:bg-zinc-700/50"
+        class="flex items-center justify-center w-8 h-8 text-xs
+              text-foreground 
+              {isToday ? 'bg-muted' : ''}
+              {isOutsideMonth ? 'text-muted-foreground/50' : ''}
+              {isSelected ? 'bg-primary text-primary-foreground' : ''}
+              {isRangeStart ? 'bg-primary text-primary-foreground' : ''}
+              {isRangeEnd ? 'bg-primary text-primary-foreground' : ''}
+              {isInRange ? 'bg-primary/30' : ''}
+              {isFocused ? 'ring-2 ring-primary/50' : ''}
+              hover:bg-muted"
       >
         {date.day}
       </button>
     {/snippet}
   </Calendar.Root>
   
-  <div class="text-xs text-zinc-400">
+  <div class="text-xs text-muted-foreground">
     <div>Start: {formatDate(startDate)}</div>
     <div>End: {formatDate(endDate)}</div>
   </div>

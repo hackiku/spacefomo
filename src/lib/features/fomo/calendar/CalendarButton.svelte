@@ -29,12 +29,12 @@
 
 <button
   type="button"
-  class="flex items-center justify-between w-full px-3 py-2 rounded-full 
-         border border-zinc-700/50 bg-zinc-800/80 hover:bg-zinc-700/80
-         text-zinc-300 transition-colors"
+  class="flex items-center justify-between w-full px-3 py-2 
+         border border-border bg-card/80 hover:bg-muted
+         text-foreground transition-colors"
   onclick={onClick}
   aria-label="Open date range selector"
 >
   <span class="text-sm mr-2">{getDateRangeText()}</span>
-  <CalendarBlank class="h-4 w-4 text-zinc-400" />
+  <CalendarBlank class="h-4 w-4 text-muted-foreground" />
 </button>

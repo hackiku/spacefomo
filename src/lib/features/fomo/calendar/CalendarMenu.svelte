@@ -49,10 +49,10 @@
     <NavigationMenu.Item value="date-picker">
       <!-- Calendar icon as trigger -->
       <NavigationMenu.Trigger
-        class="inline-flex items-center justify-center rounded-full 
+        class="inline-flex items-center justify-center
               w-10 h-10
-              bg-zinc-800 hover:bg-zinc-700 text-zinc-200
-              transition-all hover:text-white active:scale-95"
+              bg-card hover:bg-muted text-foreground
+              transition-all hover:text-primary active:scale-95"
         aria-label="Date filter"
       >
         <CalendarBlank class="w-5 h-5" />
@@ -64,24 +64,24 @@
         align="start"
         sideOffset={12}
       >
-        <div class="flex gap-4 p-4 bg-zinc-800 rounded-lg border border-zinc-700/50 shadow-xl">
+        <div class="flex gap-4 p-4 bg-card border border-border rounded-default shadow-xl">
           <!-- Calendar component -->
           <div class="w-[280px]">
             <CalendarContent onSelectionChange={handleDateSelectionChange} />
           </div>
           
           <!-- Time controls placeholder -->
-          <div class="w-[140px] border-l border-zinc-700/30 pl-4">
-            <div class="text-zinc-300 text-xs font-medium mb-3 flex items-center">
-              <Clock class="w-4 h-4 mr-1.5 text-zinc-400" />
+          <div class="w-[140px] border-l border-border pl-4">
+            <div class="text-foreground text-xs font-medium mb-3 flex items-center">
+              <Clock class="w-4 h-4 mr-1.5 text-muted-foreground" />
               <span>Time Range</span>
             </div>
             
             <!-- Apply button -->
             <button
-              class="w-full py-2 px-4 mt-4 bg-gradient-to-r from-violet-500 to-fuchsia-500 
-                     text-white rounded text-xs font-medium
-                     transition-all hover:from-violet-600 hover:to-fuchsia-600"
+              class="w-full py-2 px-4 mt-4 bg-space-gradient
+                     text-primary-foreground rounded-default text-xs font-medium
+                     transition-all hover:opacity-90"
               onclick={applyDateFilter}
             >
               Apply Range

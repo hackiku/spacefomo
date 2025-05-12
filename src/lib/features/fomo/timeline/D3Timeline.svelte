@@ -1,4 +1,4 @@
-<!-- src/lib/features/fomo/timeline/FomoTimeline.svelte -->
+<!-- src/lib/features/fomo/timeline/D3Timeline.svelte -->
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
   import * as d3 from 'd3';
@@ -170,9 +170,9 @@
       .call(d3.axisBottom(x)
         .ticks(5)
         .tickFormat(d3.timeFormat('%b %d')))
-      .call(g => g.selectAll('.domain').attr('stroke', 'rgba(161, 161, 170, 0.3)'))
-      .call(g => g.selectAll('.tick line').attr('stroke', 'rgba(161, 161, 170, 0.3)'))
-      .call(g => g.selectAll('.tick text').attr('fill', 'rgba(161, 161, 170, 0.8)').attr('font-size', '10px'));
+      .call(g => g.selectAll('.domain').attr('stroke', 'var(--border)'))
+      .call(g => g.selectAll('.tick line').attr('stroke', 'var(--border)'))
+      .call(g => g.selectAll('.tick text').attr('fill', 'var(--muted-foreground)').attr('font-size', '10px'));
 
     // Create group for bars
     const barsGroup = svg.append('g');
@@ -182,17 +182,17 @@
     
     // Gradient definitions
     const gradients = [
-      { id: 'bar-gradient-high', stopColors: ['rgba(217, 70, 239, 0.6)', 'rgba(124, 58, 237, 0.6)'] },
-      { id: 'bar-gradient-medium-high', stopColors: ['rgba(167, 139, 250, 0.6)', 'rgba(124, 58, 237, 0.6)'] },
-      { id: 'bar-gradient-medium', stopColors: ['rgba(96, 165, 250, 0.6)', 'rgba(37, 99, 235, 0.6)'] },
-      { id: 'bar-gradient-low', stopColors: ['rgba(52, 211, 153, 0.6)', 'rgba(5, 150, 105, 0.6)'] },
-      { id: 'bar-gradient-verylow', stopColors: ['rgba(161, 161, 170, 0.6)', 'rgba(82, 82, 91, 0.6)'] },
+      { id: 'bar-gradient-high', stopColors: ['var(--venus-yellow)', 'var(--venus-orange)'], opacity: [0.6, 0.6] },
+      { id: 'bar-gradient-medium-high', stopColors: ['var(--venus-yellow)', 'var(--venus-orange)'], opacity: [0.6, 0.6] },
+      { id: 'bar-gradient-medium', stopColors: ['var(--venus-orange)', 'var(--venus-rust)'], opacity: [0.6, 0.6] },
+      { id: 'bar-gradient-low', stopColors: ['var(--venus-rust)', 'var(--venus-rust)'], opacity: [0.6, 0.6] },
+      { id: 'bar-gradient-verylow', stopColors: ['var(--muted-foreground)', 'var(--muted)'], opacity: [0.6, 0.6] },
       // Selected states (full opacity)
-      { id: 'bar-gradient-high-selected', stopColors: ['rgba(217, 70, 239, 1)', 'rgba(124, 58, 237, 1)'] },
-      { id: 'bar-gradient-medium-high-selected', stopColors: ['rgba(167, 139, 250, 1)', 'rgba(124, 58, 237, 1)'] },
-      { id: 'bar-gradient-medium-selected', stopColors: ['rgba(96, 165, 250, 1)', 'rgba(37, 99, 235, 1)'] },
-      { id: 'bar-gradient-low-selected', stopColors: ['rgba(52, 211, 153, 1)', 'rgba(5, 150, 105, 1)'] },
-      { id: 'bar-gradient-verylow-selected', stopColors: ['rgba(161, 161, 170, 1)', 'rgba(82, 82, 91, 1)'] }
+      { id: 'bar-gradient-high-selected', stopColors: ['var(--venus-yellow)', 'var(--venus-orange)'], opacity: [1, 1] },
+      { id: 'bar-gradient-medium-high-selected', stopColors: ['var(--venus-yellow)', 'var(--venus-orange)'], opacity: [1, 1] },
+      { id: 'bar-gradient-medium-selected', stopColors: ['var(--venus-orange)', 'var(--venus-rust)'], opacity: [1, 1] },
+      { id: 'bar-gradient-low-selected', stopColors: ['var(--venus-rust)', 'var(--venus-rust)'], opacity: [1, 1] },
+      { id: 'bar-gradient-verylow-selected', stopColors: ['var(--muted-foreground)', 'var(--muted)'], opacity: [1, 1] }
     ];
     
     // Create the gradient definitions
@@ -206,11 +206,13 @@
         
       gradientDef.append('stop')
         .attr('offset', '0%')
-        .attr('stop-color', gradient.stopColors[0]);
+        .attr('stop-color', gradient.stopColors[0])
+        .attr('stop-opacity', gradient.opacity[0]);
         
       gradientDef.append('stop')
         .attr('offset', '100%')
-        .attr('stop-color', gradient.stopColors[1]);
+        .attr('stop-color', gradient.stopColors[1])
+        .attr('stop-opacity', gradient.opacity[1]);
     });
 
     // Add bars
@@ -222,14 +224,14 @@
       .attr('y', d => y(d.score))
       .attr('height', d => height - margin.bottom - y(d.score))
       .attr('fill', d => getBarGradient(d.score))
-      .attr('rx', 1)
+      .attr('rx', 0) // Use squared corners to match design system
       .attr('data-date', d => d.date)
       .attr('data-score', d => d.score)
       .attr('class', 'timeline-bar')
       .on('mouseover', function(event, d) {
         d3.select(this)
           .attr('fill', d => getBarGradient(d.score, true))
-          .attr('stroke', '#ffffff')
+          .attr('stroke', 'var(--foreground)')
           .attr('stroke-width', 0.5);
           
         // Show tooltip
@@ -237,21 +239,21 @@
           .append('div')
           .attr('class', 'timeline-tooltip')
           .style('position', 'absolute')
-          .style('background', 'rgba(24, 24, 27, 0.95)')
-          .style('color', 'white')
+          .style('background', 'var(--card)')
+          .style('color', 'var(--foreground)')
           .style('padding', '8px')
-          .style('border-radius', '4px')
+          .style('border-radius', '0px') // Using squared corners
           .style('font-size', '12px')
           .style('pointer-events', 'none')
           .style('z-index', 100)
-          .style('border', '1px solid rgba(82, 82, 91, 0.5)')
+          .style('border', '1px solid var(--border)')
           .style('transform', 'translate(-50%, -100%)')
           .style('left', `${event.pageX}px`)
           .style('top', `${event.pageY - 10}px`);
           
         tooltip.html(`
           <div class="font-medium">${new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
-          <div class="text-violet-300">FOMO: ${d.score}</div>
+          <div class="text-primary">FOMO: ${d.score}</div>
         `);
       })
       .on('mouseout', function() {
@@ -329,7 +331,7 @@
           .attr('y', d => updatedY(d.score))
           .attr('height', d => height - margin.bottom - updatedY(d.score))
           .attr('fill', d => getBarGradient(d.score))
-          .attr('rx', 1);
+          .attr('rx', 0);
       },
       setRange(range) {
         // Set the selected range on the visualization
@@ -342,12 +344,12 @@
 </script>
 
 <div 
-  class="fomo-timeline w-full h-full bg-zinc-900/30 backdrop-blur-sm border border-zinc-800/50 rounded-lg overflow-hidden"
+  class="fomo-timeline w-full h-full bg-card/30 backdrop-blur-sm border border-border rounded-default overflow-hidden"
   bind:this={container}
 >
   {#if !data || data.length === 0}
     <div class="flex justify-center items-center h-full">
-      <p class="text-sm text-zinc-500">Loading timeline data...</p>
+      <p class="text-sm text-muted-foreground">Loading timeline data...</p>
     </div>
   {/if}
 </div>
@@ -355,12 +357,15 @@
 <style>
   /* Custom styling for brush */
   :global(.brush .selection) {
-    fill: rgba(139, 92, 246, 0.15);
-    stroke: rgba(139, 92, 246, 0.4);
+    fill: var(--primary-foreground);
+    fill-opacity: 0.15;
+    stroke: var(--primary);
+    stroke-opacity: 0.4;
     stroke-width: 1px;
   }
   
   :global(.brush .handle) {
-    fill: rgba(139, 92, 246, 0.4);
+    fill: var(--primary);
+    fill-opacity: 0.4;
   }
 </style>

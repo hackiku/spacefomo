@@ -24,14 +24,14 @@
   <ToggleGroup.Root
     type="single"
     bind:value={activeView}
-    class="inline-flex h-10 items-center rounded-lg border border-zinc-700/50 bg-zinc-800/30 p-1"
+    class="inline-flex h-10 items-center rounded-default border border-border bg-muted p-1"
   >
     <ToggleGroup.Item
       value="bar"
       aria-label="Bar chart view"
-      class="inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-400
-             data-[state=on]:bg-zinc-700 data-[state=on]:text-zinc-200 
-             hover:bg-zinc-700/50 hover:text-zinc-300 
+      class="inline-flex h-8 w-8 items-center justify-center rounded-default text-muted-foreground
+             data-[state=on]:bg-card data-[state=on]:text-foreground 
+             hover:bg-card/70 hover:text-foreground 
              transition-colors"
     >
       <ChartBar class="h-4 w-4" />
@@ -40,9 +40,9 @@
     <ToggleGroup.Item
       value="line"
       aria-label="Line chart view"
-      class="inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-400
-             data-[state=on]:bg-zinc-700 data-[state=on]:text-zinc-200 
-             hover:bg-zinc-700/50 hover:text-zinc-300 
+      class="inline-flex h-8 w-8 items-center justify-center rounded-default text-muted-foreground
+             data-[state=on]:bg-card data-[state=on]:text-foreground 
+             hover:bg-card/70 hover:text-foreground 
              transition-colors"
     >
       <ChartLine class="h-4 w-4" />
@@ -51,9 +51,9 @@
     <ToggleGroup.Item
       value="heatmap"
       aria-label="Heatmap view"
-      class="inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-400
-             data-[state=on]:bg-zinc-700 data-[state=on]:text-zinc-200 
-             hover:bg-zinc-700/50 hover:text-zinc-300 
+      class="inline-flex h-8 w-8 items-center justify-center rounded-default text-muted-foreground
+             data-[state=on]:bg-card data-[state=on]:text-foreground 
+             hover:bg-card/70 hover:text-foreground 
              transition-colors"
     >
       <SquaresFour class="h-4 w-4" />

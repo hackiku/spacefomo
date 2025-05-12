@@ -71,11 +71,11 @@
   <!-- Mask elements for fade effects - these stay fixed relative to the container -->
   <div 
     class="absolute left-0 top-0 bottom-0 w-16 z-20 pointer-events-none"
-    style="background: linear-gradient(to right, rgba(24, 24, 27, 1), rgba(24, 24, 27, 0));">
+    style="background: linear-gradient(to right, var(--background), rgba(13, 11, 20, 0));">
   </div>
   <div 
     class="absolute right-0 top-0 bottom-0 w-16 z-20 pointer-events-none"
-    style="background: linear-gradient(to left, rgba(24, 24, 27, 1), rgba(24, 24, 27, 0));">
+    style="background: linear-gradient(to left, var(--background), rgba(13, 11, 20, 0));">
   </div>
   
   <!-- Content slot -->

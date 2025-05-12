@@ -124,7 +124,7 @@
         <div class="flex items-center gap-1.5">
           <ChartLine weight="bold" class="w-5 h-5 text-primary" />
           <span class="text-sm font-medium text-foreground">
-            FOMO
+            <!-- FOMO -->
             <span class="ml-1 text-lg font-semibold text-primary">44</span>
           </span>
         </div>
@@ -158,7 +158,7 @@
         <!-- Expand/collapse button -->
         <button
           type="button"
-          class="inline-flex items-center justify-center p-2 rounded-full 
+          class="inline-flex items-center justify-center p-2
                  bg-primary/10 hover:bg-primary/20 text-muted-foreground hover:text-foreground
                  transition-colors"
           onclick={toggleExpanded}
