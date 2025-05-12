@@ -103,7 +103,7 @@
   class:h-64={isExpanded}
 >
   <!-- Main container -->
-  <div class="flex flex-col h-full border-t border-zinc-800/70 bg-zinc-900/95 backdrop-blur-lg">
+  <div class="flex flex-col h-full border-t bg-background border-zinc-800/70 __bg-zinc-900/95 backdrop-blur-lg">
     <!-- Control bar (always visible) -->
     <div class="flex items-center justify-between h-14 px-4">
       <!-- Left section with fomo score -->

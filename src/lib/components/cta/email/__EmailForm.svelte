@@ -55,17 +55,18 @@
   });
 </script>
 
+<!-- onsubmit|preventDefault={handleSubmit} -->
 <form 
   onsubmit={handleSubmit}
   class="relative max-w-sm"
 >
   {#if !success}
     <div 
-      class="flex items-stretch h-14 border border-border bg-input overflow-hidden
-             {isFocused ? 'ring-1 ring-venus-yellow border-venus-yellow/40' : ''}"
+      class="flex items-stretch h-14 rounded-full border border-zinc-700/80 bg-zinc-800/30 
+             overflow-hidden {isFocused ? 'ring-1 ring-zinc-500 border-zinc-600' : ''}"
     >
       <div class="flex items-center justify-center pl-4 w-10">
-        <Envelope weight="light" class="w-5 h-5 text-muted-foreground/50" />
+        <Envelope weight="light" class="w-5 h-5 text-zinc-500/50" />
       </div>
 
       <input
@@ -75,8 +76,8 @@
         placeholder="your@email.com"
         onfocus={handleFocus}
         onblur={handleBlur}
-        class="min-w-[120px] flex-1 px-2 bg-transparent text-foreground 
-               placeholder:text-muted-foreground/50 border-0 outline-none 
+        class="min-w-[120px] flex-1 px-2 bg-transparent text-zinc-100 
+               placeholder:text-zinc-600/70 border-0 outline-none 
                focus:ring-0 h-full"
         disabled={loading}
       />
@@ -85,15 +86,11 @@
         <Button.Root
           type="submit"
           disabled={loading}
-          class="group relative h-full px-5 flex items-center justify-center gap-2 
-                 text-primary-foreground font-medium whitespace-nowrap
-                 bg-primary transition-all hover:bg-primary/90 disabled:opacity-50
-                 border border-transparent
-                 before:absolute before:inset-0
-                 before:border before:border-primary/50
-                 before:translate-x-1 before:translate-y-1
-                 before:transition-transform before:duration-300
-                 hover:before:translate-x-0 hover:before:translate-y-0"
+          class="h-full px-5 flex items-center justify-center gap-2 
+                 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600
+                 text-zinc-100 font-medium whitespace-nowrap
+                 transition-all hover:from-violet-500 hover:to-fuchsia-500
+                 disabled:opacity-50"
         >
           {#if loading}
             <ArrowClockwise weight="bold" class="w-4 h-4 animate-spin" />
@@ -106,17 +103,17 @@
     </div>
 
     {#if error}
-      <p class="absolute -bottom-6 ml-10 text-sm text-muted-foreground" transition:fly={{ y: -10, duration: 200 }}>
+      <p class="absolute -bottom-6 ml-10 text-sm text-zinc-400/80" transition:fly={{ y: -10, duration: 200 }}>
         {error}
       </p>
     {/if}
   {:else}
     <div 
-      class="flex items-center gap-2 py-3 px-4
-             bg-muted border border-venus-yellow/20 text-foreground text-sm"
+      class="flex items-center gap-2 py-3 px-4 rounded-full
+             bg-zinc-800/40 border border-zinc-700/80 text-zinc-300 text-sm"
       in:fly={{ y: 10, duration: 300 }}
     >
-      <Rocket weight="fill" class="w-4 h-4 text-primary" />
+      <Rocket weight="fill" class="w-4 h-4 text-emerald-400" />
       <span>Thanks for joining! Check your inbox.</span>
     </div>
   {/if}

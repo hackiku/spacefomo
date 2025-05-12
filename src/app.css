@@ -1,107 +1,127 @@
-@import 'tailwindcss';
-/* @import "tw-animate-css"; */
+@import "tailwindcss";
 @import '@fontsource/fira-mono';
 
 :root {
-	/* Font system */
-	--font-body: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-		'Open Sans', 'Helvetica Neue', sans-serif;
+	/* Base sizing */
+	--radius: 0.375rem;
+
+	/* Venus color palette */
+	--venus-yellow: #E6C229;
+	--venus-orange: #D88C2A;
+	--venus-rust: #9E4624;
+	--venus-space: #0D0B14;
+	--venus-space-light: #1A1825;
+	--venus-text: #F8F7F3;
+
+	/* Theme semantic colors */
+	--background: var(--venus-space);
+	--foreground: var(--venus-text);
+	--card: var(--venus-space-light);
+	--card-foreground: var(--venus-text);
+	--primary: var(--venus-yellow);
+	--primary-foreground: #0D0B14;
+	--secondary: var(--venus-orange);
+	--secondary-foreground: #0D0B14;
+	--muted: #2A2536;
+	--muted-foreground: #B4B2BC;
+	--accent: var(--venus-rust);
+	--accent-foreground: var(--venus-text);
+	--destructive: #EF4444;
+	--destructive-foreground: var(--venus-text);
+	--border: #2A2536;
+	--input: #2A2536;
+	--ring: var(--venus-yellow);
+
+	/* SpaceFomo specific */
+	--fomo-score-high: var(--venus-orange);
+	--fomo-score-med: var(--venus-yellow);
+	--fomo-score-low: #8B8778;
+	--space-gradient-start: var(--venus-yellow);
+	--space-gradient-end: var(--venus-orange);
+}
+
+@theme inline {
+	/* Border radius */
+	--radius-sm: 0.25rem;
+	--radius-md: 0.375rem;
+	--radius-lg: 0.5rem;
+	--radius-xl: 0.75rem;
+
+	/* Colors */
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	/* Venus specific */
+	--color-venus-yellow: var(--venus-yellow);
+	--color-venus-orange: var(--venus-orange);
+	--color-venus-rust: var(--venus-rust);
+	--color-venus-space: var(--venus-space);
+	--color-fomo-score-high: var(--fomo-score-high);
+	--color-fomo-score-med: var(--fomo-score-med);
+	--color-fomo-score-low: var(--fomo-score-low);
+
+	/* Font settings */
+	--font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
-
-	/* Base theme */
-	--radius: 0.6rem;
-	--radius-sm: 0.2rem;
-	--radius-md: 0.4rem;
-	--radius-lg: 0.6rem;
-	--radius-xl: 1rem;
-
-	/* Background styles - keeping your gradient background */
-	--color-bg-1: hsl(286, 20%, 13%);
-	--color-bg-2: hsl(223, 93%, 5%);
-
-	/* Dark theme colors (default) */
-	--background: #18181b;
-	--foreground: #f4f4f5;
-	--card: #27272a;
-	--card-foreground: #f4f4f5;
-	--popover: #27272a;
-	--popover-foreground: #f4f4f5;
-
-	/* Brand colors */
-	--primary: #8b5cf6;
-	--primary-foreground: #ffffff;
-	--secondary: #ec4899;
-	--secondary-foreground: #ffffff;
-
-	/* UI colors */
-	--muted: #3f3f46;
-	--muted-foreground: #a1a1aa;
-	--accent: #6d28d9;
-	--accent-foreground: #ffffff;
-	--destructive: #ef4444;
-	--destructive-foreground: #ffffff;
-	--success: #10b981;
-	--success-foreground: #ffffff;
-
-	/* Border, input & ring colors */
-	--border: #27272a;
-	--input: #3f3f46;
-	--ring: #8b5cf6;
-
-	/* Space theme special colors */
-	--space-dark: #0f0f12;
-	--space-gradient-start: #8b5cf6;
-	--space-gradient-end: #ec4899;
-
-	/* Navigation menu configuration */
-	--bits-navigation-menu-viewport-width: 500px;
-	--bits-navigation-menu-viewport-height: auto;
-
-	/* Set dark mode by default */
-	color-scheme: dark;
-	font-family: var(--font-body);
 }
 
-@media (min-width: 640px) {
-	:root {
-		--bits-navigation-menu-viewport-width: 600px;
-	}
-}
-
-@media (min-width: 1024px) {
-	:root {
-		--bits-navigation-menu-viewport-width: 800px;
-	}
-}
-
-body {
-	min-height: 100vh;
-	margin: 0;
-	background-attachment: fixed;
-	background-color: var(--color-bg-1);
-	background-size: 100vw 100vh;
-	background-image:
-		radial-gradient(50% 50% at 50% 50%, rgba(30, 7, 7, 0.75) 0%, rgba(255, 255, 255, 0) 100%),
-		linear-gradient(130deg, var(--background) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 40%);
-	color: var(--foreground);
-}
-
-/* Tailwind utilities for theme variables */
-/* @layer base {
+@layer base {
 	* {
-		border-color: var(--border);
+		@apply border-border;
 	}
 
 	body {
 		@apply bg-background text-foreground;
+		min-height: 100vh;
+		margin: 0;
+		background-attachment: fixed;
+		background-size: 100vw 100vh;
+		background-image:
+			radial-gradient(50% 50% at 50% 50%, rgba(158, 70, 36, 0.1) 0%, rgba(0, 0, 0, 0) 100%),
+			linear-gradient(150deg, var(--venus-space) 0%, #17151F 100%);
+		font-family: var(--font-sans);
 	}
-} */
+}
+
+/* Utility classes */
+.bg-space-gradient {
+	background: linear-gradient(to right, var(--space-gradient-start), var(--space-gradient-end));
+}
+
+.text-space-gradient {
+	background: linear-gradient(to right, var(--space-gradient-start), var(--space-gradient-end));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.fomo-score {
+	@apply text-xl font-semibold bg-clip-text text-transparent;
+	background: linear-gradient(to right, var(--venus-yellow), var(--venus-orange));
+	-webkit-background-clip: text;
+	background-clip: text;
+}
 
 
 /* Scrollbar styling */
 * {
 	scrollbar-width: thin;
-	scrollbar-color: var(--accent) transparent;
+	scrollbar-color: var(--venus-orange) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -114,22 +134,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: var(--accent);
+	background-color: var(--venus-orange);
 	border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background-color: var(--primary);
-}
-
-/* Special utility classes for space theme */
-.bg-space-gradient {
-	background: linear-gradient(to right, var(--space-gradient-start), var(--space-gradient-end));
-}
-
-.text-space-gradient {
-	background: linear-gradient(to right, var(--space-gradient-start), var(--space-gradient-end));
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
+	background-color: var(--venus-yellow);
 }
