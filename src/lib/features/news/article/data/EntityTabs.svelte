@@ -1,6 +1,7 @@
 <!-- src/lib/features/news/article/data/EntityTabs.svelte -->
 <script lang="ts">
   import type { NewsItem } from '$lib/types/news';
+  import { Button } from "bits-ui";
   import EntitySection from './EntitySection.svelte';
   import TimelineSection from './TimelineSection.svelte';
   
@@ -42,28 +43,28 @@
 {#if tabs.length > 0}
   <div class="space-y-4">
     <!-- Tab navigation -->
-    <div class="flex space-x-1 border-b border-zinc-800/50 pb-2">
+    <div class="flex space-x-1 border-b border-border/30 pb-2">
       {#each tabs as tab}
-        <button
-          class="px-4 py-2 text-sm rounded-t-lg transition-colors relative
+        <Button.Root
+          class="px-4 py-2 text-sm transition-colors relative
                  {activeTab === tab.id 
-                   ? 'text-zinc-100 font-medium' 
-                   : 'text-zinc-500 hover:text-zinc-300'}"
-          on:click={() => activeTab = tab.id}
+                   ? 'text-foreground font-medium' 
+                   : 'text-muted-foreground hover:text-foreground'}"
+          onclick={() => activeTab = tab.id}
           aria-selected={activeTab === tab.id}
           role="tab"
         >
           {tab.label}
           
           {#if activeTab === tab.id}
-            <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-violet-500"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
           {/if}
-        </button>
+        </Button.Root>
       {/each}
     </div>
     
     <!-- Tab content -->
-    <div class="min-h-[200px]">
+    <div class="min-h-[200px] pt-2">
       {#if activeTab === 'entities' && (entities?.companies?.length || entities?.people?.length)}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#if entities?.companies?.length}

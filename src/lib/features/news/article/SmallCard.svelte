@@ -26,7 +26,7 @@
     onclick={onSelect}
     aria-label={`Open article: ${article.title}`}
   >
-    <div class="p-5 border border-border
+    <div class="rounded-default p-5 border border-border
                 bg-card/60 backdrop-blur-sm 
                 group-hover:border-venus-yellow/30 group-hover:bg-card
                 transition-all duration-200">

@@ -26,7 +26,7 @@
 
 <div class="relative">
   <!-- Main Content -->
-  <div class="bg-background border border-border overflow-hidden">
+  <div class="bg-background overflow-hidden">
     <!-- Close button (if in modal) -->
     {#if onClose}
       <button

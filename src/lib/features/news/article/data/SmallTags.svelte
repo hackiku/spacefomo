@@ -13,13 +13,13 @@
 
 <div class="flex flex-wrap gap-1.5">
   {#each displayTags as tag}
-    <span class="rounded-md bg-zinc-800/30 border border-zinc-800/40 px-2 py-0.5 text-xs text-zinc-400/50 truncate max-w-[120px]">
+    <span class="bg-muted px-2 py-0.5 text-xs text-muted-foreground truncate max-w-[120px]">
       #{tag}
     </span>
   {/each}
   
   {#if hasMoreTags}
-    <span class="rounded-md bg-zinc-800/30 border border-zinc-800/40 px-2 py-0.5 text-xs text-zinc-400/50">
+    <span class="bg-muted px-2 py-0.5 text-xs text-muted-foreground">
       +{tags.length - displayLimit} more
     </span>
   {/if}
