@@ -1,6 +1,7 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
   import '../app.css';
+  import { cn } from '$lib/utils';
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
   import FomoApp from '$lib/features/fomo/FomoApp.svelte';
@@ -29,28 +30,33 @@
   setContext('nav', navContext);
   setContext('cta', ctaContext);
   
-  // Scroll handling for bezel collapse
+  // Scroll variables
   let lastScrollY = $state(0);
-  let isTopCollapsed = $state(false);
-  let isBottomCollapsed = $state(false);
+  let scrollRatio = $state(1); // 1 = fully expanded, 0 = fully collapsed
   
-  // Effect for scroll detection
+  // Effect for smooth scroll handling
   $effect(() => {
     if (!browser) return;
     
     function handleScroll() {
-      if (window.scrollY > 100 && window.scrollY > lastScrollY) {
-        // Scrolling down - collapse top
-        isTopCollapsed = true;
-        isBottomCollapsed = false;
-      } else if (window.scrollY < lastScrollY) {
-        // Scrolling up - collapse bottom
-        isTopCollapsed = false;
-        isBottomCollapsed = true;
+      // Calculate scroll velocity
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+      
+      // Calculate scroll ratio based on direction and velocity
+      // Starts at 1 (fully expanded)
+      // Decreases when scrolling down (min 0)
+      // Increases when scrolling up (max 1)
+      if (scrollDelta > 0) {
+        // Scrolling down - decrease ratio
+        scrollRatio = Math.max(0, scrollRatio - (scrollDelta * 0.01));
+      } else if (scrollDelta < 0) {
+        // Scrolling up - increase ratio
+        scrollRatio = Math.min(1, scrollRatio - (scrollDelta * 0.01));
       }
       
       // Update last scroll position
-      lastScrollY = window.scrollY;
+      lastScrollY = currentScrollY;
     }
     
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -89,51 +95,44 @@
   <ViewportSize />
 </div>
 
-<!-- Two-layer approach: Background scrollable content + HUD-like overlay -->
-<div class="relative min-h-screen __bg-background">
-  
-  <!-- Scrollable content area - normal document flow -->
-  <main class="min-h-screen bg-card">
-    <!-- Main content -->
+<div class="relative min-h-screen">
+  <!-- Main content at full width/height -->
+  <main class="w-full min-h-screen bg-card">
     {@render children()}
-	</main>
+  </main>
   
-  <!-- HUD-like overlay with bezels - fixed on top -->
-  <div class="fixed inset-0 pointer-events-none flex flex-col">
-    <!-- Top bezel - collapses on scroll down -->
-    <div 
-      class="w-full bg-background pointer-events-auto transition-all duration-300 z-40"
-      class:h-3={isTopCollapsed}
-      class:h-16={!isTopCollapsed}
-    >
-      <Nav />
-    </div>
-    
-    <!-- Middle section with side bezels -->
-    <div class="flex-1 flex ">
-      <!-- Left bezel -->
-      <div class="bg-background w-4 shrink-0"></div>
-      
-      <!-- Center "window" - just a visual frame -->
-      <div class="flex-1 p-3 flex">
-        <!-- This creates the rounded frame effect -->
-        <div class="w-full border border-border/20 rounded-2xl"></div>
+  <!-- Footer in the normal document flow -->
+  <Footer />
+  
+  <!-- HUD overlay with CSS grid for bezels -->
+  <!-- <div class="fixed inset-r-2 inset-l-12 inset-t-0 inset-b-0 pointer-events-none z-10 "> -->
+		<div class="fixed inset-0 pointer-events-none z-10 ">
+    <div class="w-full h-full grid grid-cols-[minmax(0.75rem,auto)_1fr_minmax(0.75rem,auto)] grid-rows-[minmax(0.75rem,auto)_1fr_minmax(0.75rem,auto)]">
+      <!-- Top row: Nav -->
+      <div 
+        class="col-span-3 bg-background/90 backdrop-blur-sm pointer-events-auto transition-all duration-300"
+        style={`height: calc(4rem * ${scrollRatio} + 0.75rem * ${1 - scrollRatio})`}
+      >
+        <Nav />
       </div>
       
+      <!-- Left bezel -->
+      <div class="bg-background min-w-3 transition-all duration-300"></div>
+      
+      <!-- Center cutout -->
+      <div class="w-full h-full outline-12 outline-background rounded-2xl"></div>
+      
       <!-- Right bezel -->
-      <div class="w-3 shrink-0"></div>
-    </div>
-    
-    <!-- Bottom bezel with FomoApp -->
-    <div 
-      class="w-full pointer-events-auto transition-all duration-300 z-40"
-      class:h-3={isBottomCollapsed}
-      class:h-16={!isBottomCollapsed}
-    >
-      <FomoApp />
+      <div class="bg-background min-w-3">
+		</div>
+      
+      <!-- Bottom row: FomoApp -->
+      <div 
+        class="col-span-3 bg-background backdrop-blur-sm pointer-events-auto transition-all duration-300"
+        style={`height: calc(4rem * ${scrollRatio} + 0.75rem * ${1 - scrollRatio})`}
+      >
+        <FomoApp />
+      </div>
     </div>
   </div>
-
-	<Footer />
-
 </div>
