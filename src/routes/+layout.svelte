@@ -33,8 +33,8 @@
 	// Scroll variables
 	let lastScrollY = $state(0);
 	let scrollDirection = $state('none'); // 'up', 'down', or 'none'
-	let isTopBezelCollapsed = $state(false);
-	let isBottomBezelCollapsed = $state(false);
+	let isTopHidden = $state(false);
+	let isBottomHidden = $state(false);
 	let isNearFooter = $state(false);
 
 	// Effect for scroll handling
@@ -44,16 +44,25 @@
 		function handleScroll() {
 			// Get current scroll position
 			const currentScrollY = window.scrollY;
-
-			// Determine scroll direction
-			if (currentScrollY > lastScrollY) {
-				scrollDirection = 'down';
-				isTopBezelCollapsed = true;
-				isBottomBezelCollapsed = false;
-			} else if (currentScrollY < lastScrollY) {
-				scrollDirection = 'up';
-				isTopBezelCollapsed = false;
-				isBottomBezelCollapsed = true;
+			
+			// Only trigger direction change after some movement to avoid micro-jitter
+			const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+			const scrollThreshold = 5; // minimum pixels to move before triggering direction change
+			
+			if (scrollDelta > scrollThreshold) {
+				// Determine scroll direction
+				if (currentScrollY > lastScrollY) {
+					scrollDirection = 'down';
+					isTopHidden = true;
+					isBottomHidden = false;
+				} else if (currentScrollY < lastScrollY) {
+					scrollDirection = 'up';
+					isTopHidden = false;
+					isBottomHidden = true;
+				}
+				
+				// Update last scroll position
+				lastScrollY = currentScrollY;
 			}
 
 			// Check if we're near the footer
@@ -65,9 +74,6 @@
 			} else {
 				isNearFooter = false;
 			}
-
-			// Update last scroll position
-			lastScrollY = currentScrollY;
 		}
 
 		window.addEventListener('scroll', handleScroll, { passive: true });
@@ -115,65 +121,52 @@
 	<ViewportSize />
 </div>
 
-<div class="relative min-h-screen">
-	<div
+<div class="relative min-h-screen border-12s _border-background">
+	
+	<div class="z-50 fixed left smin-w-1 md:w-3 bg-background h-screen"></div>
+	<div class="z-50 fixed top-0 smin-w-1 md:h-3 bg-background w-screen"></div>
+	<div class="z-50 fixed bottom-0 h-5 md:h-3 bg-background w-screen"></div>
+
+	<!-- Top navigation - fixed at top, slides up when scrolling down -->
+	<div 
 		class={cn(
-			'pointer-events-auto fixed z-50 w-full overflow-hidden',
-			'_pb-3 transition-all duration-200 ease-in-out',
-			'px-4 md:px-8 lg:px-12 xl:px-16',
-			isTopBezelCollapsed ? 'h-0' : 'h-full'
+			"fixed top-0 left-0 right-0 z-50 bg-background border-b border-border/20",
+			"transition-transform duration-300 ease-in-out",
+			isTopHidden ? "-translate-y-full" : "translate-y-0"
 		)}
 	>
-		<Nav />
+		<!-- Left/right bezels with auto width -->
+		<div class="flex">
+			<div class="flex-1 px-4 md:px-8 lg:px-12 xl:px-16">
+				<Nav />
+			</div>
+			<!-- <div class="min-w-1 md:min-w-3 bg-background h-full"></div> -->
+		</div>
 	</div>
 
-
-
 	<!-- Main content -->
-	<main class="bg-muted/30 min-h-screen w-full">
+	<main class="bg-muted/30 min-h-screen w-full py-16">
 		{@render children()}
 	</main>
 
 	<!-- Footer in the normal document flow -->
 	<Footer />
 
-	<!-- HUD overlay with CSS grid for bezels -->
-	<div class="pointer-events-none fixed inset-0 z-10">
-		<div
-			class="grid h-full w-full grid-cols-[minmax(0.5rem,auto)_1fr_minmax(0.10rem,auto)] grid-rows-[auto_1fr_auto]"
-		>
-			<!-- Top row: Nav (collapses when scrolling down) -->
-			<div
-				class={cn(
-					'bg-background pointer-events-auto col-span-3 overflow-hidden',
-					'pb-3 transition-all duration-200 ease-in-out',
-					'px-4 md:px-8 lg:px-12 xl:px-16',
-					isTopBezelCollapsed ? 'h-3' : 'h-18'
-				)}
-			>
-				<!-- <Nav /> -->
-			</div>
-
-			<!-- Left bezel -->
-			<div class="bg-background min-w-1 md:min-w-3"></div>
-
-			<!-- Center cutout -->
-			<div class="outline-background h-full w-full rounded-2xl outline-12"></div>
-
-			<!-- Right bezel -->
-			<div class="bg-background min-w-0"></div>
-
-			<!-- Bottom row: FomoApp (collapses when scrolling up or near footer) -->
-			<div
-				class={cn(
-					'bg-background pointer-events-auto srelative col-span-3 w-full overflow-hidden',
-					'duration-200 ease-in-out origin-bottom transition-all',
-					'px-4 md:px-8 lg:px-12 xl:px-16',
-					isBottomBezelCollapsed || isNearFooter ? 'h-3 pt-3' : 'h-full'
-				)}
-			>
+	<!-- Bottom FOMO App - fixed at bottom, slides down when scrolling up -->
+	<div 
+		class={cn(
+			"fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border/20",
+			"transition-transform duration-300 ease-in-out",
+			(isBottomHidden || isNearFooter) ? "translate-y-full" : "translate-y-0"
+		)}
+	>
+		<!-- Left/right bezels with auto width -->
+		<div class="flex">
+			<!-- <div class="min-w-1 md:min-w-3 bg-background h-full"></div> -->
+			<div class="flex-1 w-full px-4 md:px-8 lg:px-12 xl:px-16">
 				<FomoApp />
 			</div>
+			<!-- <div class="min-w-1 md:min-w-3 bg-background h-full"></div> -->
 		</div>
 	</div>
 </div>

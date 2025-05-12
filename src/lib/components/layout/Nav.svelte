@@ -30,15 +30,15 @@
 
 <svelte:window onclick={handleClickOutside} />
 
-<header class="h-full w-full">
-	<div class="h-20 flex items-center justify-between">
+<header class="w-full">
+	<div class="h-16 flex items-center justify-between">
 		<!-- Logo -->
 		<a href="/" class="flex items-center">
 			<SpacefomoLogo size="md" />
 		</a>
 
 		<!-- Desktop Navigation -->
-		<div class="hidden md:block z-50 h-auto sabsolute __top-12 __right-5">
+		<div class="hidden md:block">
 			<NavigationMenu />
 		</div>
 
@@ -59,7 +59,7 @@
 	<!-- Mobile Menu Panel -->
 	{#if isMobileMenuOpen}
 		<div 
-			class="mobile-menu absolute inset-x-0 top-16 z-40 origin-top transform bg-background pb-4 shadow-md transition"
+			class="mobile-menu absolute left-0 right-0 z-50 origin-top transform bg-background pb-4 shadow-md transition"
 			transition:fly={{ y: -20, duration: 200 }}
 		>
 			<div class="px-4 pt-2 pb-3 space-y-1">
