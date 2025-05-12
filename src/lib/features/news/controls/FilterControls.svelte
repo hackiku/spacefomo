@@ -1,5 +1,4 @@
 <!-- src/lib/features/news/controls/FilterControls.svelte -->
-
 <script lang="ts">
   import TagSelector from './TagSelector.svelte';
   
@@ -45,8 +44,8 @@
   <!-- FOMO Threshold Slider -->
   <div class="space-y-2">
     <div class="flex items-center justify-between">
-      <p class="text-xs text-zinc-500">FOMO Threshold</p>
-      <span class="text-xs font-medium text-zinc-400">{fomoThreshold}</span>
+      <p class="text-xs text-muted-foreground font-medium">FOMO Threshold</p>
+      <div class="fomo-score text-sm">{fomoThreshold}</div>
     </div>
 
     <input
@@ -56,15 +55,15 @@
       value={fomoThreshold}
       onchange={(e) => onFomoThresholdChange(parseInt(e.currentTarget.value))}
       oninput={(e) => onFomoThresholdChange(parseInt(e.currentTarget.value))}
-      class="w-full appearance-none bg-zinc-800 h-2 rounded-full accent-violet-500"
+      class="w-full appearance-none bg-muted h-2 accent-primary"
     />
   </div>
 
   <!-- Tags Selection with adaptive layout -->
   {#if !compact}
     <div class="space-y-2">
-      <p class="text-xs text-zinc-500">Filter by Tags</p>
-      <div class="rounded-lg border border-zinc-800 bg-zinc-900/30 p-2 overflow-hidden">
+      <p class="text-xs text-muted-foreground font-medium">Filter by Tags</p>
+      <div class="border border-border bg-muted/30 p-2">
         <TagSelector 
           availableTags={availableTags} 
           selectedTags={selectedTags}
@@ -76,17 +75,17 @@
   {:else}
     <!-- Compact tag selection -->
     <div class="space-y-2">
-      <p class="text-xs text-zinc-500">Tags</p>
+      <p class="text-xs text-muted-foreground font-medium">Tags</p>
       <div class="flex flex-wrap gap-1">
         {#each availableTags as tag}
           {@const isSelected = selectedTags.includes(tag)}
           <button
             type="button"
-            class="px-2 py-0.5 text-xs rounded-full border
+            class="px-2 py-0.5 text-xs border
                    transition-colors
                    {isSelected 
-                     ? 'bg-violet-500/20 text-violet-300 border-violet-500/40' 
-                     : 'border-zinc-800 text-zinc-500 hover:text-zinc-400'}"
+                     ? 'bg-primary/20 text-primary border-primary/40' 
+                     : 'border-border text-muted-foreground hover:text-foreground'}"
             onclick={() => handleTagToggle(tag)}
             aria-pressed={isSelected}
           >
@@ -98,22 +97,22 @@
   {/if}
 
   <!-- Show only active toggle switch -->
-  <div class="flex items-center space-x-2">
+  <div class="flex items-center gap-2">
     <button
       type="button"
-      class="relative inline-flex h-5 w-9 items-center rounded-full 
+      class="relative inline-flex h-5 w-9 items-center
              transition-colors duration-200 flex-shrink-0
-             {showOnlyActive ? 'bg-violet-600' : 'bg-zinc-700'}"
+             {showOnlyActive ? 'bg-primary' : 'bg-muted'}"
       role="switch"
       aria-checked={showOnlyActive}
       onclick={() => onShowOnlyActiveChange(!showOnlyActive)}
     >
       <span
-        class="inline-block h-4 w-4 transform rounded-full bg-white shadow-md
+        class="inline-block h-4 w-4 transform bg-card shadow-sm
                transition-transform duration-200 ease-in-out
                {showOnlyActive ? 'translate-x-5' : 'translate-x-1'}"
       />
     </button>
-    <span class="text-xs text-zinc-400">Active week only</span>
+    <span class="text-xs text-muted-foreground">Active week only</span>
   </div>
 </div>

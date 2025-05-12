@@ -3,7 +3,7 @@
   import LayoutControls from '../controls/LayoutControls.svelte'; 
   import FilterControls from '../controls/FilterControls.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
-  import { CaretDown, CaretUp } from 'phosphor-svelte';
+  import { CaretDown, CaretUp, Sliders } from 'phosphor-svelte';
 
   let { 
     sidebarMode, columnCount, compact,
@@ -50,14 +50,24 @@
 
   {#if !compact}
     <!-- Full filter section -->
-    <div class="space-y-4 w-full">
+    <div class="space-y-4 w-full border-t border-border pt-6">
       <div class="flex items-center justify-between">
-        <h3 class="text-sm font-medium text-zinc-300">Filters</h3>
+        <div class="flex items-center gap-2 text-foreground">
+          <Sliders class="h-4 w-4 text-primary" />
+          <h3 class="text-sm font-medium">Filters</h3>
+        </div>
         <button 
-          class="text-xs text-zinc-500 hover:text-zinc-400 transition-colors"
+          class="group relative text-xs text-muted-foreground hover:text-foreground transition-colors
+                 before:absolute before:inset-0
+                 before:border before:border-primary/0
+                 before:translate-x-0.5 before:translate-y-0.5
+                 before:transition-transform before:duration-300
+                 hover:before:border-primary/10
+                 hover:before:translate-x-0 hover:before:translate-y-0
+                 cursor-pointer active:scale-95 px-2"
           onclick={() => showFilters = !showFilters}
         >
-          {showFilters ? 'Hide' : 'Show'}
+          <span>{showFilters ? 'Hide' : 'Show'}</span>
         </button>
       </div>
       
@@ -77,12 +87,21 @@
     <button
       type="button"
       onclick={() => showFilters = !showFilters}
-      class="flex items-center justify-between w-full p-2 rounded-lg 
-             border border-zinc-800 text-zinc-400 text-xs
-             hover:bg-zinc-800/50 hover:text-zinc-300 transition-colors"
+      class="group relative flex items-center justify-between w-full p-2
+             border border-border bg-card/50 text-muted-foreground text-xs
+             hover:text-foreground transition-colors
+             before:absolute before:inset-0
+             before:border before:border-primary/0
+             before:translate-x-0.5 before:translate-y-0.5
+             before:transition-transform before:duration-300
+             hover:before:border-primary/10
+             hover:before:translate-x-0 hover:before:translate-y-0"
       aria-expanded={showFilters}
     >
-      <span>Filters</span>
+      <div class="flex items-center gap-2">
+        <Sliders class="w-3 h-3 text-primary" />
+        <span>Filters</span>
+      </div>
 
       {#snippet caretIcon()}
         {#if showFilters}

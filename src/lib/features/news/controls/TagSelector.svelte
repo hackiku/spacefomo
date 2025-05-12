@@ -21,11 +21,17 @@
       {@const isSelected = selectedTags.includes(tag)}
       <button
         type="button"
-        class="group flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs
+        class="group relative flex items-center gap-1.5 px-2.5 py-1 text-xs
                transition-all duration-200 truncate max-w-[110px]
                {isSelected 
-                 ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40' 
-                 : 'border border-zinc-700 text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
+                 ? 'bg-primary/20 text-primary border border-primary/40' 
+                 : 'border border-border text-muted-foreground hover:text-foreground'}
+               before:absolute before:inset-0
+               before:border before:border-primary/0
+               before:translate-x-0.5 before:translate-y-0.5
+               before:transition-transform before:duration-300
+               hover:before:border-primary/10
+               hover:before:translate-x-0 hover:before:translate-y-0"
         onclick={() => onTagToggle(tag)}
         aria-pressed={isSelected}
       >
@@ -39,16 +45,16 @@
     {/each}
 
     {#if availableTags.length === 0}
-      <p class="text-sm text-zinc-500">No tags available</p>
+      <p class="text-sm text-muted-foreground">No tags available</p>
     {/if}
   </div>
 
   {#if selectedTags.length > 0}
     <div class="flex items-center justify-between">
-      <span class="text-xs text-zinc-500">{selectedTags.length} selected</span>
+      <span class="text-xs text-muted-foreground">{selectedTags.length} selected</span>
       <button
         type="button"
-        class="text-xs text-violet-400 hover:text-violet-300 transition-colors"
+        class="text-xs text-primary hover:text-secondary transition-colors"
         onclick={onClearTags}
       >
         Clear all
