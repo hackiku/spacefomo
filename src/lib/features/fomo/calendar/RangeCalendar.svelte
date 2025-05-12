@@ -24,15 +24,15 @@
   // Initialize with today's date as placeholder
   let placeholder = $state(today(getLocalTimeZone()));
   
-  // When range selection changes, dispatch an event
-  $effect(() => {
-    if (value?.start && value?.end) {
+  // Handle range selection change manually instead of with an effect
+  function handleValueChange(event) {
+    if (event?.start && event?.end) {
       dispatch('rangeSelected', { 
-        start: value.start, 
-        end: value.end 
+        start: event.start, 
+        end: event.end 
       });
     }
-  });
+  }
 </script>
 
 <RangeCalendar.Root
@@ -41,6 +41,7 @@
   fixedWeeks={true}
   bind:value
   bind:placeholder
+  onValueChange={handleValueChange}
 >
   {#snippet children({ months, weekdays })}
     <RangeCalendar.Header class="flex items-center justify-between mb-4">
