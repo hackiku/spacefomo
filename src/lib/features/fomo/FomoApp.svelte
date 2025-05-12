@@ -98,12 +98,12 @@
 </script>
 
 <div 
-  class="fixed bottom-0 left-0 right-0 z-50 transition-all duration-300"
+  class="__fixed __bottom-0 __left-0 right-0 z-50 transition-all duration-300"
   class:h-14={!isExpanded}
   class:h-64={isExpanded}
 >
   <!-- Main container -->
-  <div class="flex flex-col h-full border-t bg-background border-zinc-800/70 __bg-zinc-900/95 backdrop-blur-lg">
+  <div class="flex flex-col h-full ">
     <!-- Control bar (always visible) -->
     <div class="flex items-center justify-between h-14 px-4">
       <!-- Left section with fomo score -->

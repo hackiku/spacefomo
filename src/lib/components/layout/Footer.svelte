@@ -5,8 +5,8 @@
   import SpacefomoLogo from '$lib/components/ui/SpacefomoLogo.svelte';
 </script>
 
-<footer class="border-t border-border bg-card/60 backdrop-blur-sm">
-  <div class="container mx-auto py-12 px-6">
+<footer class="backdrop-blur-sm">
+  <div class="mx-auto py-12 px-6">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
       <!-- Logo and Description -->
       <div class="md:col-span-2">

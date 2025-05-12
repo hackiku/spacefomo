@@ -3,40 +3,41 @@
   import '../app.css';
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
-	import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
-	// contexts
-	import { createNewsContext } from '$lib/context/newsContext.svelte';
+  import FomoApp from '$lib/features/fomo/FomoApp.svelte';
+  import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
+  
+  // Contexts
+  import { createNewsContext } from '$lib/context/newsContext.svelte';
   import { createFomoContext } from '$lib/context/fomoContext.svelte';
   import { createNavContext } from '$lib/context/navContext.svelte';
-	import { createCtaContext } from '$lib/context/ctaContext.svelte';
-
+  import { createCtaContext } from '$lib/context/ctaContext.svelte';
   import { setContext } from 'svelte';
 
+  // Props
   let { data, children } = $props();
 
-  console.log('Layout data news items:', data.news?.length || 0);
-
-  // Create contexts instead of using global stores
+  // Create contexts
   const newsContext = createNewsContext(data.news || []);
   const fomoContext = createFomoContext(data.weeks || []);
   const navContext = createNavContext();
-	const ctaContext = createCtaContext();
-
+  const ctaContext = createCtaContext();
   
-  // Set contexts for child components to consume
+  // Set contexts
   setContext('news', newsContext);
   setContext('fomo', fomoContext);
   setContext('nav', navContext);
   setContext('cta', ctaContext);
-
+  
+  // Constants
+  const FOMO_HEIGHT = "3.5rem";
 </script>
 
 <svelte:head>
   <!-- Site-wide metadata -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#0D0B14" />
   
-  <!-- Default metadata (overridden by pages) -->
+  <!-- Default metadata -->
   <title>SpaceFomo | Hot Space News ~100 Words a Pop</title>
   <meta name="description" content="Get the latest space industry news, curated and condensed for busy space enthusiasts." />
   
@@ -52,23 +53,39 @@
   <meta name="twitter:title" content="SpaceFomo" />
   <meta name="twitter:description" content="Get the latest space industry news, curated and condensed for busy space enthusiasts." />
   
-  <!-- Robots and indexing --> 
+  <!-- SEO -->
   <meta name="robots" content="index, follow" />
-  
-  <!-- Canonical URL for home page -->
   <link rel="canonical" href="https://spacefomo.com" />
-  
-
 </svelte:head>
 
+<!-- Debug tool -->
 <div class="hidden md:block">
-	<ViewportSize />
+  <ViewportSize />
 </div>
 
-<div class="min-h-screen overflow-x-hidden">
+<!-- Main layout -->
+<div class="relative min-h-screen flex flex-col bg-background overflow-hidden">
+  <!-- Navigation -->
   <Nav />
-  <main>
-    {@render children()}
-  </main>
-  <Footer />
+  
+  <!-- Main content area -->
+  <div class="flex flex-col flex-grow px-1 md:pl-3 py-4 md:py-12">
+    <!-- Central content container -->
+    <div class="w-full __max-w-6xl mx-auto">
+      <!-- Rounded content container -->
+      <div class="bg-card border border-border rounded-lg overflow-hidden __mb-14">
+        <main class="__p-4 __md:p-6">
+          {@render children()}
+        </main>
+      </div>
+    </div>
+
+		<div class="absolute bottom-0 left-0 right-0 z-40 bg-background" >
+			<FomoApp />
+		</div>
+		<div class="w-full mt-auto">
+			<Footer />
+		</div>
+  </div>
+  
 </div>
