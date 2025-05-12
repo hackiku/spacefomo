@@ -2,59 +2,67 @@
 <script lang="ts">
   import type { NewsItem } from '$lib/types/news';
   import { Copy, CaretDown, ArrowUpRight, X } from 'phosphor-svelte';
-  import { Button } from "bits-ui";
+  import { Button, Tabs } from "bits-ui";
   import ViralTitle from './content/ViralTitle.svelte';
   import Summary from './content/Summary.svelte';
   import Source from './source/Source.svelte';
   import JsonData from './data/JsonData.svelte';
   import EntityTabs from './data/EntityTabs.svelte';
   import SmallTags from './data/SmallTags.svelte';
+  import { onMount, onDestroy } from 'svelte';
   
   let { article, onClose } = $props<{ 
     article: NewsItem;
     onClose?: () => void;
   }>();
   
-  let showJson = $state(false);
+  let activeTab = $state('entities');
   
-  function copyUrl() {
-    if (article?.url) {
-      navigator.clipboard.writeText(article.url);
-    }
-  }
+  // Prevent body scrolling when modal is open
+  onMount(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  });
+  
+  onDestroy(() => {
+    document.body.style.overflow = '';
+  });
 </script>
 
-<div class="relative">
-  <!-- Main Content -->
-  <div class="bg-background overflow-hidden">
+<div class="flex flex-col md:flex-row h-full bg-background">
+  <!-- Main Content (left column) -->
+  <div class="flex-1 flex flex-col relative">
     <!-- Close button (if in modal) -->
     {#if onClose}
-      <button
-        type="button"
-        class="absolute top-4 right-4 p-2 bg-muted text-muted-foreground hover:text-foreground hover:bg-muted transition-colors z-10"
+      <Button.Root
         onclick={onClose}
+        class="absolute top-4 right-4 p-2 z-30 bg-muted text-muted-foreground hover:text-foreground transition-colors"
         aria-label="Close"
       >
         <X class="h-5 w-5" />
-      </button>
+      </Button.Root>
     {/if}
     
     <!-- Header -->
-    <div class="relative px-8 pt-8 pb-6 border-b border-border">
-      <!-- FOMO score -->
-      <div class="absolute top-6 right-16 flex items-center">
-        <div class="fomo-score text-2xl font-semibold">
-          {article.fomo_score || 0}
+    <div class="relative px-8 pt-8 pb-6">
+      <!-- Viral Title with FOMO score displayed inline -->
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <ViralTitle title={article.title} viralTitle={article.viral_title} />
+        </div>
+        <div class="flex-shrink-0 ml-4">
+          <div class="fomo-score text-2xl font-semibold">
+            {article.fomo_score || 0}
+          </div>
         </div>
       </div>
-      
-      <!-- Viral Title - The AI-generated catchy title -->
-      <ViralTitle title={article.title} viralTitle={article.viral_title} />
     </div>
 
     <!-- Scrollable Content -->
-    <div class="max-h-[70vh] overflow-y-auto hide-scrollbar">
-      <div class="p-8 space-y-8 pb-24"> <!-- Added extra padding at bottom for fixed action bar -->
+    <div class="flex-1 overflow-y-auto hide-scrollbar px-8 pb-24">
+      <div class="space-y-8"> 
         <!-- Summary - if available -->
         {#if article.summary}
           <div class="mb-6">
@@ -78,28 +86,34 @@
           </div>
         {/if}
 
-        <!-- Entity Tabs (organized data display) -->
-        <EntityTabs entities={article.entities} context={article.context} />
+        <!-- Entity Tabs (shown on mobile only) -->
+        <div class="md:hidden">
+          <EntityTabs entities={article.entities} context={article.context} />
+        </div>
       </div>
     </div>
 
     <!-- Fixed Action Bar -->
-    <div class="absolute bottom-0 left-0 right-0 px-8 py-4 border-t border-border bg-card/95 backdrop-blur-sm flex items-center justify-between z-10">
-      <Button.Root
-        class="group relative flex items-center gap-1.5 px-3 py-2 text-sm
-               bg-muted border border-border text-muted-foreground
-               hover:bg-muted hover:text-foreground transition-colors
-               before:absolute before:inset-0
-               before:border before:border-primary/10
-               before:translate-x-0.5 before:translate-y-0.5
-               before:transition-transform before:duration-300
-               hover:before:translate-x-0 hover:before:translate-y-0"
-        onclick={() => showJson = !showJson}
-        aria-label={showJson ? "Hide details" : "Show details"}
-      >
-        <CaretDown class={`h-4 w-4 transition-transform ${showJson ? 'rotate-180' : ''}`} />
-        <span>{showJson ? 'Hide Raw Data' : 'Show Raw Data'}</span>
-      </Button.Root>
+    <div class="absolute bottom-0 left-0 right-0 px-8 py-4 border-t border-border bg-card/95 backdrop-blur-sm flex items-center justify-between z-20">
+      <!-- Tab controls for mobile view -->
+      <div class="block md:hidden">
+        <Tabs.Root bind:value={activeTab}>
+          <Tabs.List class="flex gap-2">
+            <Tabs.Trigger 
+              value="entities"
+              class="px-3 py-1 text-sm bg-muted text-muted-foreground data-[state=active]:text-foreground transition-colors"
+            >
+              Entities
+            </Tabs.Trigger>
+            <Tabs.Trigger 
+              value="json"
+              class="px-3 py-1 text-sm bg-muted text-muted-foreground data-[state=active]:text-foreground transition-colors"
+            >
+              Raw Data
+            </Tabs.Trigger>
+          </Tabs.List>
+        </Tabs.Root>
+      </div>
 
       <div class="flex items-center gap-3">
         <Button.Root
@@ -111,7 +125,7 @@
                  before:translate-x-0.5 before:translate-y-0.5
                  before:transition-transform before:duration-300
                  hover:before:translate-x-0 hover:before:translate-y-0"
-          onclick={copyUrl}
+          onclick={() => navigator.clipboard.writeText(article.url || '')}
           aria-label="Copy article URL"
         >
           <Copy class="h-5 w-5" />
@@ -149,19 +163,53 @@
       </div>
     </div>
   </div>
-
-  <!-- JSON Panel -->
-  {#if showJson}
-    <div class="mt-4">
+  
+  <!-- Right Sidebar with tabs for entity data and raw JSON (desktop only) -->
+  <div class="hidden md:flex flex-col w-80 border-l border-border h-full">
+    <Tabs.Root value="entities" class="h-full flex flex-col">
+      <Tabs.List class="flex border-b border-border">
+        <Tabs.Trigger 
+          value="entities"
+          class="flex-1 px-4 py-3 text-sm text-muted-foreground data-[state=active]:text-foreground data-[state=active]:border-b-2 data-[state=active]:border-primary transition-colors"
+        >
+          Entities
+        </Tabs.Trigger>
+        <Tabs.Trigger 
+          value="json"
+          class="flex-1 px-4 py-3 text-sm text-muted-foreground data-[state=active]:text-foreground data-[state=active]:border-b-2 data-[state=active]:border-primary transition-colors"
+        >
+          Raw Data
+        </Tabs.Trigger>
+      </Tabs.List>
+      
+      <Tabs.Content value="entities" class="flex-1 overflow-auto p-4">
+        <EntityTabs entities={article.entities} context={article.context} />
+      </Tabs.Content>
+      
+      <Tabs.Content value="json" class="flex-1 overflow-auto">
+        <JsonData 
+          data={{
+            context: article.context,
+            entities: article.entities
+          }}
+          onClose={() => {}}
+        />
+      </Tabs.Content>
+    </Tabs.Root>
+  </div>
+  
+  <!-- Mobile Tabs Content (shown when tab selected) -->
+  <div class="md:hidden fixed inset-0 z-10 bg-background" class:hidden={activeTab === 'entities'}>
+    <div class="pt-20 px-4 pb-20 h-full overflow-auto">
       <JsonData 
         data={{
           context: article.context,
           entities: article.entities
         }}
-        onClose={() => showJson = false}
+        onClose={() => activeTab = 'entities'}
       />
     </div>
-  {/if}
+  </div>
 </div>
 
 <style>

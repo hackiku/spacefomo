@@ -117,9 +117,9 @@
 </svelte:head>
 
 <!-- Debug tool -->
-<div class="hidden md:block">
+<!-- <div class="hidden md:block">
 	<ViewportSize />
-</div>
+</div> -->
 
 <div class="relative min-h-screen border-12s _border-background">
 	
