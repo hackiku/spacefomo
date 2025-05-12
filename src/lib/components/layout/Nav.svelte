@@ -30,7 +30,7 @@
 
 <svelte:window onclick={handleClickOutside} />
 
-<header class="h-full w-full">
+<header class="h-full w-full z-50">
 	<div class="h-full flex items-center justify-between px-3 md:px-6">
 		<!-- Logo -->
 		<a href="/" class="flex items-center">
@@ -38,7 +38,7 @@
 		</a>
 
 		<!-- Desktop Navigation -->
-		<div class="hidden md:block">
+		<div class="hidden md:block z-50">
 			<NavigationMenu />
 		</div>
 

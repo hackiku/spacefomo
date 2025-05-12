@@ -32,27 +32,38 @@
   
   // Scroll variables
   let lastScrollY = $state(0);
-  let scrollRatio = $state(1); // 1 = fully expanded, 0 = fully collapsed
+  let scrollDirection = $state('none'); // 'up', 'down', or 'none'
+  let isTopBezelCollapsed = $state(false);
+  let isBottomBezelCollapsed = $state(false);
+  let isNearFooter = $state(false);
   
-  // Effect for smooth scroll handling
+  // Effect for scroll handling
   $effect(() => {
     if (!browser) return;
     
     function handleScroll() {
-      // Calculate scroll velocity
+      // Get current scroll position
       const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
       
-      // Calculate scroll ratio based on direction and velocity
-      // Starts at 1 (fully expanded)
-      // Decreases when scrolling down (min 0)
-      // Increases when scrolling up (max 1)
-      if (scrollDelta > 0) {
-        // Scrolling down - decrease ratio
-        scrollRatio = Math.max(0, scrollRatio - (scrollDelta * 0.01));
-      } else if (scrollDelta < 0) {
-        // Scrolling up - increase ratio
-        scrollRatio = Math.min(1, scrollRatio - (scrollDelta * 0.01));
+      // Determine scroll direction
+      if (currentScrollY > lastScrollY) {
+        scrollDirection = 'down';
+        isTopBezelCollapsed = true;
+        isBottomBezelCollapsed = false;
+      } else if (currentScrollY < lastScrollY) {
+        scrollDirection = 'up';
+        isTopBezelCollapsed = false;
+        isBottomBezelCollapsed = true;
+      }
+      
+      // Check if we're near the footer
+      const footerPosition = document.querySelector('footer')?.getBoundingClientRect().top;
+      const windowHeight = window.innerHeight;
+      
+      if (footerPosition && footerPosition < windowHeight + 100) {
+        isNearFooter = true;
+      } else {
+        isNearFooter = false;
       }
       
       // Update last scroll position
@@ -96,8 +107,8 @@
 </div>
 
 <div class="relative min-h-screen">
-  <!-- Main content at full width/height -->
-  <main class="w-full min-h-screen bg-card">
+  <!-- Main content -->
+  <main class="w-full min-h-screen bg-muted/30">
     {@render children()}
   </main>
   
@@ -105,34 +116,43 @@
   <Footer />
   
   <!-- HUD overlay with CSS grid for bezels -->
-  <!-- <div class="fixed inset-r-2 inset-l-12 inset-t-0 inset-b-0 pointer-events-none z-10 "> -->
-		<div class="fixed inset-0 pointer-events-none z-10 ">
-    <div class="w-full h-full grid grid-cols-[minmax(0.75rem,auto)_1fr_minmax(0.75rem,auto)] grid-rows-[minmax(0.75rem,auto)_1fr_minmax(0.75rem,auto)]">
-      <!-- Top row: Nav -->
+  <div class="fixed inset-0 pointer-events-none z-10">
+    <div class="w-full h-full grid grid-cols-[minmax(0.5rem,auto)_1fr_minmax(0.10rem,auto)] grid-rows-[auto_1fr_auto]">
+      <!-- Top row: Nav (collapses when scrolling down) -->
       <div 
-        class="col-span-3 bg-background/90 backdrop-blur-sm pointer-events-auto transition-all duration-300"
-        style={`height: calc(4rem * ${scrollRatio} + 0.75rem * ${1 - scrollRatio})`}
+        class={cn(
+          "col-span-3 bg-background pointer-events-auto overflow-hidden",
+          "transition-all duration-200 ease-in-out pb-3",
+					"px-4 md:px-8 lg:px-12 xl:px-16",
+          isTopBezelCollapsed ? "h-3 _pb-3" : "h-16 pt-3 "
+        )}
       >
-        <Nav />
+        <!-- <div class={cn("w-full transition-transform duration-500 ease-in-out", 
+                       isTopBezelCollapsed ? "translate-y-0" : "translate-y-full")}> -->
+          <Nav />
+        <!-- </div> -->
       </div>
       
       <!-- Left bezel -->
-      <div class="bg-background min-w-3 transition-all duration-300"></div>
+      <div class="bg-background min-w-1 md:min-w-3"></div>
       
       <!-- Center cutout -->
       <div class="w-full h-full outline-12 outline-background rounded-2xl"></div>
       
       <!-- Right bezel -->
-      <div class="bg-background min-w-3">
-		</div>
+      <div class="bg-background min-w-0"></div>
       
-      <!-- Bottom row: FomoApp -->
-      <div 
-        class="col-span-3 bg-background backdrop-blur-sm pointer-events-auto transition-all duration-300"
-        style={`height: calc(4rem * ${scrollRatio} + 0.75rem * ${1 - scrollRatio})`}
-      >
-        <FomoApp />
-      </div>
+      <!-- Bottom row: FomoApp (collapses when scrolling up or near footer) -->
+<div 
+  class={cn(
+    "relative col-span-3 bg-background pointer-events-auto overflow-hidden w-full",
+    "transition-all __duration-200 __ease-in-out origin-bottom",
+		"px-4 md:px-8 lg:px-12 xl:px-16", 
+    (isBottomBezelCollapsed || isNearFooter) ? "h-3 pt-3" : "h-full"
+  )}
+>
+	<FomoApp />
+</div>
     </div>
   </div>
 </div>

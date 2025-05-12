@@ -98,7 +98,7 @@
 </script>
 
 <div 
-  class="transition-all duration-300 px-4 md:px-8 lg:px-12 xl:px-16 bg-background/80 backdrop-blur-sm"
+  class="transition-all duration-300"
   class:h-14={!isExpanded}
   class:h-64={isExpanded}
 >
