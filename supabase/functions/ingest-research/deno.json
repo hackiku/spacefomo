@@ -1,0 +1,12 @@
+{
+	"tasks": {
+		"deploy": "supabase functions deploy ingest-research"
+	},
+	"compilerOptions": {
+		"allowJs": true,
+		"lib": [
+			"deno.window"
+		],
+		"strict": true
+	}
+}
