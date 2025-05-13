@@ -92,13 +92,14 @@
 				>
 					Admin
 				</a>
-				<button 
+				<a
 					class="group relative w-full text-left px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground
                          border-l-2 border-transparent hover:border-primary/40 transition-colors cursor-pointer"
-					onclick={openAbout}
-				>
+					href="/about"
+												 >
+												 <!-- onclick={openAbout} -->
 					About
-				</button>
+			</a>
 			</div>
 		</div>
 	{/if}

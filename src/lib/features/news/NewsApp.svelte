@@ -37,7 +37,10 @@
   </div>
   
   <!-- Sidebar toggle component - independent of grid layout -->
-  <SidebarToggle bind:sidebarMode bind:columnCount />
+  <div class="fixed top-28 left-0">
+
+		<SidebarToggle bind:sidebarMode bind:columnCount />
+	</div>
   
   <!-- FomoApp stays at the bottom within the NewsApp container -->
   <!-- <div class="fixed bottom-0 left-0 right-0 z-40 h-14">
