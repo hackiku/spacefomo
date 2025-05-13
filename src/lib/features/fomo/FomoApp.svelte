@@ -11,7 +11,7 @@
   import FomoMenu from './controls/FomoMenu.svelte';
   import TimelineWrapper from './timeline/TimelineWrapper.svelte';
   import BarTimeline from './timeline/BarTimeline.svelte';
-  import { ChartLine, ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
+  import { FireSimple, ChartLine, ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
   // Get contexts for data
   const fomo = useFomo();
@@ -122,7 +122,7 @@
       <!-- Left section with fomo score -->
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-1.5">
-          <ChartLine weight="bold" class="w-5 h-5 text-primary" />
+          <FireSimple weight="bold" class="w-5 h-5 text-primary" />
           <span class="text-sm font-medium text-foreground">
             <!-- FOMO -->
             <span class="ml-1 text-lg font-semibold text-primary">44</span>

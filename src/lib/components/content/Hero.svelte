@@ -14,9 +14,9 @@
 
 <div class="container mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 relative">
 	<!-- Left-aligned content container -->
-	<div class="max-w-xl md:max-w-2xl space-y-8 md:ml-0">
+	<div class="__max-w-xl __md:max-w-2xl flex flex-col items-center space-y-8 md:ml-0">
 		<!-- Main Heading - more left-aligned -->
-		<h1 class="text-4xl text-foreground font-light sm:text-5xl lg:text-6xl leading-tight">
+		<h1 class="text-center text-4xl text-foreground font-light sm:text-5xl lg:text-7xl leading-tight">
 			There's no place <br class="sm:hidden"/> like space
 		</h1>
 
@@ -32,12 +32,12 @@
 	</div>
 
 	<!-- Tagline with arrow - positioned for desktop view -->
-	<div class="hidden md:block absolute right-10 lg:right-36 bottom-0 transform translate-y-20">
+	<div class="hidden md:block absolute left-24 lg:left-36 bottom-4 transform translate-y-36">
 		<div class="text-left rotate-6">
-			<span class="text-space-gradient text-xl md:text-xl lg:text-2xl font-semibold inline-block">
-				Hot space news<br/> ~100 words a pop
+			<span class="text-space-gradient text-xl md:text-xl lg:text-2xl font-regular inline-block">
+				Can't miss space news<br/> ~100 words a pop
 			</span>
-			<div class="h-16 mt-2">
+			<div class="h-16 mt-2 transform __rotate-45">
 				<svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M75 5 C40 5, 20 5, 5 55" stroke="url(#arrow-gradient)" stroke-width="3" stroke-linecap="round"/>
 					<path d="M15 45 L5 55 L20 55" stroke="url(#arrow-gradient)" stroke-width="3" transform="rotate(-48 6 57)" stroke-linecap="round" stroke-linejoin="round"/>
