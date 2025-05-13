@@ -1,6 +1,5 @@
 // supabase/functions/fetch-news/index.ts
 
-// Import type definitions for Supabase
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 

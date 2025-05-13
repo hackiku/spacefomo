@@ -2,12 +2,11 @@
 <script>
   import EventCard from './EventCard.svelte';
   
-  export let events = [];
-  export let isTestData = false;
-  export let columns = 2;
+  // Use $props for component props
+  let { events = [], isTestData = false, columns = 2 } = $props();
 </script>
 
-{#if events.length === 0}
+{#if !events || events.length === 0}
   <div class="p-8 text-center border border-border bg-card/50 backdrop-blur-sm">
     <p class="text-muted-foreground">No events available</p>
   </div>

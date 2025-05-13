@@ -1,7 +1,7 @@
 <!-- src/routes/events/EventCard.svelte -->
 <script>
-  export let event;
-  export let isTestData = false;
+  // Use $props for component props
+  let { event, isTestData = false } = $props();
   
   function formatDate(dateString) {
     if (!dateString) return '';
@@ -12,9 +12,14 @@
     });
   }
   
-  $: fomo = event.fomo_score || 0;
-  $: impact = event.impact_score || 0;
-  $: tags = Array.isArray(event.tags) ? event.tags : [];
+  // Derived values with $derived
+  const fomo = $derived(event?.fomo_score || 0);
+  const impact = $derived(event?.impact_score || 0);
+  
+  // Use $derived for derived state
+  const tags = $derived(
+    Array.isArray(event?.tags) ? event.tags : []
+  );
 </script>
 
 <div class="group relative w-full cursor-pointer">
@@ -39,7 +44,7 @@
 
       <!-- Date info -->
       <div class="flex items-center ml-auto">
-        {#if event.event_date}
+        {#if event?.event_date}
           <span class="text-lg text-muted-foreground">{formatDate(event.event_date)}</span>
         {/if}
       </div>
@@ -48,12 +53,12 @@
     <!-- Title -->
     <div class="mb-4">
       <h2 class="text-lg font-medium text-foreground line-clamp-2">
-        {event.title}
+        {event?.title}
       </h2>
     </div>
 
     <!-- Summary -->
-    {#if event.summary}
+    {#if event?.summary}
       <p class="text-sm text-muted-foreground mb-4 line-clamp-2">
         {event.summary}
       </p>
@@ -62,10 +67,10 @@
     <!-- Source count badge -->
     <div class="mb-3 flex items-center gap-2">
       <span class="bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-        {isTestData ? '1 source' : `${event.source_count} sources`}
+        {isTestData ? '1 source' : `${event?.source_count || 0} sources`}
       </span>
       
-      {#if !isTestData && event.primary_source}
+      {#if !isTestData && event?.primary_source}
         <span class="text-xs text-muted-foreground">Primary: {event.primary_source}</span>
       {/if}
     </div>
@@ -88,7 +93,8 @@
   </div>
   
   <!-- External link indicator -->
-  <div 
+  <a
+    href={`/events/${event?.slug}`}
     class="absolute bottom-5 right-5 flex items-center justify-center h-7 w-7
            bg-muted border border-border text-muted-foreground
            group-hover:text-foreground group-hover:border-venus-yellow/30
@@ -104,5 +110,5 @@
       <line x1="7" y1="17" x2="17" y2="7"></line>
       <polyline points="7 7 17 7 17 17"></polyline>
     </svg>
-  </div>
+  </a>
 </div>

@@ -16,11 +16,7 @@ export async function load() {
         tags, 
         event_date,
         entities,
-        context,
-        event_sources(
-          news_id, 
-          is_primary
-        )
+        context
       `)
 			.order('created_at', { ascending: false });
 
@@ -56,17 +52,47 @@ export async function load() {
 			};
 		}
 
-		// Process events to add source_count and primary_source
-		const processedEvents = events.map(event => {
-			const sources = event.event_sources || [];
-			const primarySource = sources.find(s => s.is_primary)?.news_id;
+		// For actual events, we need to get the sources count and primary source separately
+		// since the relationship query is having issues
+		const processedEvents = await Promise.all(events.map(async (event) => {
+			// Get sources count
+			const { count: sourceCount, error: countError } = await supabase
+				.from('event_sources')
+				.select('*', { count: 'exact', head: true })
+				.eq('event_id', event.id);
+
+			if (countError) console.error('Error getting source count:', countError);
+
+			// Get primary source
+			const { data: primarySource, error: primaryError } = await supabase
+				.from('event_sources')
+				.select('news_id')
+				.eq('event_id', event.id)
+				.eq('is_primary', true)
+				.limit(1);
+
+			if (primaryError) console.error('Error getting primary source:', primaryError);
+
+			// If we have a primary source, get its details
+			let primarySourceInfo = null;
+			if (primarySource && primarySource.length > 0) {
+				const { data: sourceDetails, error: sourceError } = await supabase
+					.from('processed_news')
+					.select('id, source')
+					.eq('id', primarySource[0].news_id)
+					.single();
+
+				if (!sourceError && sourceDetails) {
+					primarySourceInfo = sourceDetails.source;
+				}
+			}
 
 			return {
 				...event,
-				source_count: sources.length,
-				primary_source: primarySource
+				source_count: sourceCount || 0,
+				primary_source: primarySourceInfo
 			};
-		});
+		}));
 
 		return {
 			events: processedEvents,

@@ -289,17 +289,6 @@ s3_access_key = "env(S3_ACCESS_KEY)"
 # Configures AWS_SECRET_ACCESS_KEY for S3 bucket
 s3_secret_key = "env(S3_SECRET_KEY)"
 
-[functions.claude]
-enabled = true
-verify_jwt = true
-import_map = "./functions/claude/deno.json"
-# Uncomment to specify a custom file path to the entrypoint.
-# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/claude/index.ts"
-# Specifies static files to be bundled with the function. Supports glob patterns.
-# For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/claude/*.html" ]
-
 [functions.fetch-news]
 enabled = true
 verify_jwt = true
@@ -311,27 +300,6 @@ entrypoint = "./functions/fetch-news/index.ts"
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/fetch-news/*.html" ]
 
-[functions.get-news]
-enabled = true
-verify_jwt = true
-import_map = "./functions/get-news/deno.json"
-# Uncomment to specify a custom file path to the entrypoint.
-# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/get-news/index.ts"
-# Specifies static files to be bundled with the function. Supports glob patterns.
-# For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/get-news/*.html" ]
-
-[functions.process-submissions]
-enabled = true
-verify_jwt = true
-import_map = "./functions/process-submissions/deno.json"
-# Uncomment to specify a custom file path to the entrypoint.
-# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/process-submissions/index.ts"
-# Specifies static files to be bundled with the function. Supports glob patterns.
-# For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/process-submissions/*.html" ]
 
 [functions.get-submissions]
 enabled = true
@@ -343,17 +311,6 @@ entrypoint = "./functions/get-submissions/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/get-submissions/*.html" ]
-
-[functions.hello-world]
-enabled = true
-verify_jwt = true
-import_map = "./functions/hello-world/deno.json"
-# Uncomment to specify a custom file path to the entrypoint.
-# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/hello-world/index.ts"
-# Specifies static files to be bundled with the function. Supports glob patterns.
-# For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/hello-world/*.html" ]
 
 [functions.process-news]
 enabled = true

@@ -2,12 +2,21 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   
-  export let columns = 2;
+  // Define props with $props
+  let { columns = 2 } = $props();
+  
+  // Use $state to create local component state 
+  let localColumns = $state(columns);
   
   const dispatch = createEventDispatcher();
   
+  // Effect to keep props and local state in sync
+  $effect(() => {
+    localColumns = columns;
+  });
+  
   function setColumns(num) {
-    columns = num;
+    localColumns = num;
     dispatch('columns', num);
   }
 </script>
@@ -21,7 +30,7 @@
   <div class="flex gap-2">
     <!-- Column toggle buttons -->
     <button 
-      class={`p-2 border transition-colors ${columns === 1 ? 'bg-muted border-primary text-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}
+      class={`p-2 border transition-colors ${localColumns === 1 ? 'bg-muted border-primary text-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}
       on:click={() => setColumns(1)}
       aria-label="Single column"
     >
@@ -34,7 +43,7 @@
     </button>
     
     <button 
-      class={`p-2 border transition-colors ${columns === 2 ? 'bg-muted border-primary text-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}
+      class={`p-2 border transition-colors ${localColumns === 2 ? 'bg-muted border-primary text-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}
       on:click={() => setColumns(2)}
       aria-label="Two columns"
     >

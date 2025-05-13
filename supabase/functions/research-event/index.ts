@@ -1,40 +1,161 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
+// supabase/functions/research-event/index.ts
+// index.ts
+import { researchRelatedArticles, storeResearchResults } from './research.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// https://spacenews.com/ursa-major-wins-28-5-million-air-force-contract-to-flight-test-draper-engine-for-hypersonic-use/
-// https://breakingdefense.com/2025/05/ursa-major-looks-to-fly-draper-engine-takes-aim-at-rocket-engine-markets/
-// https://executivebiz.com/2025/05/ursa-major-wins-afrl-contract-to-demonstrate-draper/
-// https://www.defensedaily.com/air-force-taps-ursa-major-to-integrate-tactical-flight-demonstrator-for-hypersonic-uses/air-force/
-// https://www.ursamajor.com/media/press-release/afrl-awards-ursa-major-usd28-6m-contract
-// https://www.airforce-technology.com/news/ursa-afrl-deal-hypersonics/
+// Create a Supabase client
+const supabaseClient = (req: Request) => {
+	const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+	const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
 
+	const authHeader = req.headers.get('Authorization');
 
-// Setup type definitions for built-in Supabase Runtime APIs
-import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+	if (authHeader) {
+		// Use the client's JWT if provided
+		const token = authHeader.replace('Bearer ', '');
+		return createClient(supabaseUrl, supabaseKey, {
+			global: { headers: { Authorization: `Bearer ${token}` } },
+		});
+	}
 
-console.log("Hello from Functions!")
+	// Otherwise use the anon key
+	return createClient(supabaseUrl, supabaseKey);
+};
 
+// Handle requests
 Deno.serve(async (req) => {
-  const { name } = await req.json()
-  const data = {
-    message: `Hello ${name}!`,
-  }
+	// Handle CORS preflight request
+	if (req.method === 'OPTIONS') {
+		return new Response(null, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'POST, OPTIONS',
+				'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+			}
+		});
+	}
 
-  return new Response(
-    JSON.stringify(data),
-    { headers: { "Content-Type": "application/json" } },
-  )
-})
+	if (req.method !== 'POST') {
+		return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+			status: 405,
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*'
+			}
+		});
+	}
 
-/* To invoke locally:
+	try {
+		const url = new URL(req.url);
+		const requestData = await req.json();
 
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
+		// Test mode - research only, no database writes
+		if (url.pathname.endsWith('/test')) {
+			// First try simple response for connectivity testing
+			if (!requestData.title && !requestData.url && !requestData.submissionId) {
+				return new Response(
+					JSON.stringify({
+						success: true,
+						message: "Function is running correctly",
+						path: url.pathname
+					}),
+					{
+						headers: {
+							'Content-Type': 'application/json',
+							'Access-Control-Allow-Origin': '*'
+						}
+					}
+				);
+			}
 
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/research-event' \
-    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
+			// Perform research without database writes
+			const result = await researchRelatedArticles(
+				requestData,
+				requestData.apiKey // Optional API key override
+			);
 
-*/
+			return new Response(
+				JSON.stringify({
+					success: true,
+					data: result
+				}),
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*'
+					}
+				}
+			);
+		}
+		// Research only endpoint - store research but don't create event
+		else if (url.pathname.endsWith('/research')) {
+			// We need at least a submission ID or URL
+			if (!requestData.submissionId && !requestData.url) {
+				throw new Error('Either submissionId or url is required');
+			}
+
+			// Create Supabase client
+			const supabase = supabaseClient(req);
+
+			// Perform research
+			const result = await researchRelatedArticles(requestData);
+
+			// Store results if we have a submission ID
+			let researchId;
+			if (requestData.submissionId) {
+				researchId = await storeResearchResults(
+					requestData.submissionId,
+					result,
+					supabase
+				);
+			}
+
+			return new Response(
+				JSON.stringify({
+					success: true,
+					data: result,
+					researchId
+				}),
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*'
+					}
+				}
+			);
+		}
+		// Full production endpoint with event creation
+		else {
+			// This would include the code for creating events
+			// For now, just indicate this isn't implemented yet
+			return new Response(
+				JSON.stringify({
+					success: false,
+					error: "Event creation not yet implemented"
+				}),
+				{
+					status: 501, // Not Implemented
+					headers: {
+						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*'
+					}
+				}
+			);
+		}
+	} catch (error) {
+		console.error('Error processing request:', error);
+
+		return new Response(
+			JSON.stringify({
+				error: error.message || 'An unexpected error occurred'
+			}),
+			{
+				status: 500,
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*'
+				}
+			}
+		);
+	}
+});
