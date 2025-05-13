@@ -1,6 +1,6 @@
 // supabase/functions/research-event/index.ts
 // index.ts
-import { researchRelatedArticles, storeResearchResults } from './research.ts';
+import { researchRelatedArticles, storeResearchResults, createCandidateEvent } from './research.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 // Create a Supabase client
@@ -124,6 +124,41 @@ Deno.serve(async (req) => {
 				}
 			);
 		}
+
+		// Add this endpoint to index.ts
+
+		// Candidate endpoint - create a candidate event from research
+		else if (url.pathname.endsWith('/candidate')) {
+			// We need a research ID
+			if (!requestData.researchId) {
+				throw new Error('researchId is required');
+			}
+
+			// Create Supabase client
+			const supabase = supabaseClient(req);
+
+			// Create candidate event
+			const candidateId = await createCandidateEvent(
+				requestData.researchId,
+				supabase
+			);
+
+			return new Response(
+				JSON.stringify({
+					success: true,
+					data: {
+						candidateId
+					}
+				}),
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*'
+					}
+				}
+			);
+		}
+
 		// Full production endpoint with event creation
 		else {
 			// This would include the code for creating events
