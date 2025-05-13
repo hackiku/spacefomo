@@ -38,3 +38,4 @@ export interface StoredResearch {
 	status: 'complete' | 'error' | 'processing';
 	error?: string;
 }
+

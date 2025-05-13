@@ -1,0 +1,12 @@
+{
+	"tasks": {
+		"deploy": "supabase functions deploy write-raw-news"
+	},
+	"compilerOptions": {
+		"allowJs": true,
+		"lib": [
+			"deno.window"
+		],
+		"strict": true
+	}
+}
