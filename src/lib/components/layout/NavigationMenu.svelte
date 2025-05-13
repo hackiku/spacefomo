@@ -44,9 +44,9 @@
       description: "See which news made the biggest impact this week"
     },
     {
-      title: "Categories",
-      href: "/news/categories",
-      description: "Browse space news by topic and industry segment"
+      title: "Events",
+      href: "/events",
+      description: "Testy debuggy for news system"
     }
   ];
 </script>
