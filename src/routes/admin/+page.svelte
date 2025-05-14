@@ -1,16 +1,16 @@
 <!-- src/routes/admin/+page.svelte -->
-
 <script lang="ts">
   import { ArrowRight, RocketLaunch, Database, Code } from 'phosphor-svelte';
   import RawNewsQueue from './process/RawNewsQueue.svelte';
   import ProcessArticle from './process/ProcessArticle.svelte';
   import ApiMonitor from './misc/ApiMonitor.svelte';
+  import { cn } from '$lib/utils';
   
   // State
   let selectedArticle = $state<any>(null);
   let activeTab = $state('queue');
   
-  // Effect for URL params
+  // Effect to update tab when article is selected
   $effect(() => {
     if (selectedArticle) {
       activeTab = 'process';
@@ -64,7 +64,12 @@
       <div class="flex items-center gap-4">
         <button 
           onclick={() => activeTab = 'api'}
-          class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          class={cn(
+            "text-sm transition-colors",
+            activeTab === 'api' 
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
         >
           API Status
         </button>
@@ -84,9 +89,12 @@
           <ul class="space-y-1">
             <li>
               <button
-                class={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2
-                       ${activeTab === 'queue' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted hover:text-foreground'} 
-                       transition-colors`}
+                class={cn(
+                  "w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition-colors",
+                  activeTab === 'queue' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
                 onclick={() => activeTab = 'queue'}
               >
                 <Database weight={activeTab === 'queue' ? 'fill' : 'regular'} class="h-5 w-5" />
@@ -95,9 +103,12 @@
             </li>
             <li>
               <button
-                class={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2
-                       ${activeTab === 'process' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
-                       transition-colors`}
+                class={cn(
+                  "w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition-colors",
+                  activeTab === 'process' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
                 onclick={() => activeTab = 'process'}
                 disabled={!selectedArticle}
               >
