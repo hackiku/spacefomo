@@ -19,16 +19,22 @@
 	let { data, children } = $props();
 
 	// Create contexts
-	const newsContext = createNewsContext(data.news || []);
-	const fomoContext = createFomoContext(data.news || []);
+	const newsContext = createNewsContext(data.news || [], data.processedNews || []);
+	const fomoContext = createFomoContext();
 	const navContext = createNavContext();
 	const ctaContext = createCtaContext();
+
 
 	// Set contexts
 	setContext('news', newsContext);
 	setContext('fomo', fomoContext);
 	setContext('nav', navContext);
 	setContext('cta', ctaContext);
+
+	$effect(() => {
+    console.log('Initial news data:', data.news.length);
+    console.log('Initial processed news:', data.processedNews.length);
+  });
 
 	// Scroll variables
 	let lastScrollY = $state(0);

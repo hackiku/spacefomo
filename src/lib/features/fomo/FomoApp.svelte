@@ -1,7 +1,6 @@
-<!-- src/lib/features/fomo/FomoApp.svelte (updated) -->
+<!-- src/lib/features/fomo/FomoApp.svelte -->
 <script lang="ts">
-  import { useFomo } from '$lib/context/fomoContext.svelte';
-  import { getNewsContext } from '$lib/context/newsContext.svelte';
+  import { useFomo } from '$lib/hooks/useFomo.svelte';
   import { parseDate, type DateValue } from "@internationalized/date";
   
   // Components
@@ -11,28 +10,25 @@
   import CalendarMenu from './calendar/CalendarMenu.svelte';
   import FomoScoreButton from './score/FomoScoreButton.svelte';
   import FomoScoreMenu from './score/FomoScoreMenu.svelte';
-  // import TimelineWrapper from './timeline/TimelineWrapper.svelte';
-  // import BarTimeline from './timeline/BarTimeline.svelte';
   import { ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
-  // Get contexts for data
-  const fomo = useFomo();
-  const news = getNewsContext();
+  // Get context data via hook
+  const {
+    fomoThreshold, 
+    startDate, 
+    endDate,
+    isExpanded,
+    setFomoThreshold,
+    setDateRange,
+    toggleExpanded,
+    currentScore,
+    articleCount
+  } = useFomo();
   
-  // App state
-  let isExpanded = $state(false);
+  // Local UI state that doesn't need to be shared
   let isScoreMenuOpen = $state(false);
   let isCalendarMenuOpen = $state(false);
   let isShareModalOpen = $state(false);
-  let startDate = $state<Date | null>(null);
-  let endDate = $state<Date | null>(null);
-  let visualizationType = $state<'bar' | 'line' | 'heatmap'>('bar');
-  let fomoThreshold = $state(50);
-  
-  // Toggle expanded state for timeline
-  function toggleExpanded() {
-    isExpanded = !isExpanded;
-  }
   
   // Toggle score menu
   function toggleScoreMenu() {
@@ -60,31 +56,21 @@
     const { startDate: start, endDate: end } = event.detail;
     
     if (start && end) {
-      // Convert DateValue to JavaScript Date
-      startDate = new Date(start.toString());
-      endDate = new Date(end.toString());
+      // Convert DateValue to JavaScript Date and update context
+      const startDateObj = new Date(start.toString());
+      const endDateObj = new Date(end.toString());
+      setDateRange(startDateObj, endDateObj);
     } else {
-      resetDateFilter();
+      setDateRange(null, null);
     }
     
     // Close the calendar menu after selection
     isCalendarMenuOpen = false;
   }
   
-  // Reset the date filter
-  function resetDateFilter() {
-    startDate = null;
-    endDate = null;
-  }
-  
   // Handle FOMO threshold change
   function handleThresholdChange(value: number) {
-    fomoThreshold = value;
-  }
-  
-  // Handle visualization type change
-  function handleVisualizationChange(type: 'bar' | 'line' | 'heatmap') {
-    visualizationType = type;
+    setFomoThreshold(value);
   }
   
   // Close menus when clicking outside
@@ -117,10 +103,11 @@
         
         <!-- FOMO Score with menu -->
         <div class="relative">
-          <FomoScoreButton score={44} onClick={toggleScoreMenu} />
+          <FomoScoreButton score={currentScore} onClick={toggleScoreMenu} />
           <FomoScoreMenu 
             isOpen={isScoreMenuOpen} 
-            score={44}
+            score={currentScore}
+            articleCount={articleCount}
             threshold={fomoThreshold}
             onThresholdChange={handleThresholdChange}
           />
@@ -129,15 +116,15 @@
         <!-- Date range button with menu -->
         <div class="relative">
           <CalendarButton 
-            {startDate}
-            {endDate}
+            startDate={startDate}
+            endDate={endDate}
             onClick={toggleCalendarMenu}
           />
           
           <CalendarMenu 
             isOpen={isCalendarMenuOpen}
-            {startDate}
-            {endDate}
+            startDate={startDate}
+            endDate={endDate}
             on:dateRangeChange={handleDateRangeChange}
             on:close={() => isCalendarMenuOpen = false}
           />

@@ -13,7 +13,7 @@
   } = $props();
   
   // Use the hook for data fetching
-  const { items, isLoading, error } = useNews();
+  const { items, isLoading, setActiveItem, error } = useNews();
   
   // Modal state
   let modalOpen = $state(false);
@@ -22,6 +22,7 @@
   // Modal control functions
   function openModal(article: NewsItem) {
     currentArticle = article;
+	  setActiveItem(article.id);  // Update in the context too
     modalOpen = true;
   }
   

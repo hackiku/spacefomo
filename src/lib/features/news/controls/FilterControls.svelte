@@ -1,118 +1,109 @@
 <!-- src/lib/features/news/controls/FilterControls.svelte -->
 <script lang="ts">
-  import TagSelector from './TagSelector.svelte';
+  import { useFomo } from '$lib/hooks/useFomo.svelte';
+  import { useNews } from '$lib/hooks/useNews.svelte';
   
-  let { 
+  // Get context data from hooks
+  const { 
     fomoThreshold, 
-    selectedTags, 
-    showOnlyActive,
-    compact = false,
-    onFomoThresholdChange,
-    onSelectedTagsChange,
-    onShowOnlyActiveChange
-  } = $props<{
-    fomoThreshold: number;
-    selectedTags: string[];
-    showOnlyActive: boolean;
-    compact?: boolean;
-    onFomoThresholdChange: (value: number) => void;
-    onSelectedTagsChange: (tags: string[]) => void;
-    onShowOnlyActiveChange: (value: boolean) => void;
-  }>();
-
-  // Available tags to filter by - can be expanded
-  const availableTags = [
-    'SpaceX', 'NASA', 'Rocket Lab', 'Mars', 'Moon'
-  ];
+    selectedTags,
+    setFomoThreshold,
+    setSelectedTags
+  } = useFomo();
   
-  // Handle tag selection
-  function handleTagToggle(tag: string) {
-    const newTags = selectedTags.includes(tag)
-      ? selectedTags.filter(t => t !== tag)
-      : [...selectedTags, tag];
+  const { allItems } = useNews();
+  
+  // Derived property - get all unique tags from the data
+  const availableTags = $derived(() => {
+    const tagSet = new Set<string>();
     
-    onSelectedTagsChange(newTags);
+    allItems.forEach(item => {
+      if (item.tags && Array.isArray(item.tags)) {
+        item.tags.forEach(tag => tagSet.add(tag));
+      }
+    });
+    
+    return Array.from(tagSet).sort();
+  });
+  
+  // Handle threshold slider change
+  function handleThresholdChange(e: Event) {
+    const value = parseInt((e.target as HTMLInputElement).value);
+    setFomoThreshold(value);
   }
   
-  // Handle clearing all tags
-  function handleClearTags() {
-    onSelectedTagsChange([]);
+  // Handle tag selection changes
+  function handleTagSelect(tag: string) {
+    if (selectedTags.includes(tag)) {
+      // Remove tag if already selected
+      setSelectedTags(selectedTags.filter(t => t !== tag));
+    } else {
+      // Add tag if not selected
+      setSelectedTags([...selectedTags, tag]);
+    }
+  }
+  
+  // Clear all selected tags
+  function clearTags() {
+    setSelectedTags([]);
   }
 </script>
 
-<div class="space-y-4 w-full {compact ? 'text-sm' : ''}">
-  <!-- FOMO Threshold Slider -->
+<div class="space-y-6">
+  <!-- FOMO threshold slider -->
   <div class="space-y-2">
     <div class="flex items-center justify-between">
-      <p class="text-xs text-muted-foreground font-medium">FOMO Threshold</p>
-      <div class="fomo-score text-sm">{fomoThreshold}</div>
+      <label for="fomo-threshold" class="text-xs text-muted-foreground font-medium">
+        FOMO Score Threshold
+      </label>
+      <span class="text-sm font-medium">{fomoThreshold}</span>
     </div>
-
+    
     <input
+      id="fomo-threshold"
       type="range"
       min="0"
       max="100"
       value={fomoThreshold}
-      onchange={(e) => onFomoThresholdChange(parseInt(e.currentTarget.value))}
-      oninput={(e) => onFomoThresholdChange(parseInt(e.currentTarget.value))}
-      class="w-full appearance-none bg-muted h-2 accent-primary"
+      onchange={handleThresholdChange}
+      oninput={handleThresholdChange}
+      class="w-full appearance-none bg-muted h-2 rounded-md accent-primary"
     />
   </div>
-
-  <!-- Tags Selection with adaptive layout -->
-  {#if !compact}
-    <div class="space-y-2">
-      <p class="text-xs text-muted-foreground font-medium">Filter by Tags</p>
-      <div class="border border-border bg-muted/30 p-2">
-        <TagSelector 
-          availableTags={availableTags} 
-          selectedTags={selectedTags}
-          onTagToggle={handleTagToggle}
-          onClearTags={handleClearTags}
-        />
-      </div>
+  
+  <!-- Tags filter -->
+  <div class="space-y-2">
+    <div class="flex items-center justify-between">
+      <label class="text-xs text-muted-foreground font-medium">Tags</label>
+      {#if selectedTags.length > 0}
+        <button 
+          type="button"
+          class="text-xs text-primary hover:underline"
+          onclick={clearTags}
+        >
+          Clear ({selectedTags.length})
+        </button>
+      {/if}
     </div>
-  {:else}
-    <!-- Compact tag selection -->
-    <div class="space-y-2">
-      <p class="text-xs text-muted-foreground font-medium">Tags</p>
-      <div class="flex flex-wrap gap-1">
-        {#each availableTags as tag}
-          {@const isSelected = selectedTags.includes(tag)}
-          <button
-            type="button"
-            class="px-2 py-0.5 text-xs border
-                   transition-colors
-                   {isSelected 
-                     ? 'bg-primary/20 text-primary border-primary/40' 
-                     : 'border-border text-muted-foreground hover:text-foreground'}"
-            onclick={() => handleTagToggle(tag)}
-            aria-pressed={isSelected}
-          >
-            {tag}
-          </button>
-        {/each}
-      </div>
+    
+    <div class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-1">
+      {#each availableTags as tag}
+        <button
+          type="button"
+          class="bg-muted border border-border px-2 py-0.5 text-xs rounded-sm transition-colors"
+          class:bg-card={selectedTags.includes(tag)}
+          class:border-card={selectedTags.includes(tag)}
+          class:text-foreground={selectedTags.includes(tag)}
+          class:text-muted-foreground={!selectedTags.includes(tag)}
+          onclick={() => handleTagSelect(tag)}
+        >
+          {tag}
+        </button>
+      {/each}
+      
+      {#if availableTags.length === 0}
+        <span class="text-xs text-muted-foreground italic">No tags available</span>
+      {/if}
     </div>
-  {/if}
-
-  <!-- Show only active toggle switch -->
-  <div class="flex items-center gap-2">
-    <button
-      type="button"
-      class="relative inline-flex h-5 w-9 items-center
-             transition-colors duration-200 flex-shrink-0
-             {showOnlyActive ? 'bg-primary' : 'bg-muted'}"
-      role="switch"
-      aria-checked={showOnlyActive}
-      onclick={() => onShowOnlyActiveChange(!showOnlyActive)}
-    >
-      <span
-        class="inline-block h-4 w-4 transform bg-card shadow-sm
-               transition-transform duration-200 ease-in-out
-               {showOnlyActive ? 'translate-x-5' : 'translate-x-1'}"
-      />
-    </button>
-    <span class="text-xs text-muted-foreground">Active week only</span>
   </div>
 </div>

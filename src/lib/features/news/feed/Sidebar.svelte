@@ -2,7 +2,7 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
   import LayoutControls from '../controls/LayoutControls.svelte'; 
-  import FilterControls from '../controls/FilterControls.svelte';
+	import FilterControls from '../controls/FilterControls.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
   import { Sliders, CaretDown, CaretUp, ArrowsInLineHorizontal, Columns, Table, Rows, SquaresFour, X } from 'phosphor-svelte';
   import { ToggleGroup } from "bits-ui";
@@ -40,9 +40,9 @@
   }
   
   // Handle filter changes
-  function handleFomoChange(value: number) {
-    fomoScore = value;
-  }
+  // function handleFomoChange(value: number) {
+  //   fomoScore = value;
+  // }
   
   function handleTagsChange(tags: string[]) {
     selectedTags = tags;
@@ -189,14 +189,23 @@
             <h3 class="text-sm font-medium text-foreground">Filters</h3>
           </div>
           
-          <FilterControls 
+					<div class="border-t border-border pt-4">
+  <div class="flex items-center gap-2 mb-4">
+    <Sliders class="h-4 w-4 text-primary" />
+    <h3 class="text-sm font-medium text-foreground">Filters</h3>
+  </div>
+  
+  <FilterControls />
+</div>
+
+          <!-- <FilterControls 
             fomoThreshold={fomoScore}
             selectedTags={selectedTags}
             showOnlyActive={activeOnly}
             onFomoThresholdChange={handleFomoChange}
             onSelectedTagsChange={handleTagsChange}
             onShowOnlyActiveChange={handleActiveChange}
-          />
+          /> -->
         </div>
       </div>
     </div>

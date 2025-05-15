@@ -1,77 +1,73 @@
 // src/lib/hooks/useNews.svelte.ts
-import { fetchNews } from '$lib/services/news/newsService';
 import { getNewsContext } from '$lib/context/newsContext.svelte';
+import { getFomoContext } from '$lib/context/fomoContext.svelte';
 import type { NewsItem } from '$lib/types/news';
 
+
+
 export function useNews() {
-	// Get the context
-	const context = getNewsContext();
+	// Get contexts
+	const newsContext = getNewsContext();
+	const fomoContext = getFomoContext();
 
-	// Destructure what we need from context
-	const {
-		items,
-		activeItem,
-		isLoading,
-		error,
-		setItems,
-		setActiveItem,
-		setLoading,
-		setError
-	} = context;
+	// Apply filters from FOMO context to items
+	const filteredItems = $derived(() => {
+		const allItems = newsContext.currentItems;
 
-	// Our filters state (local to this hook instance)
-	let filters = $state({
-		limit: 50,
-		offset: 0,
-		tags: [] as string[],
-		weekId: null as number | null,
-		minScore: 0
+		// If no items, return empty array
+		if (!allItems || allItems.length === 0) return [];
+
+		// Apply FOMO threshold filter
+		return allItems.filter(item => {
+			// Filter by FOMO score
+			if (!item.fomo_score || item.fomo_score < fomoContext.fomoThreshold) {
+				return false;
+			}
+
+			// Filter by date range if active
+			if (fomoContext.startDate && fomoContext.endDate && item.publication_date) {
+				const pubDate = new Date(item.publication_date);
+				if (pubDate < fomoContext.startDate || pubDate > fomoContext.endDate) {
+					return false;
+				}
+			}
+
+			// Filter by tags if set
+			if (fomoContext.selectedTags && fomoContext.selectedTags.length > 0) {
+				if (!item.tags || !Array.isArray(item.tags)) return false;
+
+				// Check if any selected tag is in the item's tags
+				const hasMatchingTag = fomoContext.selectedTags.some(tag =>
+					item.tags?.includes(tag)
+				);
+
+				if (!hasMatchingTag) return false;
+			}
+
+			return true;
+		});
 	});
 
-	// Load news data
-	async function loadNews() {
-		setLoading(true);
-		setError(null);
+	console.log('All items:', newsContext.currentItems.length);
+	console.log('Filtered items:', filteredItems.length);
+	console.log('FOMO threshold:', fomoContext.fomoThreshold);
 
-		try {
-			const result = await fetchNews(filters);
-			setItems(result.items);
-		} catch (e) {
-			console.error('Error loading news:', e);
-			setError(e instanceof Error ? e.message : 'Unknown error loading news');
-		} finally {
-			setLoading(false);
-		}
-	}
 
-	// Update filters and reload data
-	function setFilters(newFilters: Partial<typeof filters>) {
-		filters = { ...filters, ...newFilters };
-		loadNews();
-	}
-
-	// Load initial data if not already loaded
-	$effect(() => {
-		if (items.length === 0 && !isLoading && !error) {
-			loadNews();
-		}
-	});
-
-	// Enhanced setActiveItem with logging
-	function setActiveItemWithLogging(id: number | null) {
-		console.log('useNews setActiveItem called with ID:', id);
-		setActiveItem(id);
-	}
-
-	// Return the API
 	return {
-		items,
-		activeItem,  // Just pass through the context's activeItem
-		isLoading,
-		error,
-		filters,
-		setActiveItem: setActiveItemWithLogging,
-		setFilters,
-		refresh: loadNews
+		// Original data
+		allItems: newsContext.currentItems,
+
+		// Filtered data
+		items: filteredItems,
+
+		// Pass through other context properties
+		isLoading: newsContext.isLoading,
+		error: newsContext.error,
+		activeItemId: newsContext.activeItemId,
+
+		// Pass through context methods
+		setActiveItem: newsContext.setActiveItem,
+		setActiveDataSource: newsContext.setActiveDataSource
 	};
 }
+
