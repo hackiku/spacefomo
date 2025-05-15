@@ -43,6 +43,7 @@
 	let isBottomHidden = $state(false);
 	let isNearFooter = $state(false);
 
+	
 	// Effect for scroll handling
 	$effect(() => {
 		if (!browser) return;

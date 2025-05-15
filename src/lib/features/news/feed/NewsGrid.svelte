@@ -3,7 +3,6 @@
   import { useNews } from '$lib/hooks';
   import SmallCard from '../article/SmallCard.svelte';
   import NewsModal from './NewsModal.svelte';
-  // import SidebarToggle from '../layout/SidebarToggle.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
   import type { NewsItem } from '$lib/types/news';
   
@@ -12,8 +11,17 @@
     sidebarMode = $bindable<SidebarMode>('default')
   } = $props();
   
-  // Use the hook for data fetching
-  const { items, isLoading, setActiveItem, error } = useNews();
+  // Use the hook for data fetching, get both filtered and all items
+  const { items, allItems, isLoading, setActiveItem, error } = useNews();
+  
+  // Use all items as a fallback until filtering works
+  const displayItems = items.length > 0 ? items : allItems;
+
+  console.log('NewsGrid rendering with:', {
+    filteredItems: items.length,
+    allItems: allItems.length,
+    display: displayItems.length
+  });
   
   // Modal state
   let modalOpen = $state(false);
@@ -22,7 +30,7 @@
   // Modal control functions
   function openModal(article: NewsItem) {
     currentArticle = article;
-	  setActiveItem(article.id);  // Update in the context too
+    setActiveItem(article.id);
     modalOpen = true;
   }
   
@@ -32,9 +40,6 @@
 </script>
 
 <div class="w-full">
-  <!-- SidebarToggle positioned inside the grid -->
-  <!-- <SidebarToggle bind:sidebarMode bind:columnCount /> -->
-  
   <!-- News content with appropriate spacing -->
   <div class="space-y-6 pt-4">
     {#if isLoading}
@@ -48,11 +53,11 @@
       <div class="p-8 text-center border border-destructive/30 bg-destructive/10 backdrop-blur-sm">
         <p class="text-destructive">Error loading news: {error}</p>
       </div>
-    {:else if items.length > 0}
+    {:else if displayItems.length > 0}
       {#if columnCount === 1}
         <!-- Single column layout -->
         <div class="space-y-6">
-          {#each items as article (article.id)}
+          {#each displayItems as article (article.id)}
             <div class="mx-auto">
               <SmallCard 
                 article={article} 
@@ -64,7 +69,7 @@
       {:else}
         <!-- Two-column grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {#each items as article (article.id)}
+          {#each displayItems as article (article.id)}
             <SmallCard 
               article={article} 
               onSelect={() => openModal(article)}

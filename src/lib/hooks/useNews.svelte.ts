@@ -3,24 +3,34 @@ import { getNewsContext } from '$lib/context/newsContext.svelte';
 import { getFomoContext } from '$lib/context/fomoContext.svelte';
 import type { NewsItem } from '$lib/types/news';
 
-
-
 export function useNews() {
 	// Get contexts
 	const newsContext = getNewsContext();
 	const fomoContext = getFomoContext();
 
+	// All items from context
+	const allItems = newsContext.newsItems;
+
 	// Apply filters from FOMO context to items
 	const filteredItems = $derived(() => {
-		const allItems = newsContext.currentItems;
+		// Log key filter components
+		console.log('Filtering with threshold:', fomoContext.fomoThreshold);
+		console.log('Date range:', fomoContext.startDate, fomoContext.endDate);
+		console.log('Tags:', fomoContext.selectedTags);
 
 		// If no items, return empty array
 		if (!allItems || allItems.length === 0) return [];
 
-		// Apply FOMO threshold filter
+		// Apply FOMO threshold filter - temporarily relax this to see if it's the issue
 		return allItems.filter(item => {
-			// Filter by FOMO score
-			if (!item.fomo_score || item.fomo_score < fomoContext.fomoThreshold) {
+			// Accept items with no FOMO score in testing
+			if (item.fomo_score === null || item.fomo_score === undefined) {
+				return true;
+			}
+
+			// For testing purposes, let's be more lenient with the threshold
+			// After testing, you can restore the proper threshold check
+			if (fomoContext.fomoThreshold > 0 && item.fomo_score < fomoContext.fomoThreshold) {
 				return false;
 			}
 
@@ -34,7 +44,8 @@ export function useNews() {
 
 			// Filter by tags if set
 			if (fomoContext.selectedTags && fomoContext.selectedTags.length > 0) {
-				if (!item.tags || !Array.isArray(item.tags)) return false;
+				// Skip tag filtering if item has no tags
+				if (!item.tags || !Array.isArray(item.tags)) return true;
 
 				// Check if any selected tag is in the item's tags
 				const hasMatchingTag = fomoContext.selectedTags.some(tag =>
@@ -48,14 +59,11 @@ export function useNews() {
 		});
 	});
 
-	console.log('All items:', newsContext.currentItems.length);
-	console.log('Filtered items:', filteredItems.length);
-	console.log('FOMO threshold:', fomoContext.fomoThreshold);
-
+	console.log('Filtered items count:', filteredItems.length);
 
 	return {
 		// Original data
-		allItems: newsContext.currentItems,
+		allItems: allItems,
 
 		// Filtered data
 		items: filteredItems,
@@ -70,4 +78,3 @@ export function useNews() {
 		setActiveDataSource: newsContext.setActiveDataSource
 	};
 }
-

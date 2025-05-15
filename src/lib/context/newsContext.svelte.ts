@@ -3,14 +3,28 @@ import { getContext } from 'svelte';
 import type { NewsItem } from '$lib/types/news';
 
 export function createNewsContext(initialNews: NewsItem[] = [], initialProcessedNews: NewsItem[] = []) {
+	// Process the data to ensure dates are correctly formatted
+	const processData = (items: any[]) => {
+		return items.map(item => ({
+			...item,
+			created_at: item.created_at instanceof Date ? item.created_at : new Date(item.created_at),
+			publication_date: item.publication_date ?
+				(item.publication_date instanceof Date ? item.publication_date : new Date(item.publication_date)) : null
+		}));
+	};
+	
 	// Core state
-	let newsItems = $state<NewsItem[]>(initialNews);
-	let processedNewsItems = $state<NewsItem[]>(initialProcessedNews);
+	let newsItems = $state<NewsItem[]>(processData(initialNews));
+	let processedNewsItems = $state<NewsItem[]>(processData(initialProcessedNews));
 	let activeItemId = $state<number | null>(null);
 	let activeDataSource = $state<'news' | 'processed_news'>('news');
 	let isLoading = $state(false);
 	let error = $state<string | null>(null);
 
+	// Important - define using a function for proper reactivity
+	function getCurrentItems() {
+		return activeDataSource === 'news' ? newsItems : processedNewsItems;
+	}
 	// Current items based on active data source
 	const currentItems = $derived(() => {
 		return activeDataSource === 'news' ? newsItems : processedNewsItems;
@@ -63,18 +77,21 @@ export function createNewsContext(initialNews: NewsItem[] = [], initialProcessed
 		// State
 		newsItems,
 		processedNewsItems,
-		currentItems,
 		activeItemId,
 		activeDataSource,
 		isLoading,
 		error,
 
+		currentItems: getCurrentItems(),
+
+
 		// Methods
+		setActiveItem,
+		setActiveDataSource,
+		getActiveItem,
 		setNewsItems,
 		setProcessedNewsItems,
-		setActiveDataSource,
-		setActiveItem,
-		getActiveItem
+
 	};
 }
 

@@ -13,17 +13,27 @@
   import { ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
   // Get context data via hook
-  const {
-    fomoThreshold, 
-    startDate, 
-    endDate,
-    isExpanded,
-    setFomoThreshold,
-    setDateRange,
-    toggleExpanded,
-    currentScore,
-    articleCount
-  } = useFomo();
+  const fomo = useFomo();
+  
+  // Destructure with safety checks
+  const fomoThreshold = fomo.fomoThreshold || 0;
+  const startDate = fomo.startDate || null;
+  const endDate = fomo.endDate || null;
+  const isExpanded = fomo.isExpanded || false;
+  const currentScore = typeof fomo.currentScore === 'number' ? fomo.currentScore : 0;
+  const articleCount = typeof fomo.articleCount === 'number' ? fomo.articleCount : 0;
+  
+  // Methods with safety checks
+  const setFomoThreshold = fomo.setFomoThreshold || ((val: number) => {});
+  const setDateRange = fomo.setDateRange || ((start: Date | null, end: Date | null) => {});
+  const toggleExpanded = fomo.toggleExpanded || (() => {});
+  
+  // Log values for debugging
+  console.log('FomoApp values:', { 
+    currentScore, 
+    articleCount, 
+    fomoThreshold 
+  });
   
   // Local UI state that doesn't need to be shared
   let isScoreMenuOpen = $state(false);

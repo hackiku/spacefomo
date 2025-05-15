@@ -6,36 +6,43 @@ export function useFomo() {
 	const fomoContext = getFomoContext();
 	const newsContext = getNewsContext();
 
-	// Calculate the current FOMO score from filtered items
-	const currentScore = $derived(() => {
-		const items = newsContext.currentItems;
-		if (!items || items.length === 0) return 0;
+	// Calculate score value immediately as a number
+	let scoreValue = 0;
+	try {
+		const items = newsContext.newsItems || [];
+		if (items.length > 0) {
+			const filteredItems = items.filter(item =>
+				item.fomo_score && item.fomo_score >= fomoContext.fomoThreshold
+			);
 
-		// Only count items that meet the threshold
-		const filteredItems = items.filter(item =>
-			item.fomo_score && item.fomo_score >= fomoContext.fomoThreshold
-		);
+			if (filteredItems.length > 0) {
+				const totalScore = filteredItems.reduce((sum, item) =>
+					sum + (item.fomo_score || 0), 0);
+				scoreValue = Math.round(totalScore / filteredItems.length);
+			}
+		}
+	} catch (e) {
+		console.error('Error calculating FOMO score:', e);
+	}
 
-		if (filteredItems.length === 0) return 0;
-
-		const totalScore = filteredItems.reduce((sum, item) =>
-			sum + (item.fomo_score || 0), 0);
-
-		return Math.round(totalScore / filteredItems.length);
-	});
-
-	// Calculate the number of articles that meet the filter criteria
-	const articleCount = $derived(() => {
-		return newsContext.currentItems.filter(item =>
+	// Calculate article count immediately as a number
+	let countValue = 0;
+	try {
+		const items = newsContext.newsItems || [];
+		countValue = items.filter(item =>
 			item.fomo_score && item.fomo_score >= fomoContext.fomoThreshold
 		).length;
-	});
+	} catch (e) {
+		console.error('Error calculating article count:', e);
+	}
+
+	console.log('useFomo values:', { scoreValue, countValue, threshold: fomoContext.fomoThreshold });
 
 	return {
 		// Pass through the context values
 		...fomoContext,
-		// Add derived values
-		currentScore,
-		articleCount
+		// Add concrete values (not functions)
+		currentScore: scoreValue,
+		articleCount: countValue
 	};
 }
