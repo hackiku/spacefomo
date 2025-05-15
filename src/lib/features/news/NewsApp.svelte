@@ -1,7 +1,7 @@
 <!-- src/lib/features/news/NewsApp.svelte -->
 <script lang="ts">
   import NewsGrid from './feed/NewsGrid.svelte';
-  // import FomoApp from '$lib/features/fomo/FomoApp.svelte';
+  import FomoApp from '$lib/features/fomo/FomoApp.svelte';
   import SidebarToggle from './layout/SidebarToggle.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
 
@@ -29,7 +29,8 @@
 <div class="relative min-h-[calc(100vh-4rem)]">
   <!-- Main content -->
   <div class="container mx-auto px-4 sm:px-6 pb-20">
-    <!-- Centered content wrapper -->
+    <!-- <FomoApp /> -->
+		<!-- Centered content wrapper -->
     <div class="mx-auto {getContainerClasses()} ">
       <!-- Grid is content-agnostic, just displays the news -->
       <NewsGrid columnCount={columnCount} />
