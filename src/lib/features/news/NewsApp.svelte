@@ -1,12 +1,11 @@
 <!-- src/lib/features/news/NewsApp.svelte -->
 <script lang="ts">
   import NewsGrid from './feed/NewsGrid.svelte';
-  import FomoApp from '$lib/features/fomo/FomoApp.svelte';
-  import SidebarToggle from './layout/SidebarToggle.svelte';
+  import Sidebar from './feed/Sidebar.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
 
   // State for layout configuration
-  let sidebarMode = $state<SidebarMode>('thin');
+  let sidebarMode = $state<SidebarMode>('default');
   let columnCount = $state<ColumnCount>(1);
   
   // Track when sidebar mode or column count changes
@@ -27,24 +26,17 @@
 </script>
 
 <div class="relative min-h-[calc(100vh-4rem)]">
-  <!-- Main content -->
-  <div class="container mx-auto px-4 sm:px-6 pb-20">
-    <!-- <FomoApp /> -->
-		<!-- Centered content wrapper -->
-    <div class="mx-auto {getContainerClasses()} ">
-      <!-- Grid is content-agnostic, just displays the news -->
-      <NewsGrid columnCount={columnCount} />
+  <!-- Main container with grid layout for desktop -->
+	<Sidebar bind:sidebarMode bind:columnCount />
+  <div class="container mx-auto px-4 sm:px-6 pb-20 md:pl-16"> <!-- padding-left to account for collapsed sidebar on desktop -->
+    <!-- Sidebar positioned here (left edge on desktop, top on mobile) -->
+    <div class="relative">
+      
+      <!-- Content wrapper -->
+      <div class="mx-auto {getContainerClasses()} md:pt-0">
+        <!-- Grid is content-agnostic, just displays the news -->
+        <NewsGrid columnCount={columnCount} />
+      </div>
     </div>
   </div>
-  
-  <!-- Sidebar toggle component - independent of grid layout -->
-  <div class="fixed top-28 left-0">
-
-		<SidebarToggle bind:sidebarMode bind:columnCount />
-	</div>
-  
-  <!-- FomoApp stays at the bottom within the NewsApp container -->
-  <!-- <div class="fixed bottom-0 left-0 right-0 z-40 h-14">
-    <FomoApp />
-  </div> -->
 </div>
