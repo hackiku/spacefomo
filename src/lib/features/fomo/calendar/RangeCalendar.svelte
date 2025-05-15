@@ -1,11 +1,11 @@
-<!-- src/lib/features/fomo/calendar/RangeCalendar.svelte -->
+<!-- src/lib/features/fomo/calendar/RangeCalendar.svelte (improved) -->
 <script lang="ts">
   import { RangeCalendar } from "bits-ui";
   import { CaretLeft, CaretRight } from 'phosphor-svelte';
   import { today, getLocalTimeZone, type DateValue } from "@internationalized/date";
   import { createEventDispatcher } from 'svelte';
   
-  // Set up event dispatcher
+  // Set up event dispatcher for backward compatibility
   const dispatch = createEventDispatcher<{
     rangeSelected: { start: DateValue | undefined, end: DateValue | undefined }
   }>();
@@ -15,16 +15,27 @@
     value = $bindable(),
     startDate = null, 
     endDate = null,
+    isDateDisabled = null,
   } = $props<{
     value?: { start: DateValue | undefined, end: DateValue | undefined };
     startDate?: Date | null;
     endDate?: Date | null;
+    isDateDisabled?: ((date: DateValue) => boolean) | null;
   }>();
   
   // Initialize with today's date as placeholder
   let placeholder = $state(today(getLocalTimeZone()));
   
-  // Handle range selection change manually instead of with an effect
+  // Default function to disable future dates if no custom function provided
+  function defaultIsDateDisabled(date: DateValue): boolean {
+    const todayDate = today(getLocalTimeZone());
+    return date.compare(todayDate) > 0;
+  }
+  
+  // Use provided function or default
+  const checkIsDateDisabled = isDateDisabled || defaultIsDateDisabled;
+  
+  // Handle range selection change
   function handleValueChange(event) {
     if (event?.start && event?.end) {
       dispatch('rangeSelected', { 
@@ -42,11 +53,12 @@
   bind:value
   bind:placeholder
   onValueChange={handleValueChange}
+  isDateDisabled={checkIsDateDisabled}
 >
   {#snippet children({ months, weekdays })}
     <RangeCalendar.Header class="flex items-center justify-between mb-6">
       <RangeCalendar.PrevButton
-        class="p-2 text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
+        class="p-2 text-muted-foreground hover:bg-muted hover:text-primary transition-colors rounded-default"
       >
         <CaretLeft class="h-5 w-5" />
       </RangeCalendar.PrevButton>
@@ -54,7 +66,7 @@
       <RangeCalendar.Heading class="text-base font-medium text-foreground" />
       
       <RangeCalendar.NextButton
-        class="p-2 text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
+        class="p-2 text-muted-foreground hover:bg-muted hover:text-primary transition-colors rounded-default"
       >
         <CaretRight class="h-5 w-5" />
       </RangeCalendar.NextButton>
@@ -95,7 +107,8 @@
                              data-[selection-start]:bg-primary data-[selection-start]:text-primary-foreground
                              data-[selection-end]:bg-primary data-[selection-end]:text-primary-foreground
                              data-[highlighted]:bg-primary/30
-                             hover:bg-muted transition-colors"
+                             data-[disabled]:opacity-30 data-[disabled]:cursor-not-allowed
+                             hover:bg-muted transition-colors rounded-default"
                     >
                       {date.day}
                     </RangeCalendar.Day>
