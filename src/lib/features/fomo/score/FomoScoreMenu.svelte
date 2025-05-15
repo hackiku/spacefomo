@@ -1,6 +1,6 @@
 <!-- src/lib/features/fomo/score/FomoScoreMenu.svelte -->
 <script lang="ts">
-  import { Gauge } from 'phosphor-svelte';
+  import { Gauge, CheckCircle } from 'phosphor-svelte';
   
   // Props
   let { 
@@ -21,12 +21,24 @@
   const scoreNumber = Number(score) || 0;
   const countNumber = Number(articleCount) || 0;
   
-  // Handle threshold change - only trigger on change, not continuous input
-  function handleThresholdChange(e: Event) {
-    const value = parseInt((e.target as HTMLInputElement).value);
-    if (onThresholdChange) {
-      onThresholdChange(value);
-      console.log('Threshold changed to:', value);
+  // Local state for the slider - initialize with the incoming threshold
+  let sliderValue = $state(threshold);
+  
+  // Update local slider value when prop changes
+  $effect(() => {
+    sliderValue = threshold;
+  });
+  
+  // Handle slider input (just updates local state, doesn't commit)
+  function handleSliderInput(e: Event) {
+    sliderValue = parseInt((e.target as HTMLInputElement).value);
+  }
+  
+  // Apply the threshold change
+  function applyThreshold() {
+    if (onThresholdChange && sliderValue !== threshold) {
+      onThresholdChange(sliderValue);
+      console.log('Threshold applied:', sliderValue);
     }
   }
 </script>
@@ -51,7 +63,7 @@
       <div class="space-y-2">
         <div class="flex items-center justify-between">
           <p class="text-xs text-muted-foreground font-medium">Threshold</p>
-          <div class="fomo-score text-sm">{threshold}</div>
+          <div class="fomo-score text-sm">{sliderValue}</div>
         </div>
 
         <input
@@ -59,10 +71,23 @@
           min="0"
           max="100"
           step="1"
-          value={threshold}
-          onchange={handleThresholdChange}
+          value={sliderValue}
+          oninput={handleSliderInput}
           class="w-full appearance-none bg-muted h-2 accent-primary"
         />
+        
+        <!-- Apply button -->
+        <div class="flex justify-end mt-3">
+          <button
+            type="button"
+            class="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors"
+            onclick={applyThreshold}
+            disabled={sliderValue === threshold}
+          >
+            <CheckCircle class="h-3.5 w-3.5" />
+            <span>Apply</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

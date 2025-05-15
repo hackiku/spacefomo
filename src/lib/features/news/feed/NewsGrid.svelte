@@ -5,18 +5,26 @@
   import NewsModal from './NewsModal.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
   import type { NewsItem } from '$lib/types/news';
+  import { getFomoContext } from '$lib/context/fomoContext.svelte';
   
   let { 
     columnCount = $bindable<ColumnCount>(1),
     sidebarMode = $bindable<SidebarMode>('default')
   } = $props();
   
-  // Use the hook for data fetching
+  // Get fomo context to create reactive dependency
+  const fomoContext = getFomoContext();
+  
+  // Get threshold to force reactivity
+  const threshold = fomoContext.fomoThreshold;
+  
+  // Use the hook for data fetching - will re-run when component updates
   const { items, allItems, isLoading, setActiveItem, error } = useNews();
   
   console.log('NewsGrid rendering with:', {
     filteredItemsLength: items.length,
-    allItemsLength: allItems.length
+    allItemsLength: allItems.length,
+    currentThreshold: threshold
   });
   
   // Modal state
@@ -75,7 +83,7 @@
       {/if}
     {:else}
       <div class="p-8 text-center border border-border bg-card/50 backdrop-blur-sm">
-        <p class="text-muted-foreground">No news articles match the current threshold ({items.length} of {allItems.length} items)</p>
+        <p class="text-muted-foreground">No news articles match the current threshold ({threshold}) - filtering {items.length} of {allItems.length} items</p>
       </div>
     {/if}
   </div>

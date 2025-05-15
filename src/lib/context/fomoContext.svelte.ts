@@ -3,7 +3,7 @@ import { getContext } from 'svelte';
 
 export function createFomoContext() {
 	// Filter criteria state - make sure to use exactly 50 as the default
-	let fomoThreshold = $state(80);
+	let fomoThreshold = $state(50);
 	let startDate = $state<Date | null>(null);
 	let endDate = $state<Date | null>(null);
 	let selectedTags = $state<string[]>([]);
