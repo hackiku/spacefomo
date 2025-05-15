@@ -11,8 +11,8 @@
     onClick: () => void;
   }>();
   
-  // Ensure we're displaying a number
-  const displayScore = typeof score === 'number' ? score : 0;
+  // Convert to a simple number to ensure display
+  const scoreNumber = Number(score) || 0;
 </script>
 
 <button
@@ -23,6 +23,6 @@
 >
   <FireSimple weight="bold" class="w-5 h-5 text-primary" />
   <span class="text-sm font-medium text-foreground">
-    <span class="ml-1 text-lg font-semibold text-primary">{displayScore}</span>
+    <span class="ml-1 text-lg font-semibold text-primary">{scoreNumber}</span>
   </span>
 </button>

@@ -7,7 +7,7 @@
     isOpen = false,
     score = 0,
     articleCount = 0,
-    threshold = 20, // Match the lower initial threshold from fomoContext
+    threshold = 20,
     onThresholdChange
   } = $props<{
     isOpen: boolean;
@@ -17,22 +17,9 @@
     onThresholdChange?: (value: number) => void;
   }>();
   
-  // Format values to ensure clean display
-  const displayScore = $derived(() => {
-    if (typeof score === 'function') {
-      console.warn('Score is a function in FomoScoreMenu, using 0 instead');
-      return 0;
-    }
-    return typeof score === 'number' ? Math.round(score) : 0;
-  });
-  
-  const displayCount = $derived(() => {
-    if (typeof articleCount === 'function') {
-      console.warn('ArticleCount is a function in FomoScoreMenu, using 0 instead');
-      return 0;
-    }
-    return typeof articleCount === 'number' ? articleCount : 0;
-  });
+  // Convert to simple numbers
+  const scoreNumber = Number(score) || 0;
+  const countNumber = Number(articleCount) || 0;
   
   // Handle threshold change
   function handleThresholdChange(e: Event) {
@@ -55,8 +42,8 @@
       <div class="flex items-center gap-2">
         <Gauge class="h-5 w-5 text-primary" />
         <div>
-          <div class="text-sm font-medium text-foreground">Current Score: {displayScore}</div>
-          <div class="text-xs text-muted-foreground">Based on {displayCount} articles</div>
+          <div class="text-sm font-medium text-foreground">Current Score: {scoreNumber}</div>
+          <div class="text-xs text-muted-foreground">Based on {countNumber} articles</div>
         </div>
       </div>
       
