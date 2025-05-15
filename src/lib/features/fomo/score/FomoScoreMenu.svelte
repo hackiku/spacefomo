@@ -27,8 +27,8 @@
 {#if isOpen}
   <div 
     class="absolute bottom-full left-0 mb-2 p-4 w-64
-          bg-background rounded-2xl shadow-lg
-          animate-in slide-in-from-top-2 duration-200 z-20"
+          bg-background rounded-t-2xl
+          animate-in slide-in-from-bottom-2 duration-800 z-20"
   >
     <h3 class="text-base font-medium text-foreground mb-3">FOMO Score</h3>
     <div class="space-y-4">

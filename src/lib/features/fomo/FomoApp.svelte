@@ -1,4 +1,4 @@
-<!-- src/lib/features/fomo/FomoApp.svelte -->
+<!-- src/lib/features/fomo/FomoApp.svelte (updated) -->
 <script lang="ts">
   import { useFomo } from '$lib/context/fomoContext.svelte';
   import { getNewsContext } from '$lib/context/newsContext.svelte';
@@ -66,6 +66,9 @@
     } else {
       resetDateFilter();
     }
+    
+    // Close the calendar menu after selection
+    isCalendarMenuOpen = false;
   }
   
   // Reset the date filter
@@ -80,8 +83,7 @@
   }
   
   // Handle visualization type change
-  function handleVisualizationChange(event) {
-    const { type } = event.detail;
+  function handleVisualizationChange(type: 'bar' | 'line' | 'heatmap') {
     visualizationType = type;
   }
   
@@ -125,26 +127,20 @@
         </div>
         
         <!-- Date range button with menu -->
-        <div class="relative">
+        <div class="relative mb-2">
           <CalendarButton 
             {startDate}
             {endDate}
             onClick={toggleCalendarMenu}
           />
           
-          {#if isCalendarMenuOpen}
-            <div class="absolute bottom-full left-0 mb-2 z-20">
-              <CalendarMenu 
-                isOpen={true}
-                {startDate}
-                {endDate}
-                {visualizationType}
-                on:dateRangeChange={handleDateRangeChange}
-                on:visualizationChange={handleVisualizationChange}
-                on:close={() => isCalendarMenuOpen = false}
-              />
-            </div>
-          {/if}
+          <CalendarMenu 
+            isOpen={isCalendarMenuOpen}
+            {startDate}
+            {endDate}
+            on:dateRangeChange={handleDateRangeChange}
+            on:close={() => isCalendarMenuOpen = false}
+          />
         </div>
       </div>
       
