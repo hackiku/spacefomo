@@ -4,14 +4,16 @@
   import { getNewsContext } from '$lib/context/newsContext.svelte';
   import { parseDate, type DateValue } from "@internationalized/date";
   
+  // Components
   import ShareButton from '$lib/components/cta/share/ShareButton.svelte';
   import ShareModal from '$lib/components/cta/share/ShareModal.svelte';
-
   import CalendarButton from './calendar/CalendarButton.svelte';
-  import FomoMenu from './controls/FomoMenu.svelte';
+  import CalendarMenu from './calendar/CalendarMenu.svelte';
+  import FomoScoreButton from './score/FomoScoreButton.svelte';
+  import FomoScoreMenu from './score/FomoScoreMenu.svelte';
   import TimelineWrapper from './timeline/TimelineWrapper.svelte';
   import BarTimeline from './timeline/BarTimeline.svelte';
-  import { FireSimple, ChartLine, ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
+  import { ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
   // Get contexts for data
   const fomo = useFomo();
@@ -19,21 +21,29 @@
   
   // App state
   let isExpanded = $state(false);
-  let isMenuOpen = $state(false);
+  let isScoreMenuOpen = $state(false);
+  let isCalendarMenuOpen = $state(false);
   let isShareModalOpen = $state(false);
   let startDate = $state<Date | null>(null);
   let endDate = $state<Date | null>(null);
   let visualizationType = $state<'bar' | 'line' | 'heatmap'>('bar');
-  let isFilterActive = $state(false);
+  let fomoThreshold = $state(50);
   
-  // Toggle expanded state
+  // Toggle expanded state for timeline
   function toggleExpanded() {
     isExpanded = !isExpanded;
   }
   
-  // Toggle menu
-  function toggleMenu() {
-    isMenuOpen = !isMenuOpen;
+  // Toggle score menu
+  function toggleScoreMenu() {
+    isScoreMenuOpen = !isScoreMenuOpen;
+    if (isScoreMenuOpen) isCalendarMenuOpen = false;
+  }
+  
+  // Toggle calendar menu
+  function toggleCalendarMenu() {
+    isCalendarMenuOpen = !isCalendarMenuOpen;
+    if (isCalendarMenuOpen) isScoreMenuOpen = false;
   }
   
   // Open/close share modal
@@ -53,54 +63,20 @@
       // Convert DateValue to JavaScript Date
       startDate = new Date(start.toString());
       endDate = new Date(end.toString());
-      isFilterActive = true;
-      
-      // Apply filters to news
-      applyDateFilter(startDate, endDate);
     } else {
       resetDateFilter();
     }
-  }
-  
-  // Apply date filter to news items
-  function applyDateFilter(start, end) {
-    if (!news || !news.items) return;
-    
-    if (!start || !end) {
-      // Reset filtering
-      isFilterActive = false;
-      return;
-    }
-    
-    isFilterActive = true;
-    
-    // Log filtering action (in real app, you would update the UI with filtered news)
-    console.log(`Filtering news between ${start.toLocaleDateString()} and ${end.toLocaleDateString()}`);
-    console.log(`Found ${news.items.length} total items`);
-    
-    // Example of how to filter news items by date
-    const filteredItems = news.items.filter(item => {
-      const itemDate = item.publication_date 
-        ? (item.publication_date instanceof Date ? item.publication_date : new Date(item.publication_date))
-        : null;
-        
-      // Skip items without dates
-      if (!itemDate) return false;
-      
-      return itemDate >= start && itemDate <= end;
-    });
-    
-    console.log(`Filtered to ${filteredItems.length} items in date range`);
-    
-    // Here you would update your news display or dispatch an event to notify parent components
   }
   
   // Reset the date filter
   function resetDateFilter() {
     startDate = null;
     endDate = null;
-    isFilterActive = false;
-    applyDateFilter(null, null);
+  }
+  
+  // Handle FOMO threshold change
+  function handleThresholdChange(value: number) {
+    fomoThreshold = value;
   }
   
   // Handle visualization type change
@@ -108,7 +84,22 @@
     const { type } = event.detail;
     visualizationType = type;
   }
+  
+  // Close menus when clicking outside
+  function handleClickOutside(e: MouseEvent) {
+    if (isScoreMenuOpen || isCalendarMenuOpen) {
+      const target = e.target as Node;
+      const controlBar = document.querySelector('.control-bar');
+      
+      if (controlBar && !controlBar.contains(target)) {
+        isScoreMenuOpen = false;
+        isCalendarMenuOpen = false;
+      }
+    }
+  }
 </script>
+
+<svelte:window onclick={handleClickOutside} />
 
 <div 
   class="transition-all duration-300"
@@ -118,35 +109,42 @@
   <!-- Main container -->
   <div class="flex flex-col h-full">
     <!-- Control bar (always visible) -->
-    <div class="flex items-center justify-between h-14">
-      <!-- Left section with fomo score -->
+    <div class="control-bar flex items-center justify-between h-14 relative">
+      <!-- Left section with controls -->
       <div class="flex items-center gap-3">
-        <div class="flex items-center gap-1.5">
-          <FireSimple weight="bold" class="w-5 h-5 text-primary" />
-          <span class="text-sm font-medium text-foreground">
-            <!-- FOMO -->
-            <span class="ml-1 text-lg font-semibold text-primary">44</span>
-          </span>
+        
+        <!-- FOMO Score with menu -->
+        <div class="relative">
+          <FomoScoreButton score={44} onClick={toggleScoreMenu} />
+          <FomoScoreMenu 
+            isOpen={isScoreMenuOpen} 
+            score={44}
+            threshold={fomoThreshold}
+            onThresholdChange={handleThresholdChange}
+          />
         </div>
         
-        <!-- Date range button -->
+        <!-- Date range button with menu -->
         <div class="relative">
           <CalendarButton 
             {startDate}
             {endDate}
-            onClick={toggleMenu}
+            onClick={toggleCalendarMenu}
           />
           
-          <!-- Floating menu -->
-          <FomoMenu 
-            isOpen={isMenuOpen}
-            {startDate}
-            {endDate}
-            {visualizationType}
-            on:dateRangeChange={handleDateRangeChange}
-            on:visualizationChange={handleVisualizationChange}
-            on:close={() => isMenuOpen = false}
-          />
+          {#if isCalendarMenuOpen}
+            <div class="absolute bottom-full left-0 mb-2 z-20">
+              <CalendarMenu 
+                isOpen={true}
+                {startDate}
+                {endDate}
+                {visualizationType}
+                on:dateRangeChange={handleDateRangeChange}
+                on:visualizationChange={handleVisualizationChange}
+                on:close={() => isCalendarMenuOpen = false}
+              />
+            </div>
+          {/if}
         </div>
       </div>
       
@@ -175,11 +173,9 @@
     
     <!-- Timeline (expanded when isExpanded is true) -->
     <TimelineWrapper {isExpanded}>
-      <!-- We'll conditionally render different timeline visualizations based on visualizationType -->
       {#if visualizationType === 'bar'}
         <BarTimeline />
       {:else if visualizationType === 'line'}
-        <!-- D3Timeline will be implemented later -->
         <div class="w-full h-full flex items-center justify-center">
           <p class="text-muted-foreground">Line visualization coming soon</p>
         </div>

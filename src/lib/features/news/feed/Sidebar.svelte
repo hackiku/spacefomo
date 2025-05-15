@@ -4,7 +4,7 @@
   import LayoutControls from '../controls/LayoutControls.svelte'; 
   import FilterControls from '../controls/FilterControls.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
-  import { Sliders, CaretDown, CaretUp, ArrowsInLineHorizontal, Columns, Table, Rows, SquaresFour } from 'phosphor-svelte';
+  import { Sliders, CaretDown, CaretUp, ArrowsInLineHorizontal, Columns, Table, Rows, SquaresFour, X } from 'phosphor-svelte';
   import { ToggleGroup } from "bits-ui";
 
   // Bindable props
@@ -54,17 +54,15 @@
 </script>
 
 <div class="sidebar-container">
-  <!-- Collapsed state - visible always -->
+  <!-- Collapsed sidebar control -->
   <div 
-    class={cn(
-      "bg-background rounded-2xl shadow-md border border-border overflow-hidden transition-all duration-300",
-      isExpanded ? "opacity-0 pointer-events-none absolute" : "opacity-100"
-    )}
+    class="rounded-2xl bg-background border border-border shadow-md overflow-hidden cursor-pointer"
+    class:hidden={isExpanded}
     onclick={toggleExpanded}
   >
-    <!-- Two rows of controls stacked on top of each other -->
-    <div class="p-3 space-y-3">
-      <!-- Top row: Layout Controls -->
+    <!-- Layout Controls Preview -->
+    <div class="p-3 space-y-3 min-w-[54px]">
+      <!-- Layout Toggle Group -->
       <div class="border border-border bg-muted/30">
         <ToggleGroup.Root
           type="single"
@@ -108,7 +106,7 @@
         </ToggleGroup.Root>
       </div>
 
-      <!-- Bottom row: Column Toggle -->
+      <!-- Column Toggle Group -->
       <div class="border border-border bg-muted/30">
         <ToggleGroup.Root
           type="single"
@@ -141,19 +139,23 @@
         </ToggleGroup.Root>
       </div>
       
-      <!-- Expand indicator -->
-      <div class="text-center">
+      <div class="mt-2 text-center">
         <CaretDown class="h-3 w-3 text-muted-foreground mx-auto" />
       </div>
     </div>
   </div>
   
-  <!-- Expanded state -->
+  <!-- Expanded sidebar panel -->
   <div 
     class={cn(
-      "bg-background rounded-2xl shadow-md border border-border transition-all duration-300",
-      isExpanded ? "opacity-100" : "opacity-0 pointer-events-none absolute"
+      "fixed z-40 rounded-2xl bg-background border border-border shadow-md transition-all duration-300",
+      isExpanded ? "opacity-100" : "opacity-0 pointer-events-none"
     )}
+    style="
+      width: 280px;
+      max-height: 80vh;
+      overflow-y: auto;
+    "
   >
     <div class="p-4 relative">
       <!-- Close button -->
@@ -164,9 +166,7 @@
         onclick={toggleExpanded}
         aria-label="Close sidebar"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 6 6 18M6 6l12 12"></path>
-        </svg>
+        <X class="w-4 h-4" />
       </button>
       
       <!-- Expanded content -->
@@ -207,26 +207,19 @@
   /* Container styles based on screen size */
   .sidebar-container {
     position: relative;
-    width: 3rem;
     z-index: 30;
-  }
-
-  /* Collapsed state */
-  .sidebar-container > div:first-child {
-    width: 3rem;
-  }
-
-  /* Expanded state */
-  .sidebar-container > div:last-child {
-    width: 280px;
-    max-height: 80vh;
-    overflow-y: auto;
   }
 
   /* Desktop layout - left side */
   @media (min-width: 768px) {
     .sidebar-container {
       position: absolute;
+      left: 0;
+      top: 0;
+    }
+    
+    /* Expanded state */
+    .sidebar-container > div:last-child {
       left: 0;
       top: 0;
     }
@@ -242,7 +235,6 @@
 
     /* Expanded state for mobile */
     .sidebar-container > div:last-child {
-      position: fixed;
       top: 1rem;
       left: 1rem;
       right: 1rem;
