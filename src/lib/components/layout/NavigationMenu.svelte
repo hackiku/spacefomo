@@ -201,7 +201,7 @@
       <NavigationMenu.Viewport
         class="relative mt-2 h-[var(--bits-navigation-menu-viewport-height)] 
               w-[var(--bits-navigation-menu-viewport-width)] origin-[top_center] overflow-hidden 
-              bg-card border border-border shadow-md data-[state=open]:animate-in
+              bg-background rounded-b-2xl __border __border-border shadow-md data-[state=open]:animate-in
               data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0
               data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
       />
