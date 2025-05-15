@@ -11,8 +11,8 @@
   import CalendarMenu from './calendar/CalendarMenu.svelte';
   import FomoScoreButton from './score/FomoScoreButton.svelte';
   import FomoScoreMenu from './score/FomoScoreMenu.svelte';
-  import TimelineWrapper from './timeline/TimelineWrapper.svelte';
-  import BarTimeline from './timeline/BarTimeline.svelte';
+  // import TimelineWrapper from './timeline/TimelineWrapper.svelte';
+  // import BarTimeline from './timeline/BarTimeline.svelte';
   import { ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
   // Get contexts for data
@@ -167,20 +167,6 @@
       </div>
     </div>
     
-    <!-- Timeline (expanded when isExpanded is true) -->
-    <TimelineWrapper {isExpanded}>
-      {#if visualizationType === 'bar'}
-        <BarTimeline />
-      {:else if visualizationType === 'line'}
-        <div class="w-full h-full flex items-center justify-center">
-          <p class="text-muted-foreground">Line visualization coming soon</p>
-        </div>
-      {:else}
-        <div class="w-full h-full flex items-center justify-center">
-          <p class="text-muted-foreground">Heatmap visualization coming soon</p>
-        </div>
-      {/if}
-    </TimelineWrapper>
   </div>
 </div>
 

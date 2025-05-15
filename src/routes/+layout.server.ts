@@ -3,40 +3,37 @@ import { supabase } from '$lib/server/supabase/client';
 
 export async function load() {
 	try {
-		// Fetch weeks and news concurrently
-		const [weeksResponse, newsResponse] = await Promise.all([
-			supabase
-				.from('weeks')
-				.select('*')
-				.order('week_number', { ascending: false }),
+		// Fetch news and processed_news concurrently
+		const [newsResponse, processedNewsResponse] = await Promise.all([
 			supabase
 				.from('news')
-				.select('*, seo')  // Explicitly select SEO data
+				.select('*, seo')
 				.order('fomo_score', { ascending: false })
 				.limit(50),
 			supabase
 				.from('processed_news')
-				.select('*, seo')  // Explicitly select SEO data
+				.select('*, seo')
 				.order('fomo_score', { ascending: false })
 				.limit(50)
 		]);
 
-		if (weeksResponse.error) throw weeksResponse.error;
 		if (newsResponse.error) throw newsResponse.error;
+		if (processedNewsResponse.error) throw processedNewsResponse.error;
 
 		return {
-			weeks: weeksResponse.data || [],
-			currentWeek: weeksResponse.data?.[0] || null,
 			news: newsResponse.data || [],
-			processedNews: newsResponse.data || [],
-			debug: { success: true, weekCount: weeksResponse.data?.length || 0 }
+			processedNews: processedNewsResponse.data || [],
+			debug: {
+				success: true,
+				newsCount: newsResponse.data?.length || 0,
+				processedNewsCount: processedNewsResponse.data?.length || 0
+			}
 		};
 	} catch (error) {
 		console.error('Data fetch error:', error);
 		return {
-			weeks: [],
-			currentWeek: null,
 			news: [],
+			processedNews: [],
 			debug: { error: 'Fetch failed', details: String(error) }
 		};
 	}
