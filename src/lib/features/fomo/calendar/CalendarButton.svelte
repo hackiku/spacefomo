@@ -42,18 +42,12 @@
 <button
   type="button"
   class="group relative flex items-center justify-between w-full px-3 py-2 
-         border border-border bg-card/60 hover:bg-muted
-         text-foreground transition-colors
-         before:absolute before:inset-0
-         before:border before:border-primary/10
-         before:translate-x-0.5 before:translate-y-0.5
-         before:transition-transform before:duration-300
-         hover:before:translate-x-0 hover:before:translate-y-0"
+        border-l border-primary/20 __bg-card/60 hover:bg-muted text-foreground transition-colors"
   onclick={onClick}
   aria-label="Open date range selector"
 >
   <span class="text-sm font-medium mr-2">{getDateRangeText()}</span>
-  <div class="flex items-center justify-center bg-primary/10 p-1 text-primary">
-    <CalendarBlank class="h-4 w-4" />
+  <div class="flex items-center justify-center __bg-primary/10 text-primary">
+    <CalendarBlank class="h-5 w-5" />
   </div>
 </button>

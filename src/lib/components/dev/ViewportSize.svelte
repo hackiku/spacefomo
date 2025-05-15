@@ -27,7 +27,7 @@
 
 {#if dev && mounted}
   <button
-    class="fixed top-4 right-4 z-[100] 
+    class="fixed top-12 sm:top-4 right-4 z-[100] 
            rounded-lg border border-zinc-800 bg-zinc-900/95 px-3 py-2 
            backdrop-blur-sm hover:bg-zinc-800/80 transition-colors"
     onclick={() => showDimensions = !showDimensions}
