@@ -11,16 +11,12 @@
     sidebarMode = $bindable<SidebarMode>('default')
   } = $props();
   
-  // Use the hook for data fetching, get both filtered and all items
+  // Use the hook for data fetching
   const { items, allItems, isLoading, setActiveItem, error } = useNews();
   
-  // Use all items as a fallback until filtering works
-  const displayItems = items.length > 0 ? items : allItems;
-
   console.log('NewsGrid rendering with:', {
-    filteredItems: items.length,
-    allItems: allItems.length,
-    display: displayItems.length
+    filteredItemsLength: items.length,
+    allItemsLength: allItems.length
   });
   
   // Modal state
@@ -53,11 +49,11 @@
       <div class="p-8 text-center border border-destructive/30 bg-destructive/10 backdrop-blur-sm">
         <p class="text-destructive">Error loading news: {error}</p>
       </div>
-    {:else if displayItems.length > 0}
+    {:else if items.length > 0}
       {#if columnCount === 1}
         <!-- Single column layout -->
         <div class="space-y-6">
-          {#each displayItems as article (article.id)}
+          {#each items as article (article.id)}
             <div class="mx-auto">
               <SmallCard 
                 article={article} 
@@ -69,7 +65,7 @@
       {:else}
         <!-- Two-column grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {#each displayItems as article (article.id)}
+          {#each items as article (article.id)}
             <SmallCard 
               article={article} 
               onSelect={() => openModal(article)}
@@ -79,7 +75,7 @@
       {/if}
     {:else}
       <div class="p-8 text-center border border-border bg-card/50 backdrop-blur-sm">
-        <p class="text-muted-foreground">No news articles available</p>
+        <p class="text-muted-foreground">No news articles match the current threshold ({items.length} of {allItems.length} items)</p>
       </div>
     {/if}
   </div>

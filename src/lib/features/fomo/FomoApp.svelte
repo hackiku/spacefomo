@@ -1,7 +1,7 @@
 <!-- src/lib/features/fomo/FomoApp.svelte -->
 <script lang="ts">
   import { useFomo } from '$lib/hooks/useFomo.svelte';
-  import { parseDate, type DateValue } from "@internationalized/date";
+  import { getFomoContext } from '$lib/context/fomoContext.svelte';
   
   // Components
   import ShareButton from '$lib/components/cta/share/ShareButton.svelte';
@@ -12,21 +12,19 @@
   import FomoScoreMenu from './score/FomoScoreMenu.svelte';
   import { ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
-  // Get context data via hook
+  // Get context directly to avoid any potential hook issues
+  const fomoContext = getFomoContext();
   const fomo = useFomo();
   
-  // Destructure with safety checks
-  const fomoThreshold = fomo.fomoThreshold || 0;
-  const startDate = fomo.startDate || null;
-  const endDate = fomo.endDate || null;
-  const isExpanded = fomo.isExpanded || false;
-  const currentScore = typeof fomo.currentScore === 'number' ? fomo.currentScore : 0;
-  const articleCount = typeof fomo.articleCount === 'number' ? fomo.articleCount : 0;
+  // Get values directly from context for UI display
+  const fomoThreshold = fomoContext.fomoThreshold;
+  const startDate = fomoContext.startDate || null;
+  const endDate = fomoContext.endDate || null;
+  const isExpanded = fomoContext.isExpanded || false;
   
-  // Methods with safety checks
-  const setFomoThreshold = fomo.setFomoThreshold || ((val: number) => {});
-  const setDateRange = fomo.setDateRange || ((start: Date | null, end: Date | null) => {});
-  const toggleExpanded = fomo.toggleExpanded || (() => {});
+  // Get additional computed values from the hook
+  const currentScore = fomo.currentScore || 0; 
+  const articleCount = fomo.articleCount || 0;
   
   // Log values for debugging
   console.log('FomoApp values:', { 
@@ -69,9 +67,9 @@
       // Convert DateValue to JavaScript Date and update context
       const startDateObj = new Date(start.toString());
       const endDateObj = new Date(end.toString());
-      setDateRange(startDateObj, endDateObj);
+      fomoContext.setDateRange(startDateObj, endDateObj);
     } else {
-      setDateRange(null, null);
+      fomoContext.setDateRange(null, null);
     }
     
     // Close the calendar menu after selection
@@ -80,7 +78,8 @@
   
   // Handle FOMO threshold change
   function handleThresholdChange(value: number) {
-    setFomoThreshold(value);
+    console.log("FomoApp: Threshold change requested to", value);
+    fomoContext.setFomoThreshold(value);
   }
   
   // Close menus when clicking outside
@@ -152,7 +151,7 @@
           class="inline-flex items-center justify-center p-2
                  bg-primary/10 hover:bg-primary/20 text-muted-foreground hover:text-foreground
                  transition-colors"
-          onclick={toggleExpanded}
+          onclick={fomoContext.toggleExpanded}
           aria-label={isExpanded ? "Collapse FOMO timeline" : "Expand FOMO timeline"}
         >
           {#if isExpanded}

@@ -3,61 +3,51 @@ import { getNewsContext } from '$lib/context/newsContext.svelte';
 import { getFomoContext } from '$lib/context/fomoContext.svelte';
 import type { NewsItem } from '$lib/types/news';
 
+// Create a global filtered items array to avoid reactivity issues
+let _filteredItems: NewsItem[] = [];
+
 export function useNews() {
 	// Get contexts
 	const newsContext = getNewsContext();
 	const fomoContext = getFomoContext();
 
-	// Log debugging information
-	console.log('useNews debugging:', {
-		newsItems: newsContext.newsItems?.length || 0,
-		fomoThreshold: fomoContext.fomoThreshold,
-		hasFilter: typeof fomoContext.fomoThreshold === 'number'
-	});
-
 	// Get all items from context
 	const allItems = newsContext.newsItems || [];
 
-	// Apply filters to items - simple version that should work
-	const filteredItems = $derived(() => {
-		// Check if we have items to filter
-		if (!allItems || allItems.length === 0) {
-			console.log('No items to filter');
-			return [];
-		}
+	// Use a function to filter items, not a derived statement which can cause issues
+	function filterItems() {
+		const threshold = fomoContext.fomoThreshold;
+		console.log(`Filtering with threshold: ${threshold}`);
 
-		// Apply a very basic filter on fomo_score
-		const filtered = allItems.filter(item => {
-			// First check if fomo_score exists
-			if (item.fomo_score === null || item.fomo_score === undefined) {
-				console.log('Dropping item with no fomo_score:', item.id);
-				return false;
-			}
-
-			// Compare with threshold
-			const passes = item.fomo_score >= fomoContext.fomoThreshold;
-
-			if (!passes) {
-				console.log(`Item ${item.id} score ${item.fomo_score} below threshold ${fomoContext.fomoThreshold}`);
-			}
-
-			return passes;
+		// Filter based on FOMO score
+		_filteredItems = allItems.filter(item => {
+			const score = item.fomo_score;
+			// Include only if score exists and meets threshold
+			return (score !== null && score !== undefined && score >= threshold);
 		});
 
-		console.log(`Filtered ${allItems.length} items to ${filtered.length} items with threshold ${fomoContext.fomoThreshold}`);
+		console.log(`Filtered ${allItems.length} items to ${_filteredItems.length} items`);
+		return _filteredItems;
+	}
 
-		return filtered;
-	});
+	// Always filter when the hook is called
+	const items = filterItems();
 
-	// For now, also log scores of all items to confirm data
+	// Debug logging
 	console.log('All items fomo_scores:', allItems.map(item => item.fomo_score));
+	console.log('useNews debugging:', {
+		newsItems: allItems.length,
+		fomoThreshold: fomoContext.fomoThreshold,
+		hasFilter: typeof fomoContext.fomoThreshold === 'number',
+		filteredCount: items.length
+	});
 
 	return {
 		// Original data
-		allItems: allItems,
+		allItems,
 
 		// Filtered data
-		items: filteredItems,
+		items,
 
 		// Pass through other context properties
 		isLoading: newsContext.isLoading,
@@ -66,6 +56,7 @@ export function useNews() {
 
 		// Pass through context methods
 		setActiveItem: newsContext.setActiveItem,
-		setActiveDataSource: newsContext.setActiveDataSource
+		setActiveDataSource: newsContext.setActiveDataSource,
+		getActiveItem: newsContext.getActiveItem
 	};
 }

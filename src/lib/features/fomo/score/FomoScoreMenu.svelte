@@ -7,7 +7,7 @@
     isOpen = false,
     score = 0,
     articleCount = 0,
-    threshold = 20,
+    threshold = 50,
     onThresholdChange
   } = $props<{
     isOpen: boolean;
@@ -21,7 +21,7 @@
   const scoreNumber = Number(score) || 0;
   const countNumber = Number(articleCount) || 0;
   
-  // Handle threshold change
+  // Handle threshold change - only trigger on change, not continuous input
   function handleThresholdChange(e: Event) {
     const value = parseInt((e.target as HTMLInputElement).value);
     if (onThresholdChange) {
@@ -58,9 +58,9 @@
           type="range"
           min="0"
           max="100"
+          step="1"
           value={threshold}
           onchange={handleThresholdChange}
-          oninput={handleThresholdChange}
           class="w-full appearance-none bg-muted h-2 accent-primary"
         />
       </div>
