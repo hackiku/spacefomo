@@ -13,6 +13,11 @@ export async function load() {
 				.from('news')
 				.select('*, seo')  // Explicitly select SEO data
 				.order('fomo_score', { ascending: false })
+				.limit(50),
+			supabase
+				.from('processed_news')
+				.select('*, seo')  // Explicitly select SEO data
+				.order('fomo_score', { ascending: false })
 				.limit(50)
 		]);
 
@@ -23,6 +28,7 @@ export async function load() {
 			weeks: weeksResponse.data || [],
 			currentWeek: weeksResponse.data?.[0] || null,
 			news: newsResponse.data || [],
+			processedNews: newsResponse.data || [],
 			debug: { success: true, weekCount: weeksResponse.data?.length || 0 }
 		};
 	} catch (error) {

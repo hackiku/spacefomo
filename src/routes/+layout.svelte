@@ -20,7 +20,7 @@
 
 	// Create contexts
 	const newsContext = createNewsContext(data.news || []);
-	const fomoContext = createFomoContext(data.weeks || []);
+	const fomoContext = createFomoContext(data.news || []);
 	const navContext = createNavContext();
 	const ctaContext = createCtaContext();
 
