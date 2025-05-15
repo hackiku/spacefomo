@@ -127,7 +127,7 @@
         </div>
         
         <!-- Date range button with menu -->
-        <div class="relative mb-2">
+        <div class="relative">
           <CalendarButton 
             {startDate}
             {endDate}

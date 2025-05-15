@@ -17,13 +17,25 @@
   function getDateRangeText() {
     if (!startDate || !endDate) return "All Time";
     
+    // Check if start and end dates are the same day
+    const isSameDay = startDate.toDateString() === endDate.toDateString();
+    
+    if (isSameDay) {
+      return formatDate(startDate, true); // Format with year for single date
+    }
+    
     return `${formatDate(startDate)} - ${formatDate(endDate)}`;
   }
   
-  // Format date as "MMM D"
-  function formatDate(date: Date | null): string {
+  // Format date as "MMM D" or "MMM D, YYYY" if includeYear is true
+  function formatDate(date: Date | null, includeYear = false): string {
     if (!date) return "";
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: includeYear ? 'numeric' : undefined
+    });
   }
 </script>
 

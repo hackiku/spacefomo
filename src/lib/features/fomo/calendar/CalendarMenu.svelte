@@ -136,16 +136,6 @@
         
         <!-- Date range controls -->
         <div class="w-full md:w-[140px] border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-4 flex flex-col">
-          <!-- Date display -->
-          <div class="text-foreground text-xs font-medium mb-2 flex items-center">
-            <Clock class="w-4 h-4 mr-1.5 text-muted-foreground" />
-            <span>Selection</span>
-          </div>
-          
-          <div class="text-xs text-muted-foreground space-y-1 mb-4">
-            <div>Start: {formatDate(calendarValue.start)}</div>
-            <div>End: {formatDate(calendarValue.end)}</div>
-          </div>
           
           <!-- Preset buttons -->
           <div class="text-foreground text-xs font-medium mb-2">Quick Select</div>
