@@ -31,6 +31,7 @@
   });
 </script>
 
+
 <div class="flex flex-col md:flex-row h-full bg-background">
   <!-- Main Content (left column) -->
   <div class="flex-1 flex flex-col relative">

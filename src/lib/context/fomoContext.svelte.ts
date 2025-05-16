@@ -18,10 +18,13 @@ export function createFomoContext() {
 	const newsContext = getNewsContext();
 
 	// Get the items to filter
-	const itemsToFilter = $derived(() => newsContext.newsItems || []);
+	const itemsToFilter = $derived(() => {
+		return newsContext.newsItems || [];
+	});
 
 	// First-level filter: FOMO score
 	const scoreFilteredItems = $derived(() => {
+		console.log(`Filtering with threshold: ${fomoThreshold}, items: ${itemsToFilter.length}`);
 		return itemsToFilter.filter(item => {
 			// Handle null, undefined, or non-numeric values
 			const score = typeof item.fomo_score === 'number'
@@ -112,33 +115,32 @@ export function createFomoContext() {
 		newsContext.setActiveItem(id);
 	}
 
+	// Return the context with getters for reactivity
 	return {
-		// Filter criteria
-		fomoThreshold,
-		startDate,
-		endDate,
-		selectedTags,
-
-		// Visualization state
-		visualizationType,
-		isExpanded,
+		// Reactive state through getters
+		get fomoThreshold() { return fomoThreshold; },
+		get startDate() { return startDate; },
+		get endDate() { return endDate; },
+		get selectedTags() { return selectedTags; },
+		get visualizationType() { return visualizationType; },
+		get isExpanded() { return isExpanded; },
 
 		// Derived values
-		filteredItems: finalFilteredItems,
-		currentScore,
-		articleCount,
+		get filteredItems() { return finalFilteredItems; },
+		get currentScore() { return currentScore; },
+		get articleCount() { return articleCount; },
 
-		// Methods
+		// Pass through from news context
+		get isLoading() { return newsContext.isLoading; },
+		get error() { return newsContext.error; },
+
+		// Actions
 		setFomoThreshold,
 		setDateRange,
 		setSelectedTags,
 		toggleExpanded,
 		setVisualizationType,
-		setActiveItem,
-
-		// Pass through from news context
-		isLoading: newsContext.isLoading,
-		error: newsContext.error
+		setActiveItem
 	};
 }
 

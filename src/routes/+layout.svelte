@@ -1,13 +1,11 @@
-<!-- src/routes/+layout.svelte -->
 <script lang="ts">
   import '../app.css';
   import { cn } from '$lib/utils';
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
   import FomoApp from '$lib/features/fomo/FomoApp.svelte';
-  import ViewportSize from '$lib/components/dev/ViewportSize.svelte';
   import { browser } from '$app/environment';
-
+  
   // Contexts
   import { createNewsContext } from '$lib/context/newsContext.svelte';
   import { createFomoContext } from '$lib/context/fomoContext.svelte';
@@ -15,90 +13,58 @@
   import { createCtaContext } from '$lib/context/ctaContext.svelte';
   import { setContext } from 'svelte';
 
-  // Props
+  // Props - data comes from +layout.server.ts
   let { data, children } = $props();
 
-  // Create and set contexts in the correct order
-  // First set up news context
-  const newsContext = createNewsContext(data.news || [], data.processedNews || []);
+  // Create contexts in the correct dependency order
+  const newsContext = createNewsContext(data.news || []);
   setContext('news', newsContext);
   
-  // Then create and set the FOMO context (which depends on news context)
   const fomoContext = createFomoContext();
   setContext('fomo', fomoContext);
   
-  // Set other contexts
   const navContext = createNavContext();
   const ctaContext = createCtaContext();
   setContext('nav', navContext);
   setContext('cta', ctaContext);
 
-  // Log data for debugging
-  $effect(() => {
-    console.log('Initial setup:');
-    console.log('- News data:', data.news.length, 'items');
-    console.log('- Processed news:', data.processedNews.length, 'items');
-    console.log('- Sample news item:', data.news[0]);
-    
-    // Add a timeout to check the FOMO context values after initial rendering
-    setTimeout(() => {
-      console.log('FOMO context after init:');
-      console.log('- Threshold:', fomoContext.fomoThreshold);
-      console.log('- Filtered items:', fomoContext.filteredItems?.length || 0);
-      console.log('- Score:', fomoContext.currentScore);
-    }, 100);
-  });
-
-  // Scroll variables
+  // Scroll handling state and logic
   let lastScrollY = $state(0);
-  let scrollDirection = $state('none'); // 'up', 'down', or 'none'
   let isTopHidden = $state(false);
   let isBottomHidden = $state(false);
   let isNearFooter = $state(false);
 
-  // Effect for scroll handling
   $effect(() => {
     if (!browser) return;
-
+    
     function handleScroll() {
-      // Get current scroll position
       const currentScrollY = window.scrollY;
-      
-      // Only trigger direction change after some movement to avoid micro-jitter
       const scrollDelta = Math.abs(currentScrollY - lastScrollY);
-      const scrollThreshold = 5; // minimum pixels to move before triggering direction change
+      const scrollThreshold = 5;
       
       if (scrollDelta > scrollThreshold) {
-        // Determine scroll direction
         if (currentScrollY > lastScrollY) {
-          scrollDirection = 'down';
           isTopHidden = true;
           isBottomHidden = false;
-        } else if (currentScrollY < lastScrollY) {
-          scrollDirection = 'up';
+        } else {
           isTopHidden = false;
           isBottomHidden = true;
         }
         
-        // Update last scroll position
         lastScrollY = currentScrollY;
       }
 
-      // Check if we're near the footer
+      // Footer visibility check
       const footerPosition = document.querySelector('footer')?.getBoundingClientRect().top;
       const windowHeight = window.innerHeight;
-
-      if (footerPosition && footerPosition < windowHeight + 100) {
-        isNearFooter = true;
-      } else {
-        isNearFooter = false;
-      }
+      isNearFooter = footerPosition && footerPosition < windowHeight + 100;
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   });
 </script>
+
 
 <svelte:head>
   <!-- Site-wide metadata -->
@@ -136,9 +102,9 @@
 </svelte:head>
 
 <!-- Debug tool -->
-<div class="hidden sm:block">
+<!-- <div class="hidden sm:block">
   <ViewportSize />
-</div>
+</div> -->
 
 <div class="relative min-h-screen border-12s _border-background">
   

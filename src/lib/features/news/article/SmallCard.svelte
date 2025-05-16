@@ -2,14 +2,13 @@
 <script lang="ts">
   import { ArrowUpRight } from 'phosphor-svelte';
   import type { NewsItem } from '$lib/types/news';
-  import SmallTags from './data/SmallTags.svelte';
   
   let { article, onSelect } = $props<{ 
     article: NewsItem;
     onSelect: () => void;
   }>();
 
-  const formatDate = (date: Date | null) => {
+  const formatDate = (date: string | Date | null) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
       month: 'short',
