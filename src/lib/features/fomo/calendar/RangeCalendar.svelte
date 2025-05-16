@@ -1,4 +1,4 @@
-<!-- src/lib/features/fomo/calendar/RangeCalendar.svelte (improved) -->
+<!-- src/lib/features/fomo/calendar/RangeCalendar.svelte -->
 <script lang="ts">
   import { RangeCalendar } from "bits-ui";
   import { CaretLeft, CaretRight } from 'phosphor-svelte';
@@ -13,13 +13,9 @@
   // Props
   let { 
     value = $bindable(),
-    startDate = null, 
-    endDate = null,
     isDateDisabled = null,
   } = $props<{
     value?: { start: DateValue | undefined, end: DateValue | undefined };
-    startDate?: Date | null;
-    endDate?: Date | null;
     isDateDisabled?: ((date: DateValue) => boolean) | null;
   }>();
   

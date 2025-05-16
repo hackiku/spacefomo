@@ -1,6 +1,5 @@
 <!-- src/lib/features/fomo/FomoApp.svelte -->
 <script lang="ts">
-  import { useFomo } from '$lib/hooks/useFomo.svelte';
   import { getFomoContext } from '$lib/context/fomoContext.svelte';
   
   // Components
@@ -12,9 +11,8 @@
   import FomoScoreMenu from './score/FomoScoreMenu.svelte';
   import { ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
-  // Get context directly to avoid any potential hook issues
+  // Get context directly
   const fomoContext = getFomoContext();
-  const fomo = useFomo();
   
   // Get values directly from context for UI display
   const fomoThreshold = fomoContext.fomoThreshold;
@@ -22,15 +20,17 @@
   const endDate = fomoContext.endDate || null;
   const isExpanded = fomoContext.isExpanded || false;
   
-  // Get additional computed values from the hook
-  const currentScore = fomo.currentScore || 0; 
-  const articleCount = fomo.articleCount || 0;
+  // Get computed values directly from context
+  const currentScore = fomoContext.currentScore; 
+  const articleCount = fomoContext.articleCount;
   
   // Log values for debugging
-  console.log('FomoApp values:', { 
-    currentScore, 
-    articleCount, 
-    fomoThreshold 
+  $effect(() => {
+    console.log('FomoApp values:', { 
+      currentScore, 
+      articleCount, 
+      fomoThreshold 
+    });
   });
   
   // Local UI state that doesn't need to be shared
@@ -80,6 +80,8 @@
   function handleThresholdChange(value: number) {
     console.log("FomoApp: Threshold change requested to", value);
     fomoContext.setFomoThreshold(value);
+    // Close the menu after threshold is applied
+    isScoreMenuOpen = false;
   }
   
   // Close menus when clicking outside

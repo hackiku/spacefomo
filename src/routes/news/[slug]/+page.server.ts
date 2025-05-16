@@ -1,6 +1,6 @@
 // src/routes/news/[slug]/+page.server.ts
 import { error } from '@sveltejs/kit';
-import { supabase } from '$lib/services/supabase/client';
+import { supabase } from '$lib/server/supabase/client';
 
 export async function load({ params }) {
 	const { slug } = params;

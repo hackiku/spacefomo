@@ -1,5 +1,5 @@
 // src/lib/context/newsContext.svelte.ts
-import { getContext } from 'svelte';
+import { getContext, setContext } from 'svelte';
 import type { NewsItem } from '$lib/types/news';
 
 export function createNewsContext(initialNews: NewsItem[] = [], initialProcessedNews: NewsItem[] = []) {
@@ -12,7 +12,7 @@ export function createNewsContext(initialNews: NewsItem[] = [], initialProcessed
 				(item.publication_date instanceof Date ? item.publication_date : new Date(item.publication_date)) : null
 		}));
 	};
-	
+
 	// Core state
 	let newsItems = $state<NewsItem[]>(processData(initialNews));
 	let processedNewsItems = $state<NewsItem[]>(processData(initialProcessedNews));
@@ -21,11 +21,7 @@ export function createNewsContext(initialNews: NewsItem[] = [], initialProcessed
 	let isLoading = $state(false);
 	let error = $state<string | null>(null);
 
-	// Important - define using a function for proper reactivity
-	function getCurrentItems() {
-		return activeDataSource === 'news' ? newsItems : processedNewsItems;
-	}
-	// Current items based on active data source
+	// Reactive derived values
 	const currentItems = $derived(() => {
 		return activeDataSource === 'news' ? newsItems : processedNewsItems;
 	});
@@ -73,7 +69,7 @@ export function createNewsContext(initialNews: NewsItem[] = [], initialProcessed
 		setProcessedNewsItems(initialProcessedNews);
 	}
 
-	return {
+	const context = {
 		// State
 		newsItems,
 		processedNewsItems,
@@ -82,8 +78,8 @@ export function createNewsContext(initialNews: NewsItem[] = [], initialProcessed
 		isLoading,
 		error,
 
-		currentItems: getCurrentItems(),
-
+		// Derived values
+		currentItems,
 
 		// Methods
 		setActiveItem,
@@ -91,11 +87,23 @@ export function createNewsContext(initialNews: NewsItem[] = [], initialProcessed
 		getActiveItem,
 		setNewsItems,
 		setProcessedNewsItems,
-
 	};
+
+	return context;
 }
 
 // Helper to get the news context
 export function getNewsContext() {
-	return getContext<ReturnType<typeof createNewsContext>>('news');
+	const context = getContext<ReturnType<typeof createNewsContext>>('news');
+	if (!context) {
+		throw new Error('getNewsContext must be used within a component with NewsContext');
+	}
+	return context;
+}
+
+// Helper to set up the news context
+export function setupNewsContext(initialNews: NewsItem[] = [], initialProcessedNews: NewsItem[] = []) {
+	const context = createNewsContext(initialNews, initialProcessedNews);
+	setContext('news', context);
+	return context;
 }
