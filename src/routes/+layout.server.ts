@@ -1,5 +1,5 @@
 // src/routes/+layout.server.ts
-import { supabase } from '$lib/server/supabase/client';
+import { supabase } from '$lib/server/db/client';
 
 export async function load() {
 	try {

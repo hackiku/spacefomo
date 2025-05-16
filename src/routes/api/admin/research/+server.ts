@@ -1,7 +1,7 @@
 // src/routes/api/admin/research/+server.ts
 
 import { json, error } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabase/client';
+import { supabase } from '$lib/server/db/client';
 
 /**
  * Calls the research-event Supabase Edge Function

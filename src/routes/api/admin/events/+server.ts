@@ -1,7 +1,7 @@
 // src/routes/api/admin/events/+server.ts
 
 import { json, error } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabase/client';
+import { supabase } from '$lib/server/db/client';
 
 export async function GET({ url }) {
 	try {

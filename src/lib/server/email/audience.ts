@@ -1,7 +1,7 @@
 // src/lib/server/email/audience.ts
 import { Resend } from 'resend';
 import { RESEND_API_KEY, RESEND_AUDIENCE_ID } from '$env/static/private';
-import { supabase } from '$lib/server/supabase/client';
+import { supabase } from '$lib/server/db/client';
 
 // Initialize Resend client
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;

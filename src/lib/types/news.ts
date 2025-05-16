@@ -5,31 +5,18 @@
  * This type maps to the 'news' table in your Supabase database
  */
 export interface NewsItem {
-	// Core identifiers
 	id: number;
 	title: string;
 	url: string;
-	source: string | null;
-
-	// Content metadata
-	read_time: number | null;      // Estimated reading time in minutes
-	viral_title: string | null;    // Catchier/alternative title for social sharing
-
-	// Classification and scoring
-	fomo_score: number | null;     // Fear-of-missing-out score (importance)
-	impact_score: number | null;   // Impact on space industry/community
-
-	// Organization and filtering
-	tags: string[] | null;         // Array of topic tags for filtering
-	week_id: number | null;        // Reference to weekly buckets of content
-
-	// Rich data structures
-	entities: NewsEntities | null; // Structured data about entities mentioned
-	context: NewsContext | null;   // Additional contextual information
-
-	// Timestamps
-	created_at: Date;              // When the item was added to our system
-	publication_date: Date | null; // Original publication date of the article
+	source?: string;
+	read_time?: number;
+	fomo_score?: number;
+	tags?: string[];
+	// week_id?: number;
+	created_at: string;
+	publication_date?: string;
+	summary?: string;
+	[key: string]: any; // Allow for additional properties
 }
 
 /**
@@ -109,9 +96,12 @@ export interface RelatedStory {
  * Options for filtering news items
  */
 export interface NewsFilters {
-	limit: number;
-	offset: number;
-	tags: string[];
-	weekId: number | null;
-	minScore: number;
+	minScore?: number;
+	tags?: string[];
+	dateStart?: string;
+	dateEnd?: string;
+	sortBy?: string;
+	sortDir?: 'asc' | 'desc';
+	offset?: number;
+	limit?: number;
 }

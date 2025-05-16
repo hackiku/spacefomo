@@ -1,6 +1,7 @@
 // src/routes/api/unsubscribe/+server.ts
 import { json, error } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabase/client';
+import { supabase } from '$lib/server/db/client';
+// TODO fix imports from email server
 import { updateSubscriberStatusInResend } from '$lib/server/email';
 
 export async function POST({ request }) {
