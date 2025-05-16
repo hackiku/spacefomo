@@ -1,6 +1,6 @@
 // src/routes/sitemap.xml/+server.ts
-import { fetchNews } from '$lib/services/news/newsService';
-import { supabase } from '$lib/services/supabase/client';
+// import { fetchNews } from '$lib/services/news/newsService';
+import { supabase } from '$lib/server/db/client';
 
 export async function GET() {
 	// Get all published news items

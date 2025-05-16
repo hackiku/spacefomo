@@ -2,94 +2,72 @@
 import { getContext, setContext } from 'svelte';
 import type { NewsItem } from '$lib/types/news';
 
-export function createNewsContext(initialNews: NewsItem[] = [], initialProcessedNews: NewsItem[] = []) {
-	// Process the data to ensure dates are correctly formatted
-	const processData = (items: any[]) => {
-		return items.map(item => ({
-			...item,
-			created_at: item.created_at instanceof Date ? item.created_at : new Date(item.created_at),
-			publication_date: item.publication_date ?
-				(item.publication_date instanceof Date ? item.publication_date : new Date(item.publication_date)) : null
-		}));
-	};
-
-	// Core state
-	let newsItems = $state<NewsItem[]>(processData(initialNews));
-	let processedNewsItems = $state<NewsItem[]>(processData(initialProcessedNews));
+export function createNewsContext(initialNews: NewsItem[] = []) {
+	// Core state with clear types
+	let newsItems = $state<NewsItem[]>(initialNews);
 	let activeItemId = $state<number | null>(null);
-	let activeDataSource = $state<'news' | 'processed_news'>('news');
 	let isLoading = $state(false);
 	let error = $state<string | null>(null);
 
-	// Reactive derived values
-	const currentItems = $derived(() => {
-		return activeDataSource === 'news' ? newsItems : processedNewsItems;
-	});
+	// Pagination state
+	let currentPage = $state(1);
+	let totalPages = $state(1);
+	let hasMore = $derived(currentPage < totalPages);
 
-	// Methods
-	function setNewsItems(items: NewsItem[]) {
-		newsItems = items.map(processNewsItem);
-	}
+	// Reactive derived values using $derived
+	const activeItem = $derived(
+		newsItems.find(item => item.id === activeItemId) || null
+	);
 
-	function setProcessedNewsItems(items: NewsItem[]) {
-		processedNewsItems = items.map(processNewsItem);
-	}
+	// Clear methods for data actions
+	async function loadMore() {
+		if (!hasMore || isLoading) return;
 
-	function setActiveDataSource(source: 'news' | 'processed_news') {
-		activeDataSource = source;
+		isLoading = true;
+		try {
+			const response = await fetch(`/api/v1/news?page=${currentPage + 1}`);
+			const data = await response.json();
+
+			if (data.success) {
+				newsItems = [...newsItems, ...data.data.items];
+				currentPage = data.data.meta.currentPage;
+				totalPages = data.data.meta.totalPages;
+			} else {
+				error = data.error;
+			}
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Unknown error';
+		} finally {
+			isLoading = false;
+		}
 	}
 
 	function setActiveItem(id: number | null) {
 		activeItemId = id;
 	}
 
-	function getActiveItem() {
-		const items = activeDataSource === 'news' ? newsItems : processedNewsItems;
-		return items.find(item => item.id === activeItemId) || null;
+	function refreshData() {
+		// Implementation to refresh data from API
 	}
 
-	// Helper to process dates in news items
-	function processNewsItem(item: NewsItem): NewsItem {
-		return {
-			...item,
-			created_at: item.created_at instanceof Date ?
-				item.created_at : new Date(item.created_at),
-			publication_date: item.publication_date ?
-				(item.publication_date instanceof Date ?
-					item.publication_date : new Date(item.publication_date)) : null
-		};
-	}
-
-	// Initialize with data if provided
-	if (initialNews.length > 0) {
-		setNewsItems(initialNews);
-	}
-
-	if (initialProcessedNews.length > 0) {
-		setProcessedNewsItems(initialProcessedNews);
-	}
-
-	const context = {
+	return {
 		// State
 		newsItems,
-		processedNewsItems,
 		activeItemId,
-		activeDataSource,
 		isLoading,
 		error,
+		currentPage,
+		totalPages,
 
 		// Derived values
-		currentItems,
+		activeItem,
+		hasMore,
 
 		// Methods
 		setActiveItem,
-		setActiveDataSource,
-		getActiveItem,
-		setNewsItems,
-		setProcessedNewsItems,
+		loadMore,
+		refreshData
 	};
-
-	return context;
 }
 
 // Helper to get the news context
@@ -102,8 +80,8 @@ export function getNewsContext() {
 }
 
 // Helper to set up the news context
-export function setupNewsContext(initialNews: NewsItem[] = [], initialProcessedNews: NewsItem[] = []) {
-	const context = createNewsContext(initialNews, initialProcessedNews);
+export function setupNewsContext(initialNews: NewsItem[] = []) {
+	const context = createNewsContext(initialNews);
 	setContext('news', context);
 	return context;
 }
