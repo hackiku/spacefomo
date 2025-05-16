@@ -1,32 +1,32 @@
 // src/routes/+layout.server.ts
-import { supabase } from '$lib/server/db/client';
+import { createContext } from '$lib/trpc/context';
+import { createCaller } from '$lib/trpc/router';
 
-export async function load() {
+export async function load(event) {
 	try {
-		// Fetch news and processed_news concurrently
-		const [newsResponse, processedNewsResponse] = await Promise.all([
-			supabase
-				.from('news')
-				.select('*, seo')
-				.order('fomo_score', { ascending: false })
-				.limit(50),
-			supabase
-				.from('processed_news')
-				.select('*, seo')
-				.order('fomo_score', { ascending: false })
-				.limit(50)
-		]);
+		// Create a direct caller to your tRPC router (no HTTP, direct function calls)
+		const trpc = createCaller(await createContext(event));
 
-		if (newsResponse.error) throw newsResponse.error;
-		if (processedNewsResponse.error) throw processedNewsResponse.error;
+		// Call your procedures directly
+		const newsData = await trpc.getNews({
+			limit: 50,
+			minScore: 0
+		});
+
+		// You could make multiple calls in parallel
+		const processedNewsData = await trpc.getNews({
+			limit: 50,
+			minScore: 0,
+			// You'd need to add a "processed" parameter to your procedure
+		});
 
 		return {
-			news: newsResponse.data || [],
-			processedNews: processedNewsResponse.data || [],
+			news: newsData.items,
+			processedNews: processedNewsData.items,
 			debug: {
 				success: true,
-				newsCount: newsResponse.data?.length || 0,
-				processedNewsCount: processedNewsResponse.data?.length || 0
+				newsCount: newsData.items.length,
+				processedNewsCount: processedNewsData.items.length
 			}
 		};
 	} catch (error) {
