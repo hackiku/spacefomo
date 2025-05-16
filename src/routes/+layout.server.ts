@@ -4,21 +4,22 @@ import { createCaller } from '$lib/trpc/router';
 
 export async function load(event) {
 	try {
-		// Create a direct caller to your tRPC router (no HTTP, direct function calls)
+		// Create a tRPC caller
 		const trpc = createCaller(await createContext(event));
 
-		// Call your procedures directly
-		const newsData = await trpc.getNews({
-			limit: 50,
-			minScore: 0
-		});
-
-		// You could make multiple calls in parallel
-		const processedNewsData = await trpc.getNews({
-			limit: 50,
-			minScore: 0,
-			// You'd need to add a "processed" parameter to your procedure
-		});
+		// Fetch both types of news in parallel
+		const [newsData, processedNewsData] = await Promise.all([
+			trpc.getNews({
+				limit: 50,
+				minScore: 0,
+				processed: false
+			}),
+			trpc.getNews({
+				limit: 50,
+				minScore: 0,
+				processed: true
+			})
+		]);
 
 		return {
 			news: newsData.items,

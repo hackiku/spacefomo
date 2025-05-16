@@ -17,29 +17,12 @@ export function createFomoContext() {
 	// Access news context for filtering
 	const newsContext = getNewsContext();
 
-	// Debug log the items we have
-	$effect(() => {
-		console.log('News items in fomoContext:', {
-			totalItems: newsContext.newsItems?.length || 0,
-			sampleScores: newsContext.newsItems?.slice(0, 5).map(item => item.fomo_score),
-			threshold: fomoThreshold
-		});
-	});
+	// Get the items to filter
+	const itemsToFilter = $derived(() => newsContext.newsItems || []);
 
-	// Reactive derived values for filtered items
-	const filteredItems = $derived(() => {
-		const items = newsContext.newsItems || [];
-
-		// Debug what's happening with the filter
-		console.log('Filtering items with threshold:', fomoThreshold);
-		console.log('Sample item scores:', items.slice(0, 5).map(item => ({
-			id: item.id,
-			score: item.fomo_score,
-			passes: item.fomo_score >= fomoThreshold
-		})));
-
-		// Make sure to convert everything to numbers for the comparison
-		const filtered = items.filter(item => {
+	// First-level filter: FOMO score
+	const scoreFilteredItems = $derived(() => {
+		return itemsToFilter.filter(item => {
 			// Handle null, undefined, or non-numeric values
 			const score = typeof item.fomo_score === 'number'
 				? item.fomo_score
@@ -48,41 +31,13 @@ export function createFomoContext() {
 			// Only include if it has a valid score and meets threshold
 			return !isNaN(score) && score >= fomoThreshold;
 		});
-
-		console.log(`Filtered ${items.length} items to ${filtered.length} items with threshold ${fomoThreshold}`);
-		return filtered;
 	});
 
-	// Current FOMO score average
-	const currentScore = $derived(() => {
-		try {
-			if (filteredItems.length > 0) {
-				const totalScore = filteredItems.reduce((sum, item) => {
-					const score = typeof item.fomo_score === 'number'
-						? item.fomo_score
-						: parseInt(String(item.fomo_score), 10);
-
-					return sum + (isNaN(score) ? 0 : score);
-				}, 0);
-				return Math.round(totalScore / filteredItems.length);
-			}
-			return 0;
-		} catch (e) {
-			console.error('Error calculating FOMO score:', e);
-			return 0;
-		}
-	});
-
-	// Article count meeting the threshold
-	const articleCount = $derived(() => {
-		return filteredItems.length;
-	});
-
-	// Date filtered items
+	// Second-level filter: Date range
 	const dateFilteredItems = $derived(() => {
-		if (!startDate || !endDate) return filteredItems;
+		if (!startDate || !endDate) return scoreFilteredItems;
 
-		return filteredItems.filter(item => {
+		return scoreFilteredItems.filter(item => {
 			const pubDate = item.publication_date;
 			if (!pubDate) return false;
 
@@ -92,7 +47,7 @@ export function createFomoContext() {
 		});
 	});
 
-	// Tag filtered items
+	// Third-level filter: Tags
 	const finalFilteredItems = $derived(() => {
 		if (selectedTags.length === 0) return dateFilteredItems;
 
@@ -105,6 +60,27 @@ export function createFomoContext() {
 			return selectedTags.some(tag => itemTags.includes(tag));
 		});
 	});
+
+	// Calculate the average FOMO score
+	const scoreSum = $derived(() => {
+		return finalFilteredItems.reduce((sum, item) => {
+			const score = typeof item.fomo_score === 'number'
+				? item.fomo_score
+				: parseInt(String(item.fomo_score), 10);
+
+			return sum + (isNaN(score) ? 0 : score);
+		}, 0);
+	});
+
+	// Calculate the average score
+	const currentScore = $derived(() => {
+		return finalFilteredItems.length > 0
+			? Math.round(scoreSum / finalFilteredItems.length)
+			: 0;
+	});
+
+	// Count of articles
+	const articleCount = $derived(() => finalFilteredItems.length);
 
 	// Methods
 	function setFomoThreshold(value: number) {
@@ -136,18 +112,7 @@ export function createFomoContext() {
 		newsContext.setActiveItem(id);
 	}
 
-	// Debug logging
-	$effect(() => {
-		console.log('FOMO Context values:', {
-			threshold: fomoThreshold,
-			filtered: filteredItems.length,
-			finalFiltered: finalFilteredItems.length,
-			score: currentScore,
-			count: articleCount
-		});
-	});
-
-	const context = {
+	return {
 		// Filter criteria
 		fomoThreshold,
 		startDate,
@@ -175,8 +140,6 @@ export function createFomoContext() {
 		isLoading: newsContext.isLoading,
 		error: newsContext.error
 	};
-
-	return context;
 }
 
 // Helper to get the fomo context
