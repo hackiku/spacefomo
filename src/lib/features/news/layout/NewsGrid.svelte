@@ -115,6 +115,32 @@
     loadNews(true);
   });
   
+	$effect(() => {
+  function handleFiltersChanged(e: CustomEvent) {
+    if (e.detail?.fomoThreshold !== undefined && fomoThreshold !== e.detail.fomoThreshold) {
+      fomoThreshold = e.detail.fomoThreshold;
+      loadNews(true); // Reload with new threshold
+    }
+    
+    if (e.detail?.startDate !== undefined || e.detail?.endDate !== undefined) {
+      startDate = e.detail.startDate || null;
+      endDate = e.detail.endDate || null;
+      loadNews(true); // Reload with new dates
+    }
+    
+    if (e.detail?.selectedTags !== undefined) {
+      selectedTags = e.detail.selectedTags || [];
+      loadNews(true); // Reload with new tags
+    }
+  }
+  
+  document.addEventListener('filtersChanged', handleFiltersChanged as EventListener);
+  
+  return () => {
+    document.removeEventListener('filtersChanged', handleFiltersChanged as EventListener);
+  };
+});
+
   // Modal state
   let modalOpen = $state(false);
   let currentArticle = $state<NewsItem | null>(null);

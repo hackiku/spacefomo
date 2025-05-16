@@ -1,22 +1,20 @@
 <!-- src/lib/features/fomo/calendar/CalendarButton.svelte -->
 <script lang="ts">
   import { CalendarBlank } from 'phosphor-svelte';
-  import { getFomoContext } from '$lib/context/fomoContext.svelte';
   
   // Props for component-specific behavior
-  let { onClick } = $props<{
+  let { 
+    startDate = null,
+    endDate = null,
+    onClick 
+  } = $props<{
+    startDate?: Date | null;
+    endDate?: Date | null;
     onClick: () => void;
   }>();
   
-  // Get context instead of using props
-  const fomoContext = getFomoContext();
-  
   // Format date range for display
   function getDateRangeText() {
-    // Get dates from context each time function is called
-    const startDate = fomoContext.startDate;
-    const endDate = fomoContext.endDate;
-    
     if (!startDate || !endDate) return "All Time";
     
     // Check if start and end dates are the same day

@@ -1,14 +1,10 @@
 <!-- src/lib/features/news/layout/Sidebar.svelte -->
 <script lang="ts">
   import { cn } from '$lib/utils';
-  import { getFomoContext } from '$lib/context/fomoContext.svelte';
   import LayoutControls from '../controls/LayoutControls.svelte'; 
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
-  import { Sliders, CaretDown, CaretUp, ArrowsInLineHorizontal, Columns, Table, Rows, SquaresFour, X } from 'phosphor-svelte';
+  import { Sliders, CaretDown, ArrowsInLineHorizontal, Columns, Table, Rows, SquaresFour, X } from 'phosphor-svelte';
   import { ToggleGroup } from "bits-ui";
-
-  // Get FOMO context for filter controls
-  const fomoContext = getFomoContext();
 
   // Bindable props
   let { 
@@ -18,6 +14,26 @@
 
   // State
   let isExpanded = $state(false);
+  
+  // Filter state communication with NewsGrid
+  let fomoThreshold = $state(60);
+  let selectedTags = $state<string[]>([]);
+  
+  // Subscribe to changes from FomoApp
+  $effect(() => {
+    // Listen for filter changes from FomoApp
+    const handleFomoThresholdChange = (e: CustomEvent) => {
+      if (e.detail?.fomoThreshold !== undefined) {
+        fomoThreshold = e.detail.fomoThreshold;
+      }
+    };
+    
+    document.addEventListener('fomoThresholdChanged', handleFomoThresholdChange as EventListener);
+    
+    return () => {
+      document.removeEventListener('fomoThresholdChanged', handleFomoThresholdChange as EventListener);
+    };
+  });
   
   // Toggle expanded state
   function toggleExpanded() {
@@ -39,27 +55,29 @@
   
   // Handle FOMO threshold change
   function handleFomoChange(value: number) {
-    fomoContext.setFomoThreshold(value);
+    if (fomoThreshold !== value) {
+      fomoThreshold = value;
+      
+      // Dispatch a custom event to notify other components
+      const changeEvent = new CustomEvent('fomoThresholdChanged', {
+        detail: { fomoThreshold: value },
+        bubbles: true
+      });
+      document.dispatchEvent(changeEvent);
+    }
   }
   
   // Handle tag selection change
   function handleTagsChange(tags: string[]) {
-    fomoContext.setSelectedTags(tags);
-  }
-  
-  // Get all available tags for filtering
-  const availableTags = $derived(() => {
-    const allTags = new Set<string>();
-    const newsItems = fomoContext.filteredItems;
+    selectedTags = tags;
     
-    newsItems.forEach(item => {
-      if (item.tags && Array.isArray(item.tags)) {
-        item.tags.forEach(tag => allTags.add(tag));
-      }
+    // Dispatch a custom event to notify other components
+    const changeEvent = new CustomEvent('tagsChanged', {
+      detail: { selectedTags: tags },
+      bubbles: true
     });
-    
-    return Array.from(allTags).sort();
-  });
+    document.dispatchEvent(changeEvent);
+  }
 </script>
 
 <div class="sidebar-container">
@@ -202,11 +220,8 @@
           <div class="space-y-3 mb-6">
             <div class="flex items-center justify-between">
               <label for="fomo-slider" class="text-sm text-muted-foreground">
-                FOMO Threshold: {fomoContext.fomoThreshold}
+                FOMO Threshold: {fomoThreshold}
               </label>
-              <span class="text-primary font-medium text-sm">
-                {fomoContext.articleCount} articles
-              </span>
             </div>
             
             <input
@@ -215,50 +230,11 @@
               min="0"
               max="100"
               step="1"
-              value={fomoContext.fomoThreshold}
+              value={fomoThreshold}
               oninput={(e) => handleFomoChange(parseInt(e.currentTarget.value))}
               class="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
             />
           </div>
-          
-          <!-- Tags Filter -->
-          {#if availableTags.length > 0}
-            <div class="space-y-3">
-              <h4 class="text-sm text-muted-foreground">Tags</h4>
-              <div class="flex flex-wrap gap-2">
-                {#each availableTags.slice(0, 15) as tag}
-                  <button
-                    type="button"
-                    class={cn(
-                      "px-2 py-1 text-xs rounded-sm transition-colors",
-                      fomoContext.selectedTags.includes(tag)
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground hover:text-foreground"
-                    )}
-                    onclick={() => {
-                      const newTags = fomoContext.selectedTags.includes(tag)
-                        ? fomoContext.selectedTags.filter(t => t !== tag)
-                        : [...fomoContext.selectedTags, tag];
-                      
-                      handleTagsChange(newTags);
-                    }}
-                  >
-                    {tag}
-                  </button>
-                {/each}
-                
-                {#if fomoContext.selectedTags.length > 0}
-                  <button
-                    type="button"
-                    class="px-2 py-1 text-xs rounded-sm bg-muted/50 text-muted-foreground hover:bg-muted transition-colors"
-                    onclick={() => handleTagsChange([])}
-                  >
-                    Clear All
-                  </button>
-                {/if}
-              </div>
-            </div>
-          {/if}
         </div>
       </div>
     </div>
