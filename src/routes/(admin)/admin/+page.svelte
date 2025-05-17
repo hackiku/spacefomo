@@ -2,10 +2,13 @@
 <script lang="ts">
   import { trpc } from '$lib/trpc/client';
   import { RocketLaunch, Database, Code, ChartLine } from 'phosphor-svelte';
+  // pipeline
+	import IngestResearch from '$lib/components/admin/ingest/IngestResearch.svelte';
   import RawNewsQueue from '$lib/components/admin/process/RawNewsQueue.svelte';
   import ProcessArticle from '$lib/components/admin/process/ProcessArticle.svelte';
-  import ApiMonitor from '$lib/components/admin/misc/ApiMonitor.svelte';
-  import IngestResearch from '$lib/components/admin/ingest/IngestResearch.svelte';
+  // api
+	import ApiMonitor from '$lib/components/admin/misc/ApiMonitor.svelte';
+	import ApiConsole from '$lib/components/admin/misc/ApiConsole.svelte';
   import { cn } from '$lib/utils';
   
   // Props from +page.server.ts

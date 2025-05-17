@@ -3,9 +3,16 @@
   import '../../app.css';
   import { browser } from '$app/environment';
   import { cn } from '$lib/utils';
+  import { createApiConsoleContext } from '$lib/context/apiConsoleContext.svelte';
+  import { setContext } from 'svelte';
+  import ApiConsole from '$lib/components/admin/misc/ApiConsole.svelte';
   
   // Props
   let { data, children } = $props();
+  
+  // Create and set API console context
+  const apiConsoleContext = createApiConsoleContext();
+  setContext('apiConsole', apiConsoleContext);
   
   // State for notifications
   let notification = $state<{
@@ -55,6 +62,9 @@
     {notification.message}
   </div>
 {/if}
+
+<!-- API Console -->
+<ApiConsole />
 
 <!-- Admin shell layout -->
 <div class="min-h-screen bg-muted/30">
