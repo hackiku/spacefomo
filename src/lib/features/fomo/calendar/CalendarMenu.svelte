@@ -4,33 +4,38 @@
   import { createEventDispatcher } from 'svelte';
   import { today, getLocalTimeZone, parseDate, type DateValue } from "@internationalized/date";
   import RangeCalendar from './RangeCalendar.svelte';
-  import { getFomoContext } from '$lib/context/fomoContext.svelte';
   
-  // Create event dispatcher for closing the menu
+  // Create event dispatcher for date range changes and closing
   const dispatch = createEventDispatcher<{
+    dateRangeChange: { startDate: Date | null, endDate: Date | null };
     close: void;
   }>();
   
-  // Props
-  let { isOpen = false } = $props<{
+  // Props - receive dates directly instead of from context
+  let { 
+    isOpen = false,
+    startDate = null,
+    endDate = null 
+  } = $props<{
     isOpen: boolean;
+    startDate?: Date | null;
+    endDate?: Date | null;
   }>();
-  
-  // Get context
-  const fomoContext = getFomoContext();
   
   // Calendar state
   let calendarValue = $state<{ start: DateValue | undefined, end: DateValue | undefined }>({
-    start: fomoContext.startDate ? parseDate(fomoContext.startDate.toISOString().split('T')[0]) : undefined,
-    end: fomoContext.endDate ? parseDate(fomoContext.endDate.toISOString().split('T')[0]) : undefined
+    start: startDate ? parseDate(startDate.toISOString().split('T')[0]) : undefined,
+    end: endDate ? parseDate(endDate.toISOString().split('T')[0]) : undefined
   });
   
-  // Update calendar value when context dates change
+  // Update calendar value when props change
   $effect(() => {
-    calendarValue = {
-      start: fomoContext.startDate ? parseDate(fomoContext.startDate.toISOString().split('T')[0]) : undefined,
-      end: fomoContext.endDate ? parseDate(fomoContext.endDate.toISOString().split('T')[0]) : undefined
-    };
+    if (isOpen) { // Only update when menu is open to avoid unnecessary updates
+      calendarValue = {
+        start: startDate ? parseDate(startDate.toISOString().split('T')[0]) : undefined,
+        end: endDate ? parseDate(endDate.toISOString().split('T')[0]) : undefined
+      };
+    }
   });
   
   // Define presets with their actions
@@ -83,7 +88,7 @@
       label: 'All Time', 
       action: () => {
         calendarValue = { start: undefined, end: undefined };
-        fomoContext.setDateRange(null, null);
+        dispatch('dateRangeChange', { startDate: null, endDate: null });
         dispatch('close');
       }
     }
@@ -105,7 +110,7 @@
     if (calendarValue.start && calendarValue.end) {
       const startDateObj = new Date(calendarValue.start.toString());
       const endDateObj = new Date(calendarValue.end.toString());
-      fomoContext.setDateRange(startDateObj, endDateObj);
+      dispatch('dateRangeChange', { startDate: startDateObj, endDate: endDateObj });
       dispatch('close');
     }
   }

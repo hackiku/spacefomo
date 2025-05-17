@@ -7,6 +7,8 @@
   import { browser } from '$app/environment';
   
   // Contexts
+  import { createUiContext } from '$lib/context/uiContext.svelte';
+
   import { createNewsContext } from '$lib/context/newsContext.svelte';
   import { createFomoContext } from '$lib/context/fomoContext.svelte';
   import { createNavContext } from '$lib/context/navContext.svelte';
@@ -15,6 +17,9 @@
 
   // Props - data comes from +layout.server.ts
   let { data, children } = $props();
+
+	const uiContext = createUiContext();
+  setContext('ui', uiContext);
 
   // Create contexts in the correct dependency order
   const newsContext = createNewsContext(data.news || []);
