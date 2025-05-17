@@ -1,7 +1,9 @@
 <!-- src/lib/features/news/article/SmallCard.svelte -->
 <script lang="ts">
   import { ArrowUpRight } from 'phosphor-svelte';
+  import { Button } from "bits-ui";
   import type { NewsItem } from '$lib/types/news';
+  import { cn } from '$lib/utils';
   
   let { article, onSelect } = $props<{ 
     article: NewsItem;
@@ -15,36 +17,41 @@
       day: 'numeric'
     });
   };
+  
+  // Get FOMO color class based on score
+  function getFomoColorClass(score: number): string {
+    if (score >= 80) return "text-primary";
+    if (score >= 60) return "text-amber-500";
+    if (score >= 40) return "text-orange-500";
+    return "text-muted-foreground";
+  }
 </script>
 
-<div class="group w-full relative cursor-pointer">
-  <!-- Card Container -->
-  <button 
-    type="button"
-    class="w-full text-left transition-colors duration-200 block"
-    onclick={onSelect}
-    aria-label={`Open article: ${article.title}`}
-  >
-    <div class="rounded-default p-5 border border-border
-                bg-card/60 backdrop-blur-sm 
-                group-hover:border-venus-yellow/30 group-hover:bg-card
-                transition-all duration-200">
-    
-      <!-- Header with FOMO score and date -->
-      <div class="flex items-start gap-3 mb-3">
-        <!-- FOMO Score -->
-        <span class="fomo-score text-xl font-semibold">
+<div class="group w-full relative">
+  <!-- Card Container with side-by-side layout -->
+  <div class="flex rounded-default overflow-hidden transition-all duration-200 border border-border group-hover:border-venus-yellow/30">
+    <!-- Left sidebar with FOMO score and date -->
+    <div class="bg-card/30 backdrop-blur-sm flex flex-col items-center justify-between py-4 px-3 min-w-[60px] text-center border-r border-border/50">
+      <!-- FOMO Score -->
+      <div class="flex flex-col items-center">
+        <span class={cn("text-xl font-semibold", getFomoColorClass(article.fomo_score || 0))}>
           {article.fomo_score || 0}
         </span>
-
-        <!-- Date info -->
-        <div class="flex items-center ml-auto">
-          {#if article.publication_date}
-            <span class="text-lg text-muted-foreground">{formatDate(article.publication_date)}</span>
-          {/if}
-        </div>
+        <span class="text-xs text-muted-foreground">FOMO</span>
       </div>
-      
+
+      <!-- Date info -->
+      {#if article.publication_date}
+        <span class="text-xs text-muted-foreground mt-2">{formatDate(article.publication_date)}</span>
+      {/if}
+    </div>
+    
+    <!-- Main content area -->
+    <Button.Root
+      onclick={onSelect}
+      class="flex-1 text-left p-5 bg-card/60 backdrop-blur-sm group-hover:bg-card transition-all duration-200"
+      aria-label={`Open article: ${article.title}`}
+    >
       <!-- Title -->
       <div class="mb-4">
         <h2 class="text-lg font-medium text-foreground line-clamp-2">
@@ -72,13 +79,13 @@
           {/if}
         </div>
       {/if}
-    </div>
-  </button>
+    </Button.Root>
+  </div>
   
-  <!-- External link button - moved to bottom-right and made bigger -->
-  <a 
+  <!-- External link button - positioned at bottom-right -->
+  <Button.Root
     href={`/news/${article.slug || article.id}`}
-    class="group absolute bottom-5 right-5 flex items-center justify-center h-9 w-9
+    class="absolute bottom-5 right-5 flex items-center justify-center h-9 w-9
            bg-muted border border-border text-muted-foreground
            group-hover:text-foreground group-hover:border-venus-yellow/30
            transition-all duration-200 z-10
@@ -90,5 +97,5 @@
     aria-label="View article details"
   >
     <ArrowUpRight class="h-5 w-5" />
-  </a>
+  </Button.Root>
 </div>

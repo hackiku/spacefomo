@@ -23,7 +23,7 @@
   let error = $state<string | null>(null);
   let totalCount = $state(0);
   let offset = $state(0);
-  let limit = $state(5); // Smaller for testing pagination
+  let limit = $state(3); // Smaller for testing pagination
   
   // Filter state
   let fomoThreshold = $state(60);

@@ -71,8 +71,9 @@
         tags: selectedTags.length > 0 ? selectedTags : undefined
       });
       
+      // FIXED: Always replace items, never append
       onDataLoaded({
-        items: resetOffset ? result.items : [...newsItems, ...result.items],
+        items: result.items, // Just use the new items, don't append
         totalCount: result.meta.totalCount,
         offset: newOffset
       });
@@ -87,12 +88,16 @@
     }
   }
   
-  // Pagination handler
+  // Pagination handler - FIXED
   function handlePageChange(page: number) {
+    // Calculate the new offset
     const newOffset = (page - 1) * limit;
     offset = newOffset; // Update the offset
-    loadNews(false);
+    
+    // Always do a fresh load for pagination changes
+    loadNews(false); // Don't reset offset since we just set it manually
   }
+
   
   // Load initial data
   $effect(() => {
