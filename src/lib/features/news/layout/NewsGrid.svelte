@@ -1,33 +1,54 @@
 <!-- src/lib/features/news/layout/NewsGrid.svelte -->
 <script lang="ts">
   import { trpc } from '$lib/trpc/client';
-	import { Pagination } from 'bits-ui';
-	import { CaretLeft, CaretRight } from 'phosphor-svelte';
+  import { Pagination } from 'bits-ui';
+  import { CaretLeft, CaretRight } from 'phosphor-svelte';
   import SmallCard from '../article/SmallCard.svelte';
   import NewsModal from './NewsModal.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
   import type { NewsItem } from '$lib/types/news';
   
-  // Props for layout settings
+  // Props for everything - receiving from NewsApp parent
   let { 
-    columnCount = $bindable<ColumnCount>(1),
-    sidebarMode = $bindable<SidebarMode>('default')
-  } = $props();
+    columnCount,
+    sidebarMode,
+    fomoThreshold,
+    startDate,
+    endDate,
+    selectedTags,
+    isLoading,
+    error,
+    newsItems,
+    totalCount,
+    offset,
+    limit,
+    onFilterChange,
+    onDataLoaded,
+    onError,
+    onLoadingChange
+  } = $props<{
+    columnCount: ColumnCount;
+    sidebarMode: SidebarMode;
+    fomoThreshold: number;
+    startDate: Date | null;
+    endDate: Date | null;
+    selectedTags: string[];
+    isLoading: boolean;
+    error: string | null;
+    newsItems: NewsItem[];
+    totalCount: number;
+    offset: number;
+    limit: number;
+    onFilterChange: (filters: any) => void;
+    onDataLoaded: (data: any) => void;
+    onError: (error: string) => void;
+    onLoadingChange: (loading: boolean) => void;
+  }>();
   
-  // Local state for news data and filtering
-  let newsItems = $state<NewsItem[]>([]);
-  let isLoading = $state(true);
-  let error = $state<string | null>(null);
-  let totalCount = $state(0);
-  let offset = $state(0);
-  let limit = $state(20);
-  let hasMore = $state(false);
-  
-  // Filter state
-  let fomoThreshold = $state(60);
-  let startDate = $state<Date | null>(null);
-  let endDate = $state<Date | null>(null);
-  let selectedTags = $state<string[]>([]);
+  // Derived values
+  const hasMore = $derived(offset + limit < totalCount);
+  const currentPage = $derived(Math.floor(offset / limit) + 1);
+  const totalPages = $derived(Math.ceil(totalCount / limit));
   
   // Format dates for API
   const formatDateForApi = (date: Date | null) => {
@@ -35,106 +56,56 @@
   };
   
   // Load news with filters
-  async function loadNews(reset = false) {
-    if (reset) {
-      offset = 0;
-    }
+  async function loadNews(resetOffset = false) {
+    const newOffset = resetOffset ? 0 : offset;
     
-    isLoading = true;
+    onLoadingChange(true);
     
     try {
       const result = await trpc().news.getNews.query({
         minScore: fomoThreshold,
-        offset: offset,
+        offset: newOffset,
         limit: limit,
         dateStart: formatDateForApi(startDate),
         dateEnd: formatDateForApi(endDate),
         tags: selectedTags.length > 0 ? selectedTags : undefined
       });
       
-      if (reset) {
-        newsItems = result.items;
-      } else {
-        // Append new items
-        newsItems = [...newsItems, ...result.items];
-      }
-      
-      // Update pagination info
-      totalCount = result.meta.totalCount;
-      hasMore = offset + limit < totalCount;
+      onDataLoaded({
+        items: resetOffset ? result.items : [...newsItems, ...result.items],
+        totalCount: result.meta.totalCount,
+        offset: newOffset
+      });
       
       // Debug info
-      console.log(`Loaded ${newsItems.length} of ${totalCount} items with threshold ${fomoThreshold}`);
+      console.log(`Loaded ${result.items.length} of ${result.meta.totalCount} items with threshold ${fomoThreshold}`);
     } catch (err) {
-      error = err instanceof Error ? err.message : 'Failed to load news';
+      onError(err instanceof Error ? err.message : 'Failed to load news');
       console.error('Error loading news:', err);
     } finally {
-      isLoading = false;
+      onLoadingChange(false);
     }
   }
   
-  // Load more items
-  function loadMore() {
-    if (isLoading || !hasMore) return;
-    offset += limit;
-    loadNews(false);
-  }
-  
-  // Set FOMO threshold and reload data
-  function setFomoThreshold(value: number) {
-    if (fomoThreshold !== value) {
-      fomoThreshold = value;
-      loadNews(true); // Reset and reload
-    }
-  }
-
+  // Pagination handler
   function handlePageChange(page: number) {
-    offset = (page - 1) * limit;
+    const newOffset = (page - 1) * limit;
+    offset = newOffset; // Update the offset
     loadNews(false);
   }
-
-  
-  // Log FOMO scores for debugging
-  $effect(() => {
-    console.log('News items FOMO scores:', 
-      newsItems?.map(item => ({
-        id: item.id, 
-        title: item.title?.slice(0, 20), 
-        fomo_score: item.fomo_score
-      }))
-    );
-  });
   
   // Load initial data
   $effect(() => {
     loadNews(true);
   });
   
+  // Watch for filter changes
 	$effect(() => {
-  function handleFiltersChanged(e: CustomEvent) {
-    if (e.detail?.fomoThreshold !== undefined && fomoThreshold !== e.detail.fomoThreshold) {
-      fomoThreshold = e.detail.fomoThreshold;
-      loadNews(true); // Reload with new threshold
-    }
-    
-    if (e.detail?.startDate !== undefined || e.detail?.endDate !== undefined) {
-      startDate = e.detail.startDate || null;
-      endDate = e.detail.endDate || null;
-      loadNews(true); // Reload with new dates
-    }
-    
-    if (e.detail?.selectedTags !== undefined) {
-      selectedTags = e.detail.selectedTags || [];
-      loadNews(true); // Reload with new tags
-    }
-  }
-  
-  document.addEventListener('filtersChanged', handleFiltersChanged as EventListener);
-  
-  return () => {
-    document.removeEventListener('filtersChanged', handleFiltersChanged as EventListener);
-  };
-});
+		// Reference the dependencies explicitly to track them
+		console.log("Filters changed:", fomoThreshold, startDate, endDate, selectedTags);
+		loadNews(true);
+	});
+
 
   // Modal state
   let modalOpen = $state(false);
@@ -153,7 +124,7 @@
 
 <div class="w-full">
   <!-- News content with appropriate spacing -->
-  <div class="space-y-6 pt-4">
+  <div class="space-y-6">
     {#if isLoading && !newsItems.length}
       <div class="p-8 text-center border border-border bg-card/50 backdrop-blur-sm">
         <div class="flex justify-center items-center">
@@ -190,24 +161,52 @@
         </div>
       {/if}
       
-      <!-- Load more button -->
-      {#if hasMore}
-        <div class="flex justify-center mt-8">
-          <button
-            type="button"
-            class="px-4 py-2 bg-muted hover:bg-muted/80 text-muted-foreground rounded-md transition-colors"
-            onclick={loadMore}
-            disabled={isLoading}
+      <!-- Pagination component -->
+      {#if totalCount > 0}
+        <div class="flex justify-center mt-12">
+          <Pagination.Root 
+            count={totalCount} 
+            perPage={limit}
+            page={currentPage}
+            onPageChange={handlePageChange}
           >
-            {#if isLoading}
-              <span class="flex items-center">
-                <div class="animate-spin h-4 w-4 border-t-2 border-l-2 border-current rounded-full mr-2"></div>
-                Loading...
-              </span>
-            {:else}
-              Load More
-            {/if}
-          </button>
+            {#snippet children({ pages, range })}
+              <div class="flex items-center gap-2">
+                <Pagination.PrevButton
+                  class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                >
+                  <CaretLeft class="h-4 w-4" />
+                </Pagination.PrevButton>
+                
+                <div class="flex items-center gap-1">
+                  {#each pages as page (page.key)}
+                    {#if page.type === "ellipsis"}
+                      <div class="flex items-center justify-center h-10 w-10">
+                        <span>...</span>
+                      </div>
+                    {:else}
+                      <Pagination.Page
+                        {page}
+                        class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors data-[selected]:bg-primary data-[selected]:text-primary-foreground"
+                      >
+                        {page.value}
+                      </Pagination.Page>
+                    {/if}
+                  {/each}
+                </div>
+                
+                <Pagination.NextButton
+                  class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                >
+                  <CaretRight class="h-4 w-4" />
+                </Pagination.NextButton>
+              </div>
+              
+              <p class="text-xs text-muted-foreground mt-2 text-center">
+                Showing {range.start}-{range.end} of {totalCount} articles
+              </p>
+            {/snippet}
+          </Pagination.Root>
         </div>
       {/if}
     {:else}
@@ -226,54 +225,3 @@
     onClose={closeModal} 
   />
 </div>
-
-
-
-<!-- Add this at the bottom of NewsGrid.svelte -->
-<!-- {#if newsItems.length > 0 && totalCount > limit} -->
-  <div class="flex justify-center mt-12">
-    <Pagination.Root 
-      count={totalCount} 
-      perPage={limit}
-      page={Math.floor(offset / limit) + 1}
-      onPageChange={handlePageChange}
-    >
-      {#snippet children({ pages, range })}
-        <div class="flex items-center gap-2">
-          <Pagination.PrevButton
-            class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors disabled:opacity-50"
-          >
-            <CaretLeft class="h-4 w-4" />
-          </Pagination.PrevButton>
-          
-          <div class="flex items-center gap-1">
-            {#each pages as page (page.key)}
-              {#if page.type === "ellipsis"}
-                <div class="flex items-center justify-center h-10 w-10">
-                  <span>...</span>
-                </div>
-              {:else}
-                <Pagination.Page
-                  {page}
-                  class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors data-[selected]:bg-primary data-[selected]:text-primary-foreground"
-                >
-                  {page.value}
-                </Pagination.Page>
-              {/if}
-            {/each}
-          </div>
-          
-          <Pagination.NextButton
-            class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors disabled:opacity-50"
-          >
-            <CaretRight class="h-4 w-4" />
-          </Pagination.NextButton>
-        </div>
-        
-        <p class="text-xs text-muted-foreground mt-2 text-center">
-          Showing {range.start}-{range.end} of {totalCount} articles
-        </p>
-      {/snippet}
-    </Pagination.Root>
-  </div>
-<!-- {/if} -->

@@ -3,7 +3,7 @@
   import { cn } from '$lib/utils';
   import Nav from '$lib/components/layout/Nav.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
-  import FomoApp from '$lib/features/fomo/FomoApp.svelte';
+  // import FomoApp from '$lib/features/fomo/FomoApp.svelte';
   import { browser } from '$app/environment';
   
   // Contexts
@@ -152,12 +152,11 @@
     )}
   >
     <!-- Left/right bezels with auto width -->
-    <div class="flex">
-      <!-- <div class="min-w-1 md:min-w-3 bg-background h-full"></div> -->
+    <!-- <div class="flex">
       <div class="flex-1 w-full px-4 md:px-8 lg:px-12 xl:px-16">
         <FomoApp />
       </div>
-      <!-- <div class="min-w-1 md:min-w-3 bg-background h-full"></div> -->
-    </div>
+    </div> -->
+
   </div>
 </div>

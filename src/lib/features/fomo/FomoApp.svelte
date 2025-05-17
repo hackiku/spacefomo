@@ -11,17 +11,28 @@
   import FomoScoreMenu from './score/FomoScoreMenu.svelte';
   import { ArrowsOutSimple, ArrowsInSimple } from 'phosphor-svelte';
   
+  // Props - receive data from parent
+  let { 
+    fomoThreshold,
+    startDate,
+    endDate,
+    selectedTags,
+    onThresholdChange,
+    onDateRangeChange
+  } = $props<{
+    fomoThreshold: number;
+    startDate: Date | null;
+    endDate: Date | null;
+    selectedTags: string[];
+    onThresholdChange: (val: number) => void;
+    onDateRangeChange: (start: Date | null, end: Date | null) => void;
+  }>();
+  
   // Local state for UI
   let isScoreMenuOpen = $state(false);
   let isCalendarMenuOpen = $state(false);
   let isShareModalOpen = $state(false);
   let isExpanded = $state(false);
-  
-  // Filter state - this is shared with NewsGrid component
-  let fomoThreshold = $state(60);
-  let startDate = $state<Date | null>(null);
-  let endDate = $state<Date | null>(null);
-  let selectedTags = $state<string[]>([]);
   
   // Analytics state
   let currentScore = $state(0);
@@ -62,8 +73,6 @@
       } else {
         currentScore = 0;
       }
-      
-      console.log('FomoApp updated values:', { currentScore, articleCount, fomoThreshold });
     } catch (err) {
       console.error('Error loading FOMO stats:', err);
     } finally {
@@ -71,31 +80,12 @@
     }
   }
   
-  // Load initial data
-  $effect(() => {
-    loadFomoStats();
-  });
-  
-  // Reload when filters change
-  $effect(() => {
-    // This will trigger when fomoThreshold, startDate, endDate, or selectedTags change
-    loadFomoStats();
-  });
-  
-  // Listen for filter changes from NewsGrid
-  $effect(() => {
-    function handleExternalThresholdChanged(e: CustomEvent) {
-      if (e.detail?.fomoThreshold !== undefined && e.detail.fomoThreshold !== fomoThreshold) {
-        fomoThreshold = e.detail.fomoThreshold;
-      }
-    }
-    
-    document.addEventListener('fomoThresholdChanged', handleExternalThresholdChanged as EventListener);
-    
-    return () => {
-      document.removeEventListener('fomoThresholdChanged', handleExternalThresholdChanged as EventListener);
-    };
-  });
+  // Load initial data and when filters change
+$effect(() => {
+  // Reference the dependencies explicitly to track them
+  console.log("Filters updated:", fomoThreshold, startDate, endDate, selectedTags);
+  loadFomoStats();
+});
   
   // Toggle score menu
   function toggleScoreMenu() {
@@ -124,48 +114,25 @@
     
     if (start && end) {
       // Convert DateValue to JavaScript Date and update
-      startDate = new Date(start.toString());
-      endDate = new Date(end.toString());
+      const startObj = new Date(start.toString());
+      const endObj = new Date(end.toString());
+      onDateRangeChange(startObj, endObj);
     } else {
-      startDate = null;
-      endDate = null;
+      onDateRangeChange(null, null);
     }
     
     // Close the calendar menu after selection
     isCalendarMenuOpen = false;
-    
-    // Notify other components
-    broadcastFilterChange();
   }
   
   // Handle FOMO threshold change from menu
   function handleThresholdChange(value: number) {
-    console.log("FomoApp: Threshold change requested to", value);
-    
     if (fomoThreshold !== value) {
-      fomoThreshold = value;
-      
-      // Notify other components
-      broadcastFilterChange();
+      onThresholdChange(value);
     }
     
     // Close the menu after threshold is applied
     isScoreMenuOpen = false;
-  }
-  
-  // Notify other components of filter changes
-  function broadcastFilterChange() {
-    const changeEvent = new CustomEvent('filtersChanged', {
-      detail: { 
-        fomoThreshold, 
-        startDate, 
-        endDate, 
-        selectedTags 
-      },
-      bubbles: true
-    });
-    
-    document.dispatchEvent(changeEvent);
   }
   
   // Toggle expanded state
