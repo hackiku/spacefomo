@@ -89,14 +89,17 @@
   }
   
   // Pagination handler - FIXED
-  function handlePageChange(page: number) {
-    // Calculate the new offset
-    const newOffset = (page - 1) * limit;
-    offset = newOffset; // Update the offset
-    
-    // Always do a fresh load for pagination changes
-    loadNews(false); // Don't reset offset since we just set it manually
-  }
+function handlePageChange(page: number) {
+  // Calculate the new offset
+  const newOffset = (page - 1) * limit;
+  offset = newOffset; // Update the offset
+  
+  // Scroll to top of the grid (optional, for better UX)
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+  
+  // Always do a fresh load for pagination changes
+  loadNews(false);
+}
 
   
   // Load initial data
