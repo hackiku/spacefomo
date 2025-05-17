@@ -1,7 +1,7 @@
 // src/lib/trpc/routers/fomo.ts
 
 import { z } from "zod";
-import { t } from "../trpc";
+import { t } from "../t";
 
 export const fomoRouter = t.router({
 	// Get news filtered by FOMO score
@@ -46,7 +46,9 @@ export const fomoRouter = t.router({
 				meta: {
 					totalCount: count || 0,
 					offset: input.offset,
-					limit: input.limit
+					limit: input.limit,
+					page: Math.floor(input.offset / input.limit) + 1,
+					totalPages: Math.ceil((count || 0) / input.limit),
 				}
 			};
 		}),

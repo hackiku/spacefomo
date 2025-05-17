@@ -18,9 +18,9 @@
     if (sidebarMode === 'thin') {
       return 'max-w-lg'; // Narrower content
     } else if (sidebarMode === 'wide') {
-      return 'max-w-3xl'; // Wider content
+      return 'max-w-4xl'; // Wider content
     } else {
-      return 'max-w-2xl'; // Default width
+      return 'max-w-xl'; // Default width
     }
   });
 </script>

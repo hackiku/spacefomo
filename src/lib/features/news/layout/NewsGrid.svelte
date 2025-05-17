@@ -1,6 +1,8 @@
 <!-- src/lib/features/news/layout/NewsGrid.svelte -->
 <script lang="ts">
   import { trpc } from '$lib/trpc/client';
+	import { Pagination } from 'bits-ui';
+	import { CaretLeft, CaretRight } from 'phosphor-svelte';
   import SmallCard from '../article/SmallCard.svelte';
   import NewsModal from './NewsModal.svelte';
   import type { SidebarMode, ColumnCount } from '$lib/types/layout';
@@ -41,7 +43,7 @@
     isLoading = true;
     
     try {
-      const result = await trpc().getNews.query({
+      const result = await trpc().news.getNews.query({
         minScore: fomoThreshold,
         offset: offset,
         limit: limit,
@@ -85,19 +87,12 @@
       loadNews(true); // Reset and reload
     }
   }
-  
-  // Set date range and reload data
-  function setDateRange(start: Date | null, end: Date | null) {
-    startDate = start;
-    endDate = end;
-    loadNews(true); // Reset and reload
+
+  function handlePageChange(page: number) {
+    offset = (page - 1) * limit;
+    loadNews(false);
   }
-  
-  // Set selected tags and reload data
-  function setSelectedTags(tags: string[]) {
-    selectedTags = tags;
-    loadNews(true); // Reset and reload
-  }
+
   
   // Log FOMO scores for debugging
   $effect(() => {
@@ -231,3 +226,54 @@
     onClose={closeModal} 
   />
 </div>
+
+
+
+<!-- Add this at the bottom of NewsGrid.svelte -->
+<!-- {#if newsItems.length > 0 && totalCount > limit} -->
+  <div class="flex justify-center mt-12">
+    <Pagination.Root 
+      count={totalCount} 
+      perPage={limit}
+      page={Math.floor(offset / limit) + 1}
+      onPageChange={handlePageChange}
+    >
+      {#snippet children({ pages, range })}
+        <div class="flex items-center gap-2">
+          <Pagination.PrevButton
+            class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+          >
+            <CaretLeft class="h-4 w-4" />
+          </Pagination.PrevButton>
+          
+          <div class="flex items-center gap-1">
+            {#each pages as page (page.key)}
+              {#if page.type === "ellipsis"}
+                <div class="flex items-center justify-center h-10 w-10">
+                  <span>...</span>
+                </div>
+              {:else}
+                <Pagination.Page
+                  {page}
+                  class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors data-[selected]:bg-primary data-[selected]:text-primary-foreground"
+                >
+                  {page.value}
+                </Pagination.Page>
+              {/if}
+            {/each}
+          </div>
+          
+          <Pagination.NextButton
+            class="flex items-center justify-center h-10 w-10 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+          >
+            <CaretRight class="h-4 w-4" />
+          </Pagination.NextButton>
+        </div>
+        
+        <p class="text-xs text-muted-foreground mt-2 text-center">
+          Showing {range.start}-{range.end} of {totalCount} articles
+        </p>
+      {/snippet}
+    </Pagination.Root>
+  </div>
+<!-- {/if} -->

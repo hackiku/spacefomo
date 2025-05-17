@@ -39,7 +39,7 @@
     
     try {
       // Get filtered news for analytics
-      const result = await trpc().getNews.query({
+      const result = await trpc().news.getNews.query({
         minScore: fomoThreshold,
         dateStart: formatDateForApi(startDate),
         dateEnd: formatDateForApi(endDate),
