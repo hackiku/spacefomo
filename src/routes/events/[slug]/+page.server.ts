@@ -1,6 +1,6 @@
 // src/routes/events/[slug]/+page.server.ts
 import { error } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabase/client';
+import { supabase } from '$lib/server/db/client';
 
 export async function load({ params }) {
 	const { slug } = params;

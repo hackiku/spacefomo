@@ -3,12 +3,18 @@
 import type { RequestEvent } from '@sveltejs/kit';
 
 export async function createContext(event: RequestEvent) {
-	// This context object will be available in all your procedures
-	// You can add user authentication here later
+
+	const session = await event.locals.supabase.auth.getSession();
+	const user = session?.data.session?.user;
+
+	// This would be replaced with your actual admin check
+	const isAdmin = Boolean(user);
+
 	return {
 		event,
 		supabase: event.locals.supabase,
-
+		user,
+		isAdmin
 	};
 }
 

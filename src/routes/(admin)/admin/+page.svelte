@@ -1,14 +1,34 @@
-<!-- src/routes/admin/+page.svelte -->
+<!-- src/routes/(admin)/admin/+page.svelte -->
 <script lang="ts">
-  import { ArrowRight, RocketLaunch, Database, Code } from 'phosphor-svelte';
-  import RawNewsQueue from './process/RawNewsQueue.svelte';
-  import ProcessArticle from './process/ProcessArticle.svelte';
-  import ApiMonitor from './misc/ApiMonitor.svelte';
+  import { trpc } from '$lib/trpc/client';
+  import { RocketLaunch, Database, Code, ChartLine } from 'phosphor-svelte';
+  import RawNewsQueue from '$lib/components/admin/process/RawNewsQueue.svelte';
+  import ProcessArticle from '$lib/components/admin/process/ProcessArticle.svelte';
+  import ApiMonitor from '$lib/components/admin/misc/ApiMonitor.svelte';
+  import IngestResearch from '$lib/components/admin/ingest/IngestResearch.svelte';
   import { cn } from '$lib/utils';
+  
+  // Props from +page.server.ts
+  let { data } = $props();
   
   // State
   let selectedArticle = $state<any>(null);
   let activeTab = $state('queue');
+  
+  // Dashboard stats
+  let pendingCount = $derived(
+    data.rawNewsStats?.filter(stat => stat.status === 'pending')
+      .reduce((sum, item) => sum + parseInt(item.count), 0) || 0
+  );
+  
+  let processedToday = $derived(
+    data.rawNewsStats?.filter(stat => stat.status === 'processed')
+      .reduce((sum, item) => sum + parseInt(item.count), 0) || 0
+  );
+  
+  let costToday = $derived(
+    data.apiUsage?.providers.reduce((sum, provider) => sum + provider.costs.today, 0).toFixed(2) || '0.00'
+  );
   
   // Effect to update tab when article is selected
   $effect(() => {
@@ -57,11 +77,35 @@
         </div>
         
         <div class="text-muted-foreground">
-          5 articles pending
+          {pendingCount} articles pending
         </div>
       </div>
       
       <div class="flex items-center gap-4">
+        <button 
+          onclick={() => activeTab = 'queue'}
+          class={cn(
+            "text-sm transition-colors",
+            activeTab === 'queue' 
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Queue
+        </button>
+        
+        <button 
+          onclick={() => activeTab = 'ingest'}
+          class={cn(
+            "text-sm transition-colors",
+            activeTab === 'ingest' 
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Ingest
+        </button>
+        
         <button 
           onclick={() => activeTab = 'api'}
           class={cn(
@@ -105,6 +149,20 @@
               <button
                 class={cn(
                   "w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition-colors",
+                  activeTab === 'ingest' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+                onclick={() => activeTab = 'ingest'}
+              >
+                <RocketLaunch weight={activeTab === 'ingest' ? 'fill' : 'regular'} class="h-5 w-5" />
+                <span>Ingest Research</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class={cn(
+                  "w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition-colors",
                   activeTab === 'process' 
                     ? "bg-primary/10 text-primary" 
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -114,6 +172,20 @@
               >
                 <Code weight={activeTab === 'process' ? 'fill' : 'regular'} class="h-5 w-5" />
                 <span>Process Article</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class={cn(
+                  "w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition-colors",
+                  activeTab === 'api' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+                onclick={() => activeTab = 'api'}
+              >
+                <ChartLine weight={activeTab === 'api' ? 'fill' : 'regular'} class="h-5 w-5" />
+                <span>API Monitor</span>
               </button>
             </li>
           </ul>
@@ -139,12 +211,12 @@
         <div class="grid grid-cols-1 gap-3">
           <div class="border border-border rounded-lg p-3 bg-card/40">
             <div class="text-xs text-muted-foreground">Processed Articles</div>
-            <div class="text-2xl font-medium text-foreground mt-1">12</div>
+            <div class="text-2xl font-medium text-foreground mt-1">{processedToday}</div>
           </div>
           
           <div class="border border-border rounded-lg p-3 bg-card/40">
             <div class="text-xs text-muted-foreground">API Cost</div>
-            <div class="text-2xl font-medium text-foreground mt-1">$2.43</div>
+            <div class="text-2xl font-medium text-foreground mt-1">${costToday}</div>
           </div>
         </div>
       </div>
@@ -156,6 +228,8 @@
         <RawNewsQueue onSelect={selectArticle} />
       {:else if activeTab === 'process' && selectedArticle}
         <ProcessArticle article={selectedArticle} onComplete={resetProcess} />
+      {:else if activeTab === 'ingest'}
+        <IngestResearch />
       {:else if activeTab === 'api'}
         <ApiMonitor />
       {/if}
