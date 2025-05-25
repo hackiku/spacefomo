@@ -9,10 +9,11 @@ export const adminRouter = t.router({
 	getRawNewsStats: t.procedure
 		.query(async () => {
 			try {
+				// Fix the SQL query syntax for Supabase
 				const { data, error } = await supabase
 					.from('raw_news')
-					.select('status, source_type, count(*)', { count: 'exact' })
-					.groupBy('status, source_type');
+					.select('status, source_type, count:count(*)')
+					.group('status, source_type');
 
 				if (error) throw error;
 				return data || [];

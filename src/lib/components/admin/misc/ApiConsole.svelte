@@ -10,7 +10,7 @@
 
 <!-- Button to toggle console -->
 <button
-  class="fixed top-4 right-4 z-50 p-2 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all"
+  class="fixed top-4 right-4 z-50 p-2 rounded-full bg-foreground/10 shadow-lg hover:bg-primary/90 transition-all"
   onclick={apiConsole.toggleConsole}
   aria-label="Toggle API Console"
 >

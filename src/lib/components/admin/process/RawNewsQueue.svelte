@@ -3,7 +3,7 @@
   import { trpc } from '$lib/trpc/client';
   import { ArrowRight, MagnifyingGlass, FunnelSimple, SpinnerGap } from 'phosphor-svelte';
   import { cn } from '$lib/utils';
-  import RawNews from './RawNews.svelte';
+  import RawNewsCard from './RawNewsCard.svelte';
   import type { RawNewsItem } from '../types';
   
   // Props
@@ -249,7 +249,7 @@
     {:else}
       <ul class="divide-y divide-border">
         {#each filteredNews as item (item.id)}
-          <RawNews 
+          <RawNewsCard
             {item} 
             {onSelect} 
             onProcess={handleProcess} 

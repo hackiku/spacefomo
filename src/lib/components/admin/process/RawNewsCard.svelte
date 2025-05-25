@@ -1,4 +1,4 @@
-<!-- src/lib/components/admin/process/RawNews.svelte -->
+<!-- src/lib/components/admin/process/RawNewsCard.svelte -->
 
 <script lang="ts">
   import { trpc } from '$lib/trpc/client';
@@ -69,7 +69,7 @@
 </script>
 
 <li class="group hover:bg-muted/30 transition-colors">
-  <div class="p-4 flex items-start justify-between">
+	<div class="p-4 flex items-start justify-between">
     <div class="min-w-0 flex-1">
       <div class="flex flex-wrap items-center gap-2 mb-2">
         <!-- Source Type Badge -->

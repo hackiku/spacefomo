@@ -19,7 +19,7 @@
             <SpacefomoLogo size="md"/>
           </div>
           <p class="text-muted-foreground max-w-sm mb-6">
-            SpaceFomo delivers concise, high-signal space industry news in ~100 words per story, helping you track what matters without the noise.
+            Space race pulse ~100 words a pop.
           </p>
           
           <!-- Quick Stats -->

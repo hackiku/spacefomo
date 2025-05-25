@@ -67,9 +67,9 @@
 <ApiConsole />
 
 <!-- Admin shell layout -->
-<div class="min-h-screen bg-muted/30">
+<div class="min-h-screen">
   <!-- Main content -->
-  <main class="w-full py-6 px-4">
+  <main class="w-full py-6 px-4 md:px-8">
     {@render children()}
   </main>
 </div>
